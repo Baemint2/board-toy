@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.example.board.domain.BaseTimeEntity;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 public class Posts extends BaseTimeEntity {

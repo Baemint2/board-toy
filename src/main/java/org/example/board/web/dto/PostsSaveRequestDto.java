@@ -3,9 +3,11 @@ package org.example.board.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.board.domain.posts.Posts;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PostsSaveRequestDto {
 

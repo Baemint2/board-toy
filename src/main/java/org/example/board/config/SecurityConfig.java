@@ -20,7 +20,10 @@ public class SecurityConfig {
         http.
                 authorizeHttpRequests(config ->
                         config.requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).hasRole("USER")
                                 .anyRequest().permitAll())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**")))
                 .formLogin(login -> login
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/"))

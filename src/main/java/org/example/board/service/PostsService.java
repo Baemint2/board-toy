@@ -4,10 +4,13 @@ package org.example.board.service;
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsRepository;
+import org.example.board.domain.user.SiteUser;
 import org.example.board.web.dto.PostsListResponseDto;
 import org.example.board.web.dto.PostsResponseDto;
 import org.example.board.web.dto.PostsSaveRequestDto;
 import org.example.board.web.dto.PostsUpdateRequestDto;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,16 @@ public class PostsService {
     // 글 등록
     public Long save(PostsSaveRequestDto requestDto) {
         return postsRepository.save(requestDto.toEntity()).getId();
+    }
+
+    // 글 화면에 등록?
+    public Posts create(PostsSaveRequestDto requestDto,SiteUser user) {
+        Posts posts = new Posts();
+        posts.setTitle(requestDto.getTitle());
+        posts.setContent(requestDto.getContent());
+        posts.setAuthor(requestDto.getAuthor());
+        postsRepository.save(posts);
+        return posts;
     }
 
     // 글 수정

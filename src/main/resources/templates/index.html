@@ -17,6 +17,9 @@
             <a href="/user/login" role="button" sec:authorize="isAnonymous()" class="btn btn-success">로그인</a>
             <a href="/user/logout" role="button" sec:authorize="isAuthenticated()" class="btn btn-danger">로그아웃</a>
         </div>
+        <div>
+            <p> 어서오세요! <span th:text="${loggedUser}"></span></p>
+        </div>
     </div>
         <table class="table  table-horizontal table-bordered" >
             <thead class="table-dark">

@@ -27,7 +27,7 @@ const main = {
             alert("글이 등록되었습니다.");
             window.location.href = '/';
         }).fail(function (error) {
-            alert(JSON.stringify(data));
+            alert(JSON.stringify(error));
         })
     },
     update: function () {
@@ -64,6 +64,6 @@ const main = {
         }).fail(function (error) {
             alert(JSON.stringify(error))
         })
-    }
+    },
 };
 main.init();

@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.board.domain.BaseTimeEntity;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-public class SiteUser {
+public class SiteUser extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
