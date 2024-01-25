@@ -29,6 +29,7 @@ public class PostsService {
         return postsRepository.save(requestDto.toEntity()).getId();
     }
 
+    @Transactional
     // 글 화면에 등록?
     public Posts create(PostsSaveRequestDto requestDto,SiteUser user) {
         Posts posts = new Posts();

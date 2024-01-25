@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -27,14 +29,29 @@ public class PostsController {
     private final UserService userService;
 
     @GetMapping("/posts/save")
-    public String postsSave(
-                            Model model, Principal principal) {
+    public String postsSave(Model model, Principal principal,
+                            PostsCreateForm postsCreateForm) {
+        String loggedUser = principal.getName();
+        model.addAttribute("loggedUser", loggedUser);
+        return "posts-save";
+    }
 
-        if(principal != null) {
-            String loggedUser = principal.getName();
-            model.addAttribute("loggedUser", loggedUser);
-
+    @PostMapping("/posts/save")
+    public String postsSave(Model model, Principal principal, @Valid PostsCreateForm postsCreateForm,
+                             BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "posts-save";
         }
+
+
+        // loggedUser 는 현재 홈페이지에 로그인한 사용자 정보.
+        SiteUser siteUser = userService.getUser(principal.getName());
+        PostsSaveRequestDto requestDto = new PostsSaveRequestDto();
+        requestDto.setTitle(postsCreateForm.getTitle());
+        requestDto.setContent(postsCreateForm.getContent());
+        // 유효성 검사를 통과한 경우에만 create 메서드 호출
+        postsService.create(requestDto, siteUser);
+
         return "posts-save";
     }
 
@@ -50,7 +67,7 @@ public class PostsController {
     }
 
     @GetMapping("/posts/detail/{id}")
-    public String postsDetail(@PathVariable Long id, Model model) {
+    public String postsDetail( @PathVariable Long id, Model model) {
         PostsResponseDto dto = postsService.findById(id);
         model.addAttribute("dto", dto);
         return "posts-detail";

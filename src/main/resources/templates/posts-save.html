@@ -9,21 +9,21 @@
 <body>
 <div class="col-md-12">
     <div class="col-md-4">
-        <form>
+        <form th:action="@{/posts/save}" th:object="${postsCreateForm}" method="post">
+            <div th:replace="~{form_error::formErrorsFragment}"></div>
             <div class="form-group">
-                <label th:for="title">제목</label>
-                <input type="text" class="form-control"
-                        id="title" placeholder="제목을 입력하세요">
+                <label th:for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" placeholder="제목을 입력하세요" th:field="*{title}">
             </div>
             <div class="form-group">
-                <label th:for="username">작성자</label>
+                <label th:for="author" class="form-label">작성자</label>
                 <input type="text" class="form-control"
-                id="username" th:value="${loggedUser}" readonly>
+                id="author" th:value="${loggedUser}" readonly>
             </div>
             <div class="form-group">
-                <label th:for="content">내용</label>
-                <textarea class="form-control" id="content"
-                            placeholder="내용을 입력하세요"></textarea>
+                <label th:for="content" class="form-label">내용</label>
+                <textarea class="form-control"
+                            placeholder="내용을 입력하세요" th:field="*{content}"></textarea>
             </div>
         </form>
         <a href="/"  role="button" class="btn btn-secondary">취소</a>
