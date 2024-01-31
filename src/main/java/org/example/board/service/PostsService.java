@@ -5,12 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsRepository;
 import org.example.board.domain.user.SiteUser;
-import org.example.board.web.dto.PostsListResponseDto;
-import org.example.board.web.dto.PostsResponseDto;
-import org.example.board.web.dto.PostsSaveRequestDto;
-import org.example.board.web.dto.PostsUpdateRequestDto;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
+import org.example.board.web.dto.answer.AnswerResponseDto;
+import org.example.board.web.dto.posts.PostsListResponseDto;
+import org.example.board.web.dto.posts.PostsResponseDto;
+import org.example.board.web.dto.posts.PostsSaveRequestDto;
+import org.example.board.web.dto.posts.PostsUpdateRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,22 +31,22 @@ public class PostsService {
     @Transactional
     // 글 화면에 등록?
     public Posts create(PostsSaveRequestDto requestDto,SiteUser user) {
-        Posts posts = new Posts();
-        posts.setTitle(requestDto.getTitle());
-        posts.setContent(requestDto.getContent());
-        posts.setAuthor(requestDto.getAuthor());
+        Posts posts = Posts.builder()
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .author(requestDto.getAuthor())
+                .build();
         postsRepository.save(posts);
         return posts;
     }
 
     // 글 수정
     @Transactional
-    public Long update(Long id, PostsSaveRequestDto requestDto) {
+    public Long update(Long id, PostsUpdateRequestDto requestDto) {
         Posts posts = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + id));
 
         posts.update(requestDto.getTitle(), requestDto.getContent());
-
         return id;
     }
 
@@ -57,7 +56,11 @@ public class PostsService {
         Posts entity = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + id));
 
-        return new PostsResponseDto(entity);
+        List<AnswerResponseDto> answerDto = entity.getAnswerList().stream()
+                .map(AnswerResponseDto::new)
+                .collect(Collectors.toList());
+
+                return new PostsResponseDto(entity, answerDto);
     }
     // 글 조회 id 내림차순
     @Transactional(readOnly = true)

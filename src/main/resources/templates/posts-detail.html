@@ -10,32 +10,64 @@
 <body>
 
 <div class="container my-3">
-    <h2 class="border-bottom py-2" th:text="${dto.title}"></h2>
+
+    <div class="row mb-3">
+        <div class="col">
+            <h2 th:text="${dto.title}">게시글 제목</h2>
+            <p class="text-muted">
+                <small th:text="${#temporals.format(dto.modifiedDate, 'yyyy-MM-dd HH:mm')}">작성 시간</small>
+                <small th:text="${dto.author}">작성자</small>
+            </p>
+        </div>
+    </div>
+    <hr/>
     <input type="hidden" id="id" th:value="${dto.id}">
     <div class="my=3 class-bottom">
         <div class="card-body">
             <div class="card-text" th:text="${dto.content}"></div>
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div class="mb-2">
-                        <span th:if="${dto.author != null}" th:text="${dto.author}"></span>
-                    </div>
-                    <div th:text="${#temporals.format(dto.modifiedDate, 'yyyy-MM-dd HH:mm')}"></div>
-                </div>
-            </div>
-            <div class="my-3">
-                <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
-                sec:authorize="isAuthenticated()"
-                th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger"
+            </div>
+            <div class="text-end mt-2">
+                <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
+                <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
+                <button type="button" class="btn btn-sm btn-outline-danger"
                         sec:authorize="isAuthenticated()"
                         th:if="${dto.author != null and #authentication.name == dto.author}"
                         id="btn-delete">삭제</button>
             </div>
-            <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
         </div>
+    </div>
+
+    <h2>답변</h2>
+    <div class="comment-section">
+        <form th:action="@{|/answer/create/${dto.id}|}" method="post" class="comment-box comment-form">
+            <textarea name="content" class="form-control" rows="2" placeholder="댓글을 입력하세요"></textarea>
+            <button type="submit" class="btn btn-primary">답변 달기</button>
+        </form>
+        <!-- Comments -->
+        <div th:each="answer : ${dto.answerList}" class="comment-box">
+            <div class="comment-author" th:text="${answer.author}">작성자 이름</div>
+<!--            <div class="comment-timestamp" th:text="${#temporals.format(answer.createdTime, 'yyyy-MM-dd HH:mm')}">댓글 작성시간</div>-->
+            <p th:text="${answer.content}">댓글 내용</p>
+            <div class="text-end mt-2">
+                <a th:href="@{|/answer/update/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
+                    <!-- 댓글 삭제 버튼 -->
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                        sec:authorize="isAuthenticated()"
+                        th:if="${#authentication.name == dto.author}"
+                        th:attr="data-answer-id=${answer.id}, data-post-id=${dto.id}"
+                        onclick="main.answerDelete(this)">삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Submission Form -->
+
     </div>
 </div>
 

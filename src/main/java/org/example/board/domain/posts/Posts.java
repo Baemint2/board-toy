@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.board.domain.BaseTimeEntity;
+import org.example.board.domain.answer.Answer;
+
+import java.util.List;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 public class Posts extends BaseTimeEntity {
@@ -25,6 +27,12 @@ public class Posts extends BaseTimeEntity {
 
     private String author;
 
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
+    private List<Answer> answerList;
+
+//    @Column
+//    private Long fileId;
+
     @Builder
     public Posts(String title, String content, String author) {
         this.title = title;
@@ -33,7 +41,7 @@ public class Posts extends BaseTimeEntity {
     }
 
     public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+        this.title=title;
+        this.content=content;
     }
 }

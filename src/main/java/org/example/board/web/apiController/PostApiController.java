@@ -1,30 +1,27 @@
-package org.example.board.web.controller;
+package org.example.board.web.apiController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.PostsRepository;
 import org.example.board.service.PostsService;
-import org.example.board.web.dto.PostsResponseDto;
-import org.example.board.web.dto.PostsSaveRequestDto;
-import org.example.board.web.dto.PostsUpdateRequestDto;
-import org.springframework.ui.Model;
+import org.example.board.web.dto.posts.PostsResponseDto;
+import org.example.board.web.dto.posts.PostsSaveRequestDto;
+import org.example.board.web.dto.posts.PostsUpdateRequestDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
 @RequiredArgsConstructor
 public class PostApiController {
 
     private final PostsService postsService;
 
     @PostMapping("/api/v1/posts")
-    public Long save(@RequestBody PostsSaveRequestDto requestDto) {
+    public Long save(@Valid @RequestBody PostsSaveRequestDto requestDto) {
         return postsService.save(requestDto);
     }
 
     //수정
     @PutMapping("/api/v1/posts/{id}")
-    public Long update(@PathVariable Long id, @RequestBody PostsSaveRequestDto requestDto) {
+    public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
         return postsService.update(id, requestDto);
     }
     //특정 글 조회

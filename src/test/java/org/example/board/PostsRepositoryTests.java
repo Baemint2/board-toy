@@ -2,8 +2,7 @@ package org.example.board;
 
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsRepository;
-import org.example.board.service.PostsService;
-import org.example.board.web.dto.PostsSaveRequestDto;
+import org.example.board.web.dto.posts.PostsSaveRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

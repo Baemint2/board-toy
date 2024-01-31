@@ -19,7 +19,9 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
                 authorizeHttpRequests(config ->
-                        config.requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")
+                        config
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/sign")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).hasRole("USER")
                                 .anyRequest().permitAll())
                 .csrf(csrf -> csrf
