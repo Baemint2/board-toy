@@ -2,7 +2,8 @@ package org.example.board;
 
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsRepository;
-import org.example.board.web.dto.posts.PostsSaveRequestDto;
+import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,22 @@ public class PostsRepositoryTests {
 
     @Autowired
     private PostsRepository postsRepository;
+
+    @Autowired
+    private PostsService postsService;
+
+    @Test
+    void testPosts() throws  Exception{
+            for (int i = 1; i <= 300; i++) {
+                String title = "title";
+                String content = "content";
+                PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
+                        .title(title)
+                        .content(content)
+                        .author("작성자")
+                        .build();
+            }
+    }
 
     @Test
     void testJpa() throws Exception{

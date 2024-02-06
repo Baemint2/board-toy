@@ -1,11 +1,14 @@
 package org.example.board.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.service.PostsService;
-import org.example.board.service.UserService;
+import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.user.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -17,12 +20,15 @@ public class IndexController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal) {
+    public String index(Model model, Principal principal,
+                        @RequestParam(value = "page", defaultValue = "0")int page) {
         if (principal != null) {
             String loggedUser = principal.getName();
             model.addAttribute("loggedUser", loggedUser);
         }
-        model.addAttribute("posts", postsService.findAllDesc());
+
+        Page<Posts> paging = postsService.getList(page);
+        model.addAttribute("paging", paging);
         return "index";
     }
 }

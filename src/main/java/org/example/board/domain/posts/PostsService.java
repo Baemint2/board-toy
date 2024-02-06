@@ -1,18 +1,22 @@
-package org.example.board.service;
+package org.example.board.domain.posts;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.PostsRepository;
 import org.example.board.domain.user.SiteUser;
-import org.example.board.web.dto.answer.AnswerResponseDto;
-import org.example.board.web.dto.posts.PostsListResponseDto;
-import org.example.board.web.dto.posts.PostsResponseDto;
-import org.example.board.web.dto.posts.PostsSaveRequestDto;
-import org.example.board.web.dto.posts.PostsUpdateRequestDto;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.posts.dto.PostsListResponseDto;
+import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
+import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,5 +83,13 @@ public class PostsService {
         postsRepository.delete(posts);
     }
 
+
+    //페이징 처리
+    public Page<Posts> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.postsRepository.findAll(pageable);
+    }
 
 }

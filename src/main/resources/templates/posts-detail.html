@@ -33,10 +33,10 @@
                 <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
-                <button type="button" class="btn btn-sm btn-outline-danger"
+                <input type="button" class="btn btn-sm btn-outline-danger"
                         sec:authorize="isAuthenticated()"
                         th:if="${dto.author != null and #authentication.name == dto.author}"
-                        id="btn-delete">삭제</button>
+                        onclick="main.deleteEvent()" value="삭제"/>
             </div>
         </div>
     </div>
@@ -47,36 +47,37 @@
             <textarea name="content" class="form-control" rows="2" placeholder="댓글을 입력하세요"></textarea>
             <button type="submit" class="btn btn-primary">답변 달기</button>
         </form>
-        <!-- Comments -->
-        <div th:each="answer : ${dto.answerList}" class="comment-box">
-            <div class="comment-author" th:text="${answer.author}">작성자 이름</div>
-<!--            <div class="comment-timestamp" th:text="${#temporals.format(answer.createdTime, 'yyyy-MM-dd HH:mm')}">댓글 작성시간</div>-->
-            <p th:text="${answer.content}">댓글 내용</p>
+        <!-- 댓글 목록 -->
+        <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="answer-id=${answer.id}">
+            <div class="answer-author" th:text="${answer.author}">작성자 이름</div>
+            <p class="answer-content" th:text="${answer.content}" >댓글 내용</p>
             <div class="text-end mt-2">
-                <a th:href="@{|/answer/update/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"
-                   th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
-                    <!-- 댓글 삭제 버튼 -->
-                <button type="button" class="btn btn-sm btn-outline-danger"
+                   th:if="${dto.author != null and #authentication.name == answer.author}"
+                   th:text="수정" id="update"></button>
+
+                <input type="button" class="btn btn-sm btn-outline-danger"
                         sec:authorize="isAuthenticated()"
-                        th:if="${#authentication.name == dto.author}"
+                        th:if="${#authentication.name == answer.author}"
                         th:attr="data-answer-id=${answer.id}, data-post-id=${dto.id}"
-                        onclick="main.answerDelete(this)">삭제</button>
-                </div>
+                        onclick="main.answerDelete(this)" value="삭제"/>
             </div>
         </div>
-
-        <!-- Comment Submission Form -->
-
+            <div id="editAnswerForm" style="display:none;">
+                <textarea id="editAnswerContent"></textarea>
+                <input type="button" onclick="main.submitEdit()">수정 완료</input>
+                <input type="button" onclick="main.cancelEdit()">취소</input>
+            </div>
     </div>
 </div>
 
-<script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-        crossorigin="anonymous"></script>
-<script src="/js/app/index.js"></script>
+        <!-- Comment Submission Form -->
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="/js/app/index.js"></script>
 </body>
 </html>

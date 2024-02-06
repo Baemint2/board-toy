@@ -1,15 +1,13 @@
-package org.example.board.service;
+package org.example.board.domain.answer;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.answer.Answer;
-import org.example.board.domain.answer.AnswerRepository;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsRepository;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
-import org.example.board.web.dto.answer.AnswerResponseDto;
-import org.example.board.web.dto.answer.AnswerSaveRequestDto;
-import org.example.board.web.dto.answer.AnswerUpdateRequestDto;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
+import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

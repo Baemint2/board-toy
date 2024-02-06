@@ -1,9 +1,9 @@
-package org.example.board.web.apiController;
+package org.example.board.domain.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.service.UserService;
-import org.example.board.web.dto.user.UserCreateDto;
+import org.example.board.domain.user.service.UserService;
+import org.example.board.domain.user.dto.UserCreateDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

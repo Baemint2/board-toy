@@ -1,12 +1,12 @@
-package org.example.board.web.controller;
+package org.example.board.domain.posts.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.user.SiteUser;
-import org.example.board.service.PostsService;
-import org.example.board.service.UserService;
-import org.example.board.web.dto.posts.PostsResponseDto;
-import org.example.board.web.dto.posts.PostsSaveRequestDto;
+import org.example.board.domain.user.service.UserService;
+import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

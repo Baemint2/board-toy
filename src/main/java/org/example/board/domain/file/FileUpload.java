@@ -1,4 +1,4 @@
-package org.example.board.web.controller;
+package org.example.board.domain.file;
 
 public class FileUpload {
     //        try{

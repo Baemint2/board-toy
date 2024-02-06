@@ -1,8 +1,8 @@
-package org.example.board.web.apiController;
+package org.example.board.domain.answer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.service.AnswerService;
-import org.example.board.web.dto.answer.AnswerUpdateRequestDto;
+import org.example.board.domain.answer.AnswerService;
+import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

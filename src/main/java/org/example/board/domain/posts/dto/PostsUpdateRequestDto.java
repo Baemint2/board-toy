@@ -1,9 +1,8 @@
-package org.example.board.web.dto.posts;
+package org.example.board.domain.posts.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.posts.Posts;
 
 @Getter
 @NoArgsConstructor

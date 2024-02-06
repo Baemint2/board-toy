@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.board.domain.BaseTimeEntity;
+import org.example.board.common.BaseTimeEntity;
 import org.example.board.domain.answer.Answer;
 
 import java.util.List;

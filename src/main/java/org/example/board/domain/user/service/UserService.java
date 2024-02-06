@@ -1,10 +1,10 @@
-package org.example.board.service;
+package org.example.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.config.DataNotFoundException;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
-import org.example.board.web.dto.user.UserCreateDto;
+import org.example.board.domain.user.dto.UserCreateDto;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

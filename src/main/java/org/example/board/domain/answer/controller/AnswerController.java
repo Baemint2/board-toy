@@ -1,11 +1,11 @@
-package org.example.board.web.controller;
+package org.example.board.domain.answer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.service.AnswerService;
-import org.example.board.service.PostsService;
-import org.example.board.service.UserService;
-import org.example.board.web.dto.answer.AnswerResponseDto;
-import org.example.board.web.dto.answer.AnswerSaveRequestDto;
+import org.example.board.domain.answer.AnswerService;
+import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.user.service.UserService;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

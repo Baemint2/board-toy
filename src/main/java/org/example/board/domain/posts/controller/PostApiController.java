@@ -1,11 +1,11 @@
-package org.example.board.web.apiController;
+package org.example.board.domain.posts.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.service.PostsService;
-import org.example.board.web.dto.posts.PostsResponseDto;
-import org.example.board.web.dto.posts.PostsSaveRequestDto;
-import org.example.board.web.dto.posts.PostsUpdateRequestDto;
+import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
+import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

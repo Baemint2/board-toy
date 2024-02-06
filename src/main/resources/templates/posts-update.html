@@ -43,24 +43,13 @@
 <!--            </div>-->
         </form>
         <a href="/" role="button" class="btn btn-secondary">취소</a>
-        <button type="button" class="btn btn-primary" id="btn-update">수정완료</button>
-        <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
+        <input type="button" class="btn btn-primary" onclick="main.update()" value="수정완료"/>
+        <input type="button" class="btn btn-danger" onclick="main.deleteEvent()" value="삭제"/>
     </div>
 </div>
 
-
-<script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-        crossorigin="anonymous"></script>
-<script src="/js/app/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-<!--<script>-->
-<!--    $('.custom-file-input').on('change', function () {-->
-<!--        let fileName = $(this).val().split('\\').pop();-->
-<!--        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);-->
-<!--    });-->
-<!--</script>-->
+<script defer src="/js/app/index.js"></script>
 </body>
 </html>

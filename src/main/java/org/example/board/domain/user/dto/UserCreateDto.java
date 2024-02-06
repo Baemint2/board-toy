@@ -1,4 +1,4 @@
-package org.example.board.web.dto.user;
+package org.example.board.domain.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

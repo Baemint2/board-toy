@@ -1,9 +1,9 @@
-package org.example.board.web.controller;
+package org.example.board.domain.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.web.dto.user.UserCreateDto;
-import org.example.board.service.UserService;
+import org.example.board.domain.user.service.UserService;
+import org.example.board.domain.user.dto.UserCreateDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

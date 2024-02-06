@@ -1,8 +1,8 @@
-package org.example.board.web.dto.posts;
+package org.example.board.domain.posts.dto;
 
 import lombok.Getter;
 import org.example.board.domain.posts.Posts;
-import org.example.board.web.dto.answer.AnswerResponseDto;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

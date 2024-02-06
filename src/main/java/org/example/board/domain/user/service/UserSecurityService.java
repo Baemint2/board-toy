@@ -1,4 +1,4 @@
-package org.example.board.service;
+package org.example.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.user.Role;

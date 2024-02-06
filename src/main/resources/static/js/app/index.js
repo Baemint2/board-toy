@@ -1,157 +1,204 @@
 const main = {
     init: function () {
         const _this = this;
-        $('#btn-save').on('click', function () {
-            _this.save();
-        });
-        $('#btn-update').on('click', function () {
-            _this.update();
-        });
-        $('#btn-delete').on('click', function () {
-            _this.delete();
+        // document.getElementById('btn-signup').addEventListener('click', function () {
+        //     _this.signup();
+        // });
+        // document.getElementById('btn-save').addEventListener('click', function () {
+        //     _this.save();
+        // });
+        // document.getElementById('btn-update').addEventListener('click', function () {
+        //     _this.update();
+        // });
+        // document.getElementById('btn-delete').addEventListener('click', function () {
+        //     _this.deleteEvent();
+        // });
+
+        document.querySelectorAll('.btn-answerDelete').forEach(button => {
+            button.addEventListener('click', function () {
+                _this.answerDelete(this);
+            });
         })
-        $('#btn-signup').on('click', function () {
-            _this.signup();
-        })
-        $('#btn-answerDelete').on('click', function () {
-            _this.answerDelete
+        document.querySelectorAll('.answerList #answer').forEach(button => {
+            button.addEventListener('click', function () {
+                const answerId = this.parentElement.getAttribute('data-answer-id');
+                const content = this.previousElementSibling.textContent;
+                main.showEditForm(answerId, content);
+            })
         })
     },
+
+    showEditForm: function (answerId, content) {
+        document.getElementById('editAnswerContent').value = content;
+        document.getElementById('editAnswerForm').style.display = 'block';
+        window.currentEditingId = answerId;
+    },
+
+    submitEdit: function () {
+        const content = document.getElementById('editAnswerContent').value;
+        const answerId = window.currentEditingId;
+        fetch(`/api/v1/answer/${answerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({content: content})
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            return response.json();
+        }).then(data => {
+            document.querySelector(`.answerList[data-answer-id="${answerId}"] .answer-content`).textContent = content;
+            document.getElementById('editAnswerForm').style.display = 'none';
+        }).catch(error => console.error('Error : ', error));
+
+    },
+
+    cancelEdit: function () {
+        document.getElementById('editAnswerForm').style.display = 'none';
+    },
+
+    deleteEvent: function () {
+        const id = document.getElementById("id").value;
+        fetch(`/api/v1/posts/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            alert("글이 삭제되었습니다.")
+            window.location.href = '/';
+        }).catch(error => {
+            alert(`오류가 발생했습니다. ${error.message}`);
+        })
+    },
+
     signup: function () {
         const data = {
-            username: $('#username').val(),
-            password1: $('#password1').val(),
-            password2: $('#password2').val(),
-            email: $('#email').val()
+            username: document.getElementById('username').value,
+            password1: document.getElementById('password1').value,
+            password2: document.getElementById('password2').value,
+            email: document.getElementById('email').value
         };
-        $.ajax({
-            type: 'POST',
-            url: '/api/v1/sign',
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            data:JSON.stringify(data)
-        }).done(function () {
-            alert("회원가입이 완료되었습니다.");
-            window.location.href = '/user/login'
-        }).fail(function(error) {
-            $('.alert-danger').hide().text('');
-
-            if (error.responseJSON && error.responseJSON.errors) {
-                error.responseJSON.errors.forEach(function (err) {
-                    // 에러 메시지를 해당 필드의 에러 컨테이너에 표시
-                    $(`#${err.field}-error`).text(err.defaultMessage).show();
-                });
+        fetch('/api/v1/sign', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                alert("회원가입이 완료되었습니다.");
+                window.location.href = '/user/login';
             } else {
-                // 일반적인 오류 메시지 처리
-                if (error.responseJSON && error.responseJSON.message) {
-                    alert(error.responseJSON.message);
-                } else {
-                    alert("알 수 없는 오류가 발생했습니다.");
-                }
+                return response.json();
             }
+        }).then(data => {
+            if (data && data.errors) {
+                data.errors.forEach(function (err) {
+                    const errorElement = document.getElementById(`${err.field}-error`);
+                    if (errorElement) {
+                        errorElement.textContent = err.defaultMessage;
+                        errorElement.style.display = 'block';
+                    }
+                });
+            } else if (data && data.message) {
+                alert(data.message);
+            }
+        }).catch(error => {
+            alert("알 수 없는 오류가 발생했습니다.")
+            console.error(error);
         })
+
     },
+
     save: function () {
         const data = {
-            title: $('#title').val(),
-            author: $('#author').val(),
-            content: $('#content').val()
+            title: document.getElementById('title').value,
+            author: document.getElementById('author').value,
+            content: document.getElementById('content').value
         };
-        $.ajax({
-            type: 'POST',
-            url: '/api/v1/posts',
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data)
-        }).done(function () {
-            alert("글이 등록되었습니다.");
-            window.location.href = '/';
-        }).fail(function (error) {
-            $('.alert-danger').hide().text('');
+        fetch('/api/v1/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                alert("글이 등록되었습니다.")
+                window.location.href = "/"
+            } else {
+                return response.json()
+            }
+        }).then(errorResponse => {
+            document.querySelectorAll('.alert-danger').forEach(errorContainer => {
+                errorContainer.style.display = 'none';
+                errorContainer.textContent = '';
+            });
 
-            if (error.responseJSON && error.responseJSON.errors) {
-                error.responseJSON.errors.forEach(function (err) {
-                    // 에러 메시지를 해당 필드의 에러 컨테이너에 표시
-                    $(`#${err.field}-error`).text(err.defaultMessage).show();
-                });
+            if (errorResponse && errorResponse.errors) {
+                errorResponse.errors.forEach(err => {
+                    const errorContainer = document.getElementById(`${err.field}-error`);
+                    if (errorContainer) {
+                        errorContainer.textContent = err.defaultMessage;
+                        errorContainer.style.display = 'block';
                     }
-        })
+                })
+            }
+        }).catch(error => console.log("Fetch error: ", error));
     },
     update: function () {
         const data = {
-            title: $('#title').val(),
-            content: $('#content').val()
+            title: document.getElementById('title').value,
+            content: document.getElementById('content').value
         };
-
-        const id = $('#id').val();
-        $.ajax({
-            type: 'PUT',
-            url: '/api/v1/posts/' + id,
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data)
-        }).done(function () {
-            alert("글이 수정되었습니다.");
-            window.location.href = '/posts/detail/' + id;
-        }).fail(function (error) {
-            alert(JSON.stringify(error))
-        })
-    },
-    delete: function () {
-        const id = $('#id').val();
-
-        $.ajax({
-            type: "DELETE",
-            url: '/api/v1/posts/' + id,
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
-        }).done(function () {
-            alert("글이 삭제되었습니다.");
-            window.location.href = '/';
-        }).fail(function (error) {
-            alert(JSON.stringify(error))
+        const id = document.getElementById('id').value;
+        fetch(`/api/v1/posts/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            return response.json()
+        }).then(() => {
+            alert("글이 수정되었습니다.")
+            window.location.href = `/posts/detail/${id}`
+        }).catch(error => {
+            alert(`오류가 발생했습니다. ${error.message}`);
         })
     },
 
     // 댓글 삭제
     answerDelete: function (element) {
-        const answerId = $(element).data('answer-id');
-        const postId = $(element).data('post-id');
+        const answerId = element.getAttribute('data-answer-id')
+        const postId = element.getAttribute('data-post-id')
 
-        $.ajax({
-            type: "DELETE",
-            url: '/api/v1/answer/' + answerId,
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
-        }).done(function () {
-            alert("댓글이 삭제 되었습니다.");
-            window.location.href = '/posts/detail/' + postId;
-        }).fail(function (error) {
-            alert(JSON.stringify(error));
-        });
-    },
-    editComment: function () {
-        const answerId = $('#editCommentId').val();
-        const content = $('#editCommentContent').val();
+        fetch(`/api/v1/answer/${answerId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            alert("댓글이 삭제 되었습니다.")
+            window.location.href = `/posts/detail/${postId}`
+        }).catch(error => {
+            alert(`오류가 발생했습니다. ${error.message}`)
+        })
+    }
+}
 
-        $.ajax({
-            type: "PUT",
-            url: '/api/v1/answer/' + answerId,
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({content: content})
-        }).done(function () {
-            alert("댓글이 수정되었습니다.");
-            // 페이지 새로고침 또는 댓글 목록 갱신
-        }).fail(function (error) {
-            alert(JSON.stringify(error));
-        });
-    },
-    // upload:
-    //     $('.custom-file-input').on('change', function () {
-    //         let fileName = $(this).val().split('\\').pop();
-    //         $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
-    //     })
-};
-
-main.init();
+document.addEventListener('DOMContentLoaded', function () {
+    main.init();
+})
