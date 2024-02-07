@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.domain.posts.Posts;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +16,7 @@ public class PostsSaveRequestDto {
     @Size(min=3, max=150)
     private String title;
 
+    @Size(max=1000)
     @NotEmpty(message = "내용은 필수항목입니다.")
     private String content;
 
@@ -33,7 +35,6 @@ public class PostsSaveRequestDto {
                 .title(title)
                 .content(content)
                 .author(author)
-//                .fileId(fileId)
                 .build();
     }
 

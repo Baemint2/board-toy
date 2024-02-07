@@ -21,13 +21,14 @@ public class Posts extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String content;
 
     private String author;
 
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
 
 //    @Column
 //    private Long fileId;

@@ -12,11 +12,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
@@ -40,7 +41,8 @@ public class PostsController {
     }
 
     @PostMapping("/posts/save")
-    public String postsSave(Principal principal, @Valid PostsSaveRequestDto requestDto,
+    public String postsSave(@Valid PostsSaveRequestDto requestDto,
+                            Principal principal,
                             BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             model.addAttribute("requestDto", requestDto);

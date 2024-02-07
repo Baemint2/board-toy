@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="/css.style/index.css" rel="stylesheet">
     <title>게시글</title>
 </head>
 <body>
@@ -23,34 +24,37 @@
     <hr/>
     <input type="hidden" id="id" th:value="${dto.id}">
     <div class="my=3 class-bottom">
-        <div class="card-body">
+        <div class="card-body content-box">
             <div class="card-text" th:text="${dto.content}"></div>
-            <div class="d-flex justify-content-end">
-
-            </div>
-            <div class="text-end mt-2">
-                <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
-                <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
-                <input type="button" class="btn btn-sm btn-outline-danger"
-                        sec:authorize="isAuthenticated()"
-                        th:if="${dto.author != null and #authentication.name == dto.author}"
-                        onclick="main.deleteEvent()" value="삭제"/>
-            </div>
+            <div class="d-flex justify-content-end"></div>
         </div>
     </div>
+    <div class="text-end mt-2 button-container">
+        <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
+        <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
+           sec:authorize="isAuthenticated()"
+           th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>
+        <input type="button" class="btn btn-sm btn-outline-danger"
+               sec:authorize="isAuthenticated()"
+               th:if="${dto.author != null and #authentication.name == dto.author}"
+               onclick="main.deleteEvent()" value="삭제"/>
+</div>
 
     <h2>답변</h2>
     <div class="comment-section">
-        <form th:action="@{|/answer/create/${dto.id}|}" method="post" class="comment-box comment-form">
+        <form th:action="@{|/answer/create/${dto.id}|}" method="post" class="comment-form">
             <textarea name="content" class="form-control" rows="2" placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit" class="btn btn-primary">답변 달기</button>
+            <button type="submit" class="btn btn-primary">등록</button>
         </form>
+    </div>
         <!-- 댓글 목록 -->
         <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="answer-id=${answer.id}">
-            <div class="answer-author" th:text="${answer.author}">작성자 이름</div>
+            <div class="answer-details">
+            <span class="answer-author"> 작성자: <strong class="answer-author" th:text="${answer.author}"></strong></span>
+            <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
+            </div>
             <p class="answer-content" th:text="${answer.content}" >댓글 내용</p>
+            <hr/>
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"
@@ -61,7 +65,7 @@
                         sec:authorize="isAuthenticated()"
                         th:if="${#authentication.name == answer.author}"
                         th:attr="data-answer-id=${answer.id}, data-post-id=${dto.id}"
-                        onclick="main.answerDelete(this)" value="삭제"/>
+                        onclick="answer.answerDelete(this)" value="삭제"/>
             </div>
         </div>
             <div id="editAnswerForm" style="display:none;">
@@ -74,10 +78,9 @@
 
         <!-- Comment Submission Form -->
 
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 <script src="/js/app/index.js"></script>
+<script src="/js/app/answer.js"></script>
 </body>
 </html>

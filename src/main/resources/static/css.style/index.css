@@ -1,0 +1,33 @@
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.current-time-container {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+    padding-right: 1rem;
+    font-size: 24px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-welcome {
+    align-items: end;
+}
+
+.content-box {
+    display: flex;
+    flex-direction: column;
+    height: 150px;
+}
+
+.button-container {
+    margin-top: auto;
+    text-align: right;
+}
