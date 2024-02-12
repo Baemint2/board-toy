@@ -54,6 +54,14 @@
             <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
             </div>
             <p class="answer-content" th:text="${answer.content}" >댓글 내용</p>
+            <!-- 대댓글 목록 -->
+            <div th:each="childAnswer : ${answer.children}" class="child-answer">
+                <div class="answer-details">
+                    <span class="answer-author">작성자 <strong th:text="${childAnswer.author}"></strong></span>
+                    <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
+                </div>
+                <p class="answer-content" th:text="${childAnswer.content}">대댓글 내용</p>
+            </div>
             <hr/>
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
