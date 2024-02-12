@@ -1,6 +1,7 @@
 package org.example.board.domain.posts.dto;
 
 import lombok.Getter;
+import org.example.board.domain.answer.Answer;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 
@@ -16,6 +17,7 @@ public class PostsResponseDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private List<AnswerResponseDto> answerList;
+
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
         this.title = entity.getTitle();

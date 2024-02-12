@@ -95,4 +95,11 @@ public class PostsService {
         return this.postsRepository.findAll(pageable);
     }
 
+    // 조회수
+//    @Transactional
+//    public Long updateView(Long id) {
+//        return this.postsRepository.updateView(id);
+//    }
+
+
 }

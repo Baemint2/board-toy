@@ -26,12 +26,14 @@ public class Posts extends BaseTimeEntity {
 
     private String author;
 
+    //게시글 조회수
+//    @Column(columnDefinition = "Long default 0", nullable = false)
+//    private Long PostsView;
+
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
 
-
-//    @Column
-//    private Long fileId;
+    
 
     @Builder
     public Posts(String title, String content, String author) {
