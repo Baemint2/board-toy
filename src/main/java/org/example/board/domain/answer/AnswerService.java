@@ -20,7 +20,7 @@ public class AnswerService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long saveAnswer(AnswerSaveRequestDto requestDto) {
+    public Long saveAnswer(Long id, AnswerSaveRequestDto requestDto) {
         Posts posts = postsRepository.findById(requestDto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다. ID =" + requestDto.getPostId()));
 
@@ -38,11 +38,11 @@ public class AnswerService {
     }
     @Transactional
     public Long update(Long id, AnswerUpdateRequestDto requestDto) {
-        Answer answer = answerRepository.findById(requestDto.getAnswerId())
+        Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다." + id));
 
         answer.update(requestDto.getContent());
-        return requestDto.getAnswerId();
+        return id;
     }
 
     @Transactional

@@ -12,15 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,18 +37,20 @@ public class PostsService {
         Posts posts = Posts.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
-                .author(requestDto.getAuthor())
+                .author(user.getUsername())
                 .build();
-        postsRepository.save(posts);
-        return posts;
+        return postsRepository.save(posts);
     }
 
     // 글 수정
     @Transactional
-    public Long update(Long id, PostsUpdateRequestDto requestDto) {
+    public Long update(Long id, PostsUpdateRequestDto requestDto, String username) {
         Posts posts = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + id));
 
+        if(!posts.getAuthor().equals(username)) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
         posts.update(requestDto.getTitle(), requestDto.getContent());
         return id;
     }

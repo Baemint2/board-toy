@@ -4,6 +4,12 @@
       xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layout}">
 <head>
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
     <title>게시글</title>
 </head>
 <body>
@@ -38,46 +44,56 @@
                onclick="main.deleteEvent()" value="삭제"/>
 </div>
 
-    <h2>답변</h2>
-    <div class="comment-section">
-        <form th:action="@{|/answer/create/${dto.id}|}" method="post" class="comment-form">
-            <textarea name="content" class="form-control" rows="2" placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit" class="btn btn-primary">등록</button>
-        </form>
+    <h2>답변</h2><div class="comment-section">
+         <form th:action="@{/answer/create/{id}(id=${dto.id})}" th:object="${answer}" method="post" class="comment-form">
+    <textarea name="content" class="form-control" rows="2"
+              th:field="*{content}"
+              placeholder="댓글을 입력하세요"></textarea>
+             <div class="field-error" th:errors="*{content}"></div>
+             <button type="submit" class="btn btn-primary">등록</button>
+         </form>
+
     </div>
         <!-- 댓글 목록 -->
-        <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="answer-id=${answer.id}">
+        <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="data-answer-id=${answer.id}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
             <div class="answer-details">
-            <span class="answer-author"> 작성자: <strong class="answer-author" th:text="${answer.author}"></strong></span>
+            <span class="answer-author"> 작성자: <strong th:text="${answer.author}"></strong></span>
             <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
             </div>
-            <p class="answer-content" th:text="${answer.content}" >댓글 내용</p>
-            <!-- 대댓글 목록 -->
-            <div th:each="childAnswer : ${answer.children}" class="child-answer">
-                <div class="answer-details">
-                    <span class="answer-author">작성자 <strong th:text="${childAnswer.author}"></strong></span>
-                    <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
-                </div>
-                <p class="answer-content" th:text="${childAnswer.content}">대댓글 내용</p>
-            </div>
+            <p class="answer-content" th:text="${answer.content}">댓글 내용</p>
+<!--            &lt;!&ndash; 대댓글 목록 &ndash;&gt;-->
+<!--            <div th:each="childAnswer : ${answer.children}" class="child-answer">-->
+<!--                <div class="answer-details">-->
+<!--                    <span class="answer-author">작성자 <strong th:text="${childAnswer.author}"></strong></span>-->
+<!--                    <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>-->
+<!--                </div>-->
+<!--                <p class="answer-content" th:text="${childAnswer.content}">대댓글 내용</p>-->
+<!--            </div>-->
+<!--            <button type="button" class="btn btn-sm btn-outline-primary" th:attr="data-answer-id=${answer.id}" id="submitButton">대댓글 작성</button>-->
             <hr/>
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"
                    th:if="${dto.author != null and #authentication.name == answer.author}"
-                   th:text="수정" id="update"></button>
-                <input type="button" class="btn btn-sm btn-outline-danger"
+                        th:attr="data-answer-id=${answer.id}"
+                        th:onclick="'main.showEditForm(' + ${answer.id} + ')'">수정</button>
+                <input type="button" class="btn btn-sm btn-outline-danger btn-answerDelete"
                         sec:authorize="isAuthenticated()"
                         th:if="${#authentication.name == answer.author}"
                         th:attr="data-answer-id=${answer.id}, data-post-id=${dto.id}"
-                        onclick="answer.answerDelete(this)" value="삭제"/>
+                        value="삭제"/>
+            </div>
+            <div th:id="'editForm-' + ${answer.id}" class="editAnswerForm" style="display:none;">
+                <textarea th:id="'editContent-' + ${answer.id}" class="form-control"></textarea>
+                <button class="btn btn-primary"
+                        th:onclick="'main.submitEdit(' + ${answer.id} + ')'">수정 완료</button>
+                <button class="btn btn-secondary"
+                        th:onclick="'main.cancelEdit(' + ${answer.id} + ')'">취소</button>
             </div>
         </div>
-            <div id="editAnswerForm" style="display:none;">
-                <textarea id="editAnswerContent"></textarea>
-                <input type="button" onclick="main.submitEdit()">수정 완료</input>
-                <input type="button" onclick="main.cancelEdit()">취소</input>
-            </div>
+
+
      </section>
  </div>
 

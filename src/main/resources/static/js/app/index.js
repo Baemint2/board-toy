@@ -2,60 +2,64 @@ const main = {
     init: function () {
         const _this = this;
         console.log(document.getElementById('btn-save'))
-        document.getElementById('btn-save').addEventListener('click', function () {
+        document.getElementById('btn-save')?.addEventListener('click', function () {
             _this.save();
         });
-        document.getElementById('btn-update').addEventListener('click', function () {
+        console.log(document.getElementById("btn-update"))
+        document.getElementById('btn-update')?.addEventListener('click', function () {
             _this.update();
         });
-        document.getElementById('btn-delete').addEventListener('click', function () {
+        console.log(document.getElementById("btn-delete"))
+        document.getElementById('btn-delete')?.addEventListener('click', function () {
             _this.deleteEvent();
         });
-
-
-        document.querySelectorAll('.answerList #answer').forEach(button => {
+        document.querySelectorAll('.editAnswerBtn').forEach(button => {
             button.addEventListener('click', function () {
-                const answerId = this.parentElement.getAttribute('data-answer-id');
-                const content = this.previousElementSibling.textContent;
-                main.showEditForm(answerId, content);
+                // closest 메서드를 사용하여 .answerList 요소를 찾음
+                const answerListElement = this.closest('.answerList');
+                // .answerList 요소로부터 data-answer-id 속성 값을 가져옴
+                const answerId = answerListElement.getAttribute('data-answer-id');
+                main.showEditForm(answerId);
             })
         })
     },
 
     // 댓글 수정 창
-    showEditForm: function (answerId, content) {
-        document.getElementById('editAnswerContent').value = content;
-        document.getElementById('editAnswerForm').style.display = 'block';
-        window.currentEditingId = answerId;
+    showEditForm: function (answerId) {
+        // console.log(document.querySelector(`.answerList[data-answer-id="${answerId}"] .answer-content`).textContent);
+        console.log(document.getElementById(`editForm-${answerId}`));
+        const editForm = document.getElementById(`editForm-${answerId}`)
+        const currentContent = document.querySelector(`.answerList[data-answer-id="${answerId}"] .answer-content`).textContent;
+        console.log(document.getElementById(`editContent-${answerId}`).value = currentContent);
+        editForm.style.display= 'block';
     },
 
-
     // 댓글 수정 완료
-    submitEdit: function () {
-        const content = document.getElementById('editAnswerContent').value;
-        const answerId = window.currentEditingId;
+    submitEdit: function (answerId) {
+        const editedContent = document.getElementById(`editContent-${answerId}`).value;
         fetch(`/api/v1/answer/${answerId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({content: content})
+            body: JSON.stringify({content: editedContent})
         }).then(response => {
             if (!response.ok) {
                 throw new Error("네트워크 에러가 발생했습니다.")
             }
             return response.json();
-        }).then(data => {
-            document.querySelector(`.answerList[data-answer-id="${answerId}"] .answer-content`).textContent = content;
-            document.getElementById('editAnswerForm').style.display = 'none';
+        }).then(() => {
+            document.querySelector(`.answerList[data-answer-id="${answerId}"] .answer-content`).textContent = editedContent;
+            document.getElementById(`editForm-${answerId}`).style.display = 'none';
         }).catch(error => console.error('Error : ', error));
 
     },
 
 
     // 댓글 수정 취소
-    cancelEdit: function () {
-        document.getElementById('editAnswerForm').style.display = 'none';
+    cancelEdit: function (answerId) {
+        const editForm = document.getElementById(`editForm-${answerId}`);
+        editForm.style.display = 'none';
     },
 
     // 게시글 삭제
@@ -130,15 +134,17 @@ const main = {
             body: JSON.stringify(data)
         }).then(response => {
             if (!response.ok) {
-                throw new Error("네트워크 에러가 발생했습니다.")
+                // 서버로부터의 응답이 오류를 나타내는 경우 (예: 상태 코드가 400 이상)
+                throw new Error(`서버 오류: ${response.status}`);
             }
-            return response.json()
+            return response.json();
         }).then(() => {
-            alert("글이 수정되었습니다.")
-            window.location.href = `/posts/detail/${id}`
+            alert("글이 수정되었습니다.");
+            window.location.href = `/posts/detail/${id}`;
         }).catch(error => {
-            alert(`오류가 발생했습니다. ${error.message}`);
-        })
+            // 네트워크 오류 또는 response.ok가 false인 경우 여기서 처리
+            alert(`오류가 발생했습니다: ${error.message}`);
+        });
     },
 
     // 댓글 삭제

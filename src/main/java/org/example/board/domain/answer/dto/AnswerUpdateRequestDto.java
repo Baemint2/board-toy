@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 public class AnswerUpdateRequestDto {
 
     private String content;
-    private Long answerId;
 
     @Builder
-    public AnswerUpdateRequestDto(String content, Long answerId) {
+    public AnswerUpdateRequestDto(String content) {
         this.content=content;
-        this.answerId=answerId;
     }
 
 }

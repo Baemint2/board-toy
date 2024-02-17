@@ -2,7 +2,11 @@ package org.example.board.domain.posts.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.board.domain.answer.Answer;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
 import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.domain.posts.dto.PostsResponseDto;
@@ -42,8 +46,9 @@ public class PostsController {
 
     @PostMapping("/posts/save")
     public String postsSave(@Valid PostsSaveRequestDto requestDto,
+                            BindingResult bindingResult,
                             Principal principal,
-                            BindingResult bindingResult, Model model) {
+                            Model model) {
         if(bindingResult.hasErrors()) {
             model.addAttribute("requestDto", requestDto);
             return "posts-save";
@@ -69,10 +74,27 @@ public class PostsController {
         return "posts-update";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/posts/update/{id}")
+    public String postsUpdate(@PathVariable Long id, @Valid PostsUpdateRequestDto requestDto,
+                              BindingResult bindingResult, Principal principal, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("post", requestDto);
+            return "posts-update"; // 검증 오류가 있는 경우, 업데이트 폼으로 다시 리턴
+        }
+
+        postsService.update(id, requestDto, principal.getName());
+        return String.format("redirect:/posts/detail/%s", id); // 성공적으로 업데이트된 경우, 상세 페이지로 리다이렉션
+    }
+
     @GetMapping("/posts/detail/{id}")
-    public String postsDetail( @PathVariable Long id, Model model) {
+    public String postsDetail(@PathVariable Long id, Model model, @ModelAttribute("message") String message) {
         PostsResponseDto dto = postsService.findById(id);
         model.addAttribute("dto", dto);
+        model.addAttribute("answer", new AnswerResponseDto());
+        if (!message.isEmpty()) {
+            model.addAttribute("message", message);
+        }
         return "posts-detail";
     }
 }
