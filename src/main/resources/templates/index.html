@@ -9,7 +9,7 @@
     <div class="header-container">
      <h1>모지히의 모지?</h1>
         <div class="user-welcome">
-           <p> 어서오세요! <a href="/mypage" th:text="${loggedUser}"></a>님</p>
+           <p> 어서오세요! <a href="/user/info" th:text="${loggedUser}"></a>님</p>
         </div>
     </div>
     <div class="current-time-container">
@@ -19,7 +19,7 @@
     <div class="col-md-12">
         <div class="col-md-6">
             <a href="/posts/save" role="button"  class="btn btn-primary">글 등록</a>
-            <a href="/user/signup" role="button" class="btn btn-secondary">회원가입</a>
+            <a href="/user/signup" role="button" sec:authorize="!isAuthenticated()" class="btn btn-secondary">회원가입</a>
             <a href="/user/login" role="button" sec:authorize="isAnonymous()" class="btn btn-success">로그인</a>
             <a href="/user/logout" role="button" sec:authorize="isAuthenticated()" class="btn btn-danger">로그아웃</a>
         </div>

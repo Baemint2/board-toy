@@ -12,7 +12,7 @@
             <h4>회원가입</h4>
         </div>
         <form th:action="@{/user/signup}" th:object="${userCreateDto}" method="post">
-<!--            <div th:replace="~{form_error::formErrorsFragment}"></div>-->
+            <div th:replace="~{form_error::formErrorsFragment}"></div>
             <div class="mb-3">
                 <label th:for="username" class="form-label">사용자 ID</label>
                 <input type="text" th:field="*{username}" class="form-control" id="username">
@@ -26,6 +26,7 @@
             <div class="mb-3">
                 <label th:for="password2" class="form-label">비밀번호 확인</label>
                 <input type="password"  th:field="*{password2}" class="form-control" id="password2">
+                <p th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="error"></p>
                 <div class="alert alert-danger" id="password2-error" style="display: none;"></div>
             </div>
             <div class="mb-3">

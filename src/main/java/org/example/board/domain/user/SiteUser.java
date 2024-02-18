@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
-import org.example.board.domain.answer.Answer;
-
-import java.util.List;
+import org.example.board.domain.image.Image;
 
 @Getter
 @Entity
@@ -27,13 +25,20 @@ public class SiteUser extends BaseTimeEntity {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.REMOVE)
-    private List<Answer> answerList;
+    @Column
+    @Enumerated
+    private Role role;
 
+//    @OneToMany(mappedBy = "site_user", cascade = CascadeType.REMOVE)
+//    private List<Answer> answerList;
+
+    @OneToOne(mappedBy = "siteUser", fetch = FetchType.LAZY)
+    private Image image;
     @Builder
-    public SiteUser(String username, String password, String email) {
+    public SiteUser(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 }

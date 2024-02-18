@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.AnswerService;
 import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
@@ -22,7 +23,6 @@ import java.security.Principal;
 @Controller
 public class AnswerController {
 
-    private final PostsService postsService;
     private final AnswerService answerService;
     private final UserService userService;
 
@@ -33,10 +33,10 @@ public class AnswerController {
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
 
-        Long siteUserId = userService.findUserIdByUsername(principal.getName());
+        SiteUser siteUserId = userService.findUserIdByUsername(principal.getName());
         AnswerSaveRequestDto requestDto = AnswerSaveRequestDto.builder()
                 .postId(id)
-                .siteUserId(siteUserId)
+                .siteUserId(siteUserId.getId())
                 .content(content)
                 .build();
         answerService.saveAnswer(id, requestDto);

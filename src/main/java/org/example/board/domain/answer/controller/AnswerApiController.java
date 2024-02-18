@@ -1,5 +1,6 @@
 package org.example.board.domain.answer.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.AnswerService;
@@ -16,7 +17,7 @@ public class AnswerApiController {
 
     //댓글 등록
     @PostMapping("/api/v1/answer/{id}")
-    public Long save(@PathVariable Long id, AnswerSaveRequestDto saveRequestDto) {
+    public Long save(@PathVariable Long id, @Valid AnswerSaveRequestDto saveRequestDto) {
         return answerService.saveAnswer(id, saveRequestDto);
     }
 

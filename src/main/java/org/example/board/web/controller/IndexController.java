@@ -1,6 +1,7 @@
 package org.example.board.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.user.service.UserService;
@@ -18,6 +19,7 @@ public class IndexController {
 
     private final PostsService postsService;
     private final UserService userService;
+    private final ImageService imageService;
 
     @GetMapping("/")
     public String index(Model model, Principal principal,
