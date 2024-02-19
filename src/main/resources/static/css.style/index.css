@@ -31,3 +31,14 @@
     margin-top: auto;
     text-align: right;
 }
+
+.input-error {
+    border: 1px solid #dc3545; /* 빨간색 테두리 색상 */
+}
+
+.error-message {
+    color: #dc3545; /* 빨간색 텍스트 색상 */
+    font-size: 0.875em; /* 글씨 크기 */
+    margin-top: 0.25rem; /* 필드 위에 조금의 여백을 제공 */
+    display: none; /* 기본적으로는 보이지 않도록 설정 */
+}

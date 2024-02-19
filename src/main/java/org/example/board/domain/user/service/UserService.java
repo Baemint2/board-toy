@@ -8,11 +8,16 @@ import org.example.board.domain.user.Role;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.exception.CustomException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,6 +31,22 @@ public class UserService {
 
     @Transactional
     public Long create(UserCreateDto createDto) {
+
+        // 비밀번호 일치 검사
+        if(!createDto.getPassword1().equals(createDto.getPassword2())) {
+            throw new CustomException("password2","비밀번호가 일치하지 않습니다.");
+        }
+        // 사용자명 중복 검사
+        if (userRepository.existsByUsername(createDto.getUsername())) {
+            throw new CustomException("username","이미 사용중인 사용자명입니다.");
+        }
+
+        // 이메일 중복 검사
+        if (userRepository.existsByEmail(createDto.getEmail())) {
+            throw new CustomException("email","이미 등록된 이메일입니다.");
+        }
+
+
         SiteUser user = SiteUser.builder()
                 .username(createDto.getUsername())
                 .email(createDto.getEmail())
@@ -43,6 +64,15 @@ public class UserService {
         return user.getId();
     }
 
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+        return validatorResult;
+    }
+
     @Transactional
     public SiteUser getUser(String userName) {
         Optional<SiteUser> user = userRepository.findByUsername(userName);
@@ -56,5 +86,13 @@ public class UserService {
     public SiteUser findUserIdByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+    }
+
+    public boolean checkUsernameDuplicate(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean checkEmailDuplicate(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

@@ -108,15 +108,13 @@ const main = {
                 errorContainer.textContent = '';
             });
 
-            if (errorResponse && errorResponse.errors) {
-                errorResponse.errors.forEach(err => {
-                    const errorContainer = document.getElementById(`${err.field}-error`);
+                Object.keys(errorResponse).forEach(field => {
+                    const errorContainer = document.getElementById(`${field}-error`);
                     if (errorContainer) {
-                        errorContainer.textContent = err.defaultMessage;
+                        errorContainer.textContent = errorResponse[field];
                         errorContainer.style.display = 'block';
                     }
                 })
-            }
         }).catch(error => console.log("Fetch error: ", error));
     },
     // 글 수정

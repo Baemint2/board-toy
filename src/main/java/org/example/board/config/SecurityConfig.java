@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(config ->
                         config
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/sign")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/user/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")

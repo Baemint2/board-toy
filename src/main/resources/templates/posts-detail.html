@@ -50,6 +50,8 @@
               th:field="*{content}"
               placeholder="댓글을 입력하세요"></textarea>
              <div class="field-error" th:errors="*{content}"></div>
+             <div th:if="${answerError}" class="alert alert-danger" th:text="${answerError}"></div>
+
              <button type="submit" class="btn btn-primary">등록</button>
          </form>
 
@@ -71,7 +73,6 @@
 <!--                <p class="answer-content" th:text="${childAnswer.content}">대댓글 내용</p>-->
 <!--            </div>-->
 <!--            <button type="button" class="btn btn-sm btn-outline-primary" th:attr="data-answer-id=${answer.id}" id="submitButton">대댓글 작성</button>-->
-            <hr/>
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"
@@ -84,6 +85,7 @@
                         th:attr="data-answer-id=${answer.id}, data-post-id=${dto.id}"
                         value="삭제"/>
             </div>
+            <hr/>
             <div th:id="'editForm-' + ${answer.id}" class="editAnswerForm" style="display:none;">
                 <textarea th:id="'editContent-' + ${answer.id}" class="form-control"></textarea>
                 <button class="btn btn-primary"

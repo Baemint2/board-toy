@@ -2,6 +2,7 @@ package org.example.board.domain.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,17 +14,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @NoArgsConstructor
 public class UserCreateDto {
-    @Size(min=3, max=20)
-    @NotEmpty(message = "사용자 ID는 필수 항목입니다.")
+
+    @Pattern(regexp = "^[a-z0-9_-]{5,20}$", message = "사용자명은 5자~20자 사이의 알파벳 소문자, 숫자, 특수문자(_),(-)만 가능합니다.")
     private String username;
 
-    @NotEmpty(message = "비밀번호는 필수 항목입니다.")
+    @Pattern(regexp="^[a-zA-Z0-9!@#$%^&*()_+]{6,}$", message="비밀번호는 6자 이상의 알파벳, 숫자, 특정 특수문자만 가능합니다.")
     private String password1;
 
-    @NotEmpty(message = "비밀번호 확인은 필수 항목입니다.")
+    @NotEmpty(message = "비밀번호 확인해주세요.")
     private String password2;
+
     @Email
-    @NotEmpty(message = "이메일은 필수 항목입니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "유효하지 않은 이메일 형식입니다.")
     private String email;
 
     @Builder

@@ -8,13 +8,19 @@ import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.validator.CheckEmailValidator;
+import org.example.board.validator.CheckUsernameValidator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -23,40 +29,47 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final CheckUsernameValidator usernameValidator;
+    private final CheckEmailValidator emailValidator;
     private final ImageService imageService;
+    @InitBinder
+    public void validatorBinder(WebDataBinder binder) {
+        binder.addValidators(usernameValidator);
+        binder.addValidators(emailValidator);
+    }
+
     @GetMapping("/signup")
     public String signup(UserCreateDto userCreateDto) {
         return "signup_form";
     }
 
 
+
     @PostMapping("/signup")
     public String signup(@Valid UserCreateDto userCreateDto,
-                         BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()) {
+                         Errors errors, Model model) {
+
+        if(errors.hasErrors()) {
             model.addAttribute("userCreateDto", userCreateDto);
-            return "signup_form";
-        }
-        if(!userCreateDto.getPassword1().equals(userCreateDto.getPassword2())) {
-            bindingResult.rejectValue("password2", "passwordInCorrect",
-                    "2개의 패스워드가 일치하지 않습니다.");
-            log.info("비밀 번호 불일치");
+            Map<String, String> validatorResult = userService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
             return "signup_form";
         }
         try{
             Long siteUser = userService.create(userCreateDto);
             log.info("createUser = {}", siteUser);
+            return "redirect:/";
         } catch (DataIntegrityViolationException e) {
-            bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
+            errors.reject("signupFailed", "이미 등록된 사용자입니다.");
             log.info("이미 등록된 사용자입니다.", e);
             return "signup_form";
         } catch (Exception e) {
             e.printStackTrace();
-            bindingResult.reject("signupFailed", e.getMessage());
+            errors.reject("signupFailed", e.getMessage());
             return "signup_form";
         }
-
-        return "redirect:/";
     }
 
 

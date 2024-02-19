@@ -22,13 +22,14 @@
                 <label th:for="password1" class="form-label">비밀번호</label>
                 <input type="password" th:field="*{password1}" class="form-control" id="password1">
                 <div class="alert alert-danger" id="password1-error" style="display: none;"></div>
+
             </div>
             <div class="mb-3">
                 <label th:for="password2" class="form-label">비밀번호 확인</label>
                 <input type="password"  th:field="*{password2}" class="form-control" id="password2">
-                <p th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="error"></p>
                 <div class="alert alert-danger" id="password2-error" style="display: none;"></div>
             </div>
+            <div id="password2-error-message" class="error-message"></div>
             <div class="mb-3">
                 <label th:for="email" class="form-label">이메일</label>
                 <input type="email" th:field="*{email}" class="form-control" id="email">
