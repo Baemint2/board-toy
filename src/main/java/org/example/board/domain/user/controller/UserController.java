@@ -20,6 +20,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Slf4j
@@ -74,20 +75,18 @@ public class UserController {
 
 
     @GetMapping("/info")
-    public String userInfo(Model model, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        SiteUser siteUser = userService.findUserIdByUsername(userDetails.getUsername());
-        ImageResponseDto image = imageService.findImage(userDetails.getUsername());
+    public String userInfo(Model model, Principal principal) {
+        SiteUser siteUser = userService.findUserIdByUsername(principal.getName());
+        ImageResponseDto image = imageService.findImage(siteUser.getUsername());
 
         model.addAttribute("siteUser", siteUser);
         model.addAttribute("image", image);
 
-        return "/member/info";
+        return "/user/info";
     }
 
     @GetMapping("/login")
     public String login() {
         return "login_form";
     }
-
 }

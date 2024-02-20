@@ -1,7 +1,9 @@
 package org.example.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.board.config.DataNotFoundException;
+import org.example.board.domain.answer.AnswerRepository;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.image.ImageRepository;
 import org.example.board.domain.user.Role;
@@ -20,12 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+    private final AnswerRepository answerRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -64,15 +68,6 @@ public class UserService {
         return user.getId();
     }
 
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
-    }
-
     @Transactional
     public SiteUser getUser(String userName) {
         Optional<SiteUser> user = userRepository.findByUsername(userName);
@@ -81,6 +76,24 @@ public class UserService {
         } else {
             throw new DataNotFoundException("user not found");
         }
+    }
+
+    @Transactional
+    public boolean deleteUser(String username, String password) {
+        Optional<SiteUser> userOptional = userRepository.findByUsername(username);
+        if(userOptional.isPresent()) {
+            SiteUser siteUser = userOptional.get();
+            log.info("유저 찾기 = {}", siteUser.getUsername());
+            if (passwordEncoder.matches(password, siteUser.getPassword())) {
+
+                answerRepository.deleteBySiteUserId(siteUser.getId());
+                imageRepository.deleteBySiteUserId(siteUser.getId());
+                userRepository.deleteById(siteUser.getId());
+                log.info("password matches = {}", username);
+                return true;
+            }
+        }
+        return false;
     }
 
     public SiteUser findUserIdByUsername(String username) {
@@ -94,5 +107,14 @@ public class UserService {
 
     public boolean checkEmailDuplicate(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+        return validatorResult;
     }
 }
