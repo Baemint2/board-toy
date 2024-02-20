@@ -1,5 +1,7 @@
 package org.example.board.domain.answer;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+
 public class Answer extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,38 +26,24 @@ public class Answer extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private SiteUser siteUser;
 
     @ManyToOne
     @JoinColumn(name="posts_id")
+    @JsonBackReference
     private Posts posts;
 
 
-    // 대댓글 구현
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Answer parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Answer> children = new ArrayList<>();
-
-    public void addChildAnswer(Answer child) {
-        this.children.add(child);
-    }
-
-    protected void setParent(Answer parent) {
-        this.parent=parent;
-    }
 
     @Builder
-    public Answer(String content, SiteUser siteUser, Posts posts, Answer parent) {
+    public Answer(String content, SiteUser siteUser, Posts posts) {
         this.content = content;
         this.siteUser = siteUser;
         this.posts = posts;
-        this.parent = parent;
-        if(parent !=null) {
-            parent.addChildAnswer(this);
-        }
+
+
     }
 
 

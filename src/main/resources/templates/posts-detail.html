@@ -44,18 +44,20 @@
                onclick="main.deleteEvent()" value="삭제"/>
 </div>
 
-    <h2>답변</h2><div class="comment-section">
+    <h2>답변</h2>
+         <div class="comment-section">
          <form th:action="@{/answer/create/{id}(id=${dto.id})}" th:object="${answer}" method="post" class="comment-form">
-    <textarea name="content" class="form-control" rows="2"
+        <textarea name="content" class="form-control answer-box" rows="2"
               th:field="*{content}"
               placeholder="댓글을 입력하세요"></textarea>
              <div class="field-error" th:errors="*{content}"></div>
              <div th:if="${answerError}" class="alert alert-danger" th:text="${answerError}"></div>
-
-             <button type="submit" class="btn btn-primary">등록</button>
+             <div class="answer-register">
+                <button type="submit" class="btn btn-primary">등록</button>
+             </div>
          </form>
 
-    </div>
+        </div>
         <!-- 댓글 목록 -->
         <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="data-answer-id=${answer.id}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>

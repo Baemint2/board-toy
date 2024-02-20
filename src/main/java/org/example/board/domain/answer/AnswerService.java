@@ -8,8 +8,11 @@ import org.example.board.domain.user.UserRepository;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
 import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -58,5 +61,10 @@ public class AnswerService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다. " + id));
 
         return new AnswerResponseDto(answer);
+    }
+
+    public List<Posts> findPostsContentByUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return answerRepository.findPostsContentByUser(username);
     }
 }

@@ -18,7 +18,7 @@ public class Image {
     @Column(nullable = false)
     private String url;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "site_user_ID")
     private SiteUser siteUser;
 

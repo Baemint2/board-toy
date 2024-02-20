@@ -82,3 +82,13 @@ const answer = {
 document.addEventListener('DOMContentLoaded', function() {
     answer.init();
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector('.answer-box').addEventListener('keydown', function (event) {
+        console.log(event.key);
+        if(event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            document.querySelector('.comment-form').submit();
+        }
+    })
+})

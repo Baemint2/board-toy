@@ -16,6 +16,8 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
 
     Page<Posts> findAll(Pageable pageable);
 
+    List<Posts> findByAuthor(String author);
+
 //    @Modifying
 //    @Query("update Posts p set p.PostsView = p.PostsView + 1 where p.id = :id")
 //    Long updateView(@Param("id") Long id);

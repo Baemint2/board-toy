@@ -1,5 +1,7 @@
 package org.example.board.domain.posts;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+
 public class Posts extends BaseTimeEntity {
 
     @Id
@@ -24,6 +27,7 @@ public class Posts extends BaseTimeEntity {
     @Column(nullable = false, length = 1000)
     private String content;
 
+    @JsonManagedReference
     private String author;
 
     //게시글 조회수

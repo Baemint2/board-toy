@@ -23,8 +23,5 @@ public class AnswerResponseDto {
         this.content = answer.getContent();
         this.author = answer.getSiteUser().getUsername();
         this.createdDate = answer.getCreatedDate();
-        this.children = answer.getChildren().stream()
-                                .map(AnswerResponseDto::new)
-                                .collect(Collectors.toList());
     }
 }

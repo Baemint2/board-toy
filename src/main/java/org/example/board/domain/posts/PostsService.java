@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +92,12 @@ public class PostsService {
         sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.postsRepository.findAll(pageable);
+    }
+
+    //현재 로그인한 사용자가 작성한 글 조회
+    public List<Posts> findPostsByCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return postsRepository.findByAuthor(username);
     }
 
     // 조회수
