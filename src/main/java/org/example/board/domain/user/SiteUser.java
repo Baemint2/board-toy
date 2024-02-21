@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.image.Image;
+import org.example.board.domain.postslike.PostsLike;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,6 +39,10 @@ public class SiteUser extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "siteUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
+
+    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.ALL)
+    private List<PostsLike> postsLikesUser = new ArrayList<>();
+
     @Builder
     public SiteUser(String username, String password, String email, Role role) {
         this.username = username;

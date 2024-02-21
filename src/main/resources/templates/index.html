@@ -16,12 +16,17 @@
         <span>현재 시간</span>
         <span id="clock">00:00:00</span>
     </div>
-    <div class="col-md-12">
+    <div class="row">
         <div class="col-md-6">
             <a href="/posts/save" role="button"  class="btn btn-primary">글 등록</a>
             <a href="/user/signup" role="button" sec:authorize="!isAuthenticated()" class="btn btn-secondary">회원가입</a>
             <a href="/user/login" role="button" sec:authorize="isAnonymous()" class="btn btn-success">로그인</a>
             <a href="/user/logout" role="button" sec:authorize="isAuthenticated()" class="btn btn-danger">로그아웃</a>
+        </div>
+        <div class="col-md-6 text-right">
+            <button type="button" class="post-latest">최신순</button>
+            <button type="button" class="post-view">조회순</button>
+            <button type="button" class="post-answer">댓글순</button>
         </div>
     </div>
         <table class="table  table-horizontal table-bordered" >
@@ -36,7 +41,12 @@
             <tbody>
             <tr th:each="post : ${paging}">
                 <td th:text="${post.id}"></td>
-                <td><a th:href="@{|/posts/detail/${post.id}|}" th:text="${post.title}"></a></td>
+                <td><a th:href="@{|/posts/detail/${post.id}|}" th:text="${post.title}"></a>
+                <span class="text-danger small ms-2"
+                      th:if="${#lists.size(post.answerList) > 0}"
+                      th:text="${#lists.size(post.answerList)}"></span>
+                    <span th:text="${post.viewCount}"></span>
+                </td>
                 <td th:text="${post.author}"></td>
                 <td th:text="${#temporals.format(post.modifiedDate, 'yyyy-MM-dd HH:mm')}"></td>
             </tr>

@@ -56,6 +56,96 @@ const user = {
         })
 
     },
+    //내가 쓴 글
+    loadUserPosts: (function () {
+        fetch("/api/v1/user/posts")
+            .then(response => response.json())
+            .then(posts => {
+                this.displayUserPosts(posts);
+            }).catch(error => console.log("Error:", error));
+    }),
+    //페이지 번호 클릭 이벤트 연결
+    displayUserPosts: (function (posts) {
+        const postsContainer = document.getElementById('tabContent');
+        postsContainer.innerHTML = '';
+        if(posts.length === 0) {
+            const noPostsMessage = document.createElement('div')
+            noPostsMessage.textContent = '아직 작성한 게시글이 없습니다.'
+            noPostsMessage.className = 'no-posts-message';
+            postsContainer.appendChild(noPostsMessage);
+        }
+        posts.forEach((post, index) => {
+            const postElement = document.createElement('div');
+            postElement.className = 'user-post';
+
+            // 게시글 번호
+            const postNumber = document.createElement('span');
+            postNumber.className = 'post-number'
+            postNumber.textContent = `${index + 1}. `;
+
+            //게시글 제목
+            const postsTitle = document.createElement('a')
+            postsTitle.href = `/posts/detail/${post.id}`
+            postsTitle.className = 'post-title';
+            postsTitle.textContent =`${post.title} `;
+
+            //작성 시간
+            const postDate = document.createElement('span');
+            postDate.className = 'post-date';
+            postDate.textContent = new Date(post.createdDate).toLocaleString();
+
+            postElement.appendChild(postNumber);
+            postElement.appendChild(postsTitle);
+            postElement.appendChild(postDate);
+
+            postsContainer.appendChild(postElement);
+        })
+    }),
+    loadUserAnswerPosts: (function () {
+        fetch("/api/v1/user/answer")
+            .then(response => response.json())
+            .then(answer => {
+                this.displayUserAnswerPosts(answer);
+            }).catch(error => console.log("Error:", error));
+    }),
+    displayUserAnswerPosts: (function (answerPosts) {
+        const answerPostsContainer = document.getElementById('tabContent')
+        answerPostsContainer.innerHTML = '';
+
+        if(answerPosts.length === 0) {
+            const noAnswerPostsMessage = document.createElement('div')
+            noAnswerPostsMessage.textContent = '아직 작성한 댓글이 없습니다.'
+            noAnswerPostsMessage.className = 'no-posts-message';
+            answerPostsContainer.appendChild(noAnswerPostsMessage);
+        }
+
+        answerPosts.forEach((answer, index) => {
+            const answerPosts  = document.createElement('div');
+            answerPosts.className = 'user-post';
+
+            // 게시글 번호
+            const answerPostsNumber = document.createElement('span');
+            answerPostsNumber.className = 'post-number'
+            answerPostsNumber.textContent = `${index + 1}. `;
+
+            //게시글 제목
+            const answerPostsTitle = document.createElement('a')
+            answerPostsTitle.href = `/posts/detail/${answer.id}`
+            answerPostsTitle.className = 'post-title';
+            answerPostsTitle.textContent =`${answer.title} `;
+
+            //작성 시간
+            const answerPostDate = document.createElement('span');
+            answerPostDate.className = 'post-date';
+            answerPostDate.textContent = new Date(answer.createdDate).toLocaleString();
+
+            answerPosts.appendChild(answerPostsNumber);
+            answerPosts.appendChild(answerPostsTitle);
+            answerPosts.appendChild(answerPostDate);
+
+            answerPostsContainer.appendChild(answerPosts);
+        })
+    }),
 
     // 중복 사용자명 체크
     checkUsernameDuplicate: (function () {
@@ -119,8 +209,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btnWithdrawal = document.getElementById('btn-withdrawal');
         const modal = document.getElementById('modal-withdrawal-confirm');
-        const btnConfirm = document.getElementById('confirm-withdrawal');
-        const submitWithdrawal = document.getElementById('submit-withdrawal');
         const originalModalContent = modal.querySelector('.modal-content').innerHTML;
 
         btnWithdrawal.addEventListener('click', function () {
@@ -192,3 +280,20 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         }
 })
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('myPostsTab').addEventListener('click', function () {
+        user.loadUserPosts();
+    })
+    document.getElementById('myAnswersTab').addEventListener('click', function () {
+        user.loadUserAnswerPosts();
+    })
+    // document.querySelector('.pagination').addEventListener('click', (e) => {
+    //     if(e.target.tagName === 'A') {
+    //         const page = e.target.getAttribute('data-page')
+    //         user.loadUserPosts(page);
+    //     }
+    // })
+})
+
+

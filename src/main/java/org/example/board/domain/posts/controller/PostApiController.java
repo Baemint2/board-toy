@@ -7,6 +7,10 @@ import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +54,13 @@ public class PostApiController {
         List<Posts> userPosts = postsService.findPostsByCurrentUser();
         return ResponseEntity.ok(userPosts);
 
+    }
+
+    // 최신순 게시글
+    @GetMapping("/posts/desc")
+    public ResponseEntity<List<Posts>> getPostsSortedByDesc() {
+        List<Posts> postsSortedByDesc = postsService.getPostsSortedByDesc();
+        return ResponseEntity.ok(postsSortedByDesc);
     }
 
 }

@@ -1,10 +1,13 @@
 package org.example.board.domain.posts.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
+import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.user.SiteUser;
@@ -88,10 +91,16 @@ public class PostsController {
     }
 
     @GetMapping("/posts/detail/{id}")
-    public String postsDetail(@PathVariable Long id, Model model, @ModelAttribute("message") String message) {
+    public String postsDetail(@PathVariable Long id,
+                              Model model,
+                              @ModelAttribute("message") String message,
+                              HttpServletRequest request,
+                              HttpServletResponse response) {
         PostsResponseDto dto = postsService.findById(id);
         model.addAttribute("dto", dto);
         model.addAttribute("answer", new AnswerResponseDto());
+
+        postsService.viewCountValidation(id, request, response);
         if (!message.isEmpty()) {
             model.addAttribute("message", message);
         }

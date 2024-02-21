@@ -9,14 +9,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostsRepository extends JpaRepository<Posts, Long> {
+public interface PostsRepository extends JpaRepository<Posts, Long>, QueryRepository {
 
     @Query("SELECT p FROM Posts p ORDER BY p.id DESC")
     List<Posts> findAllDesc();
 
     Page<Posts> findAll(Pageable pageable);
 
-    List<Posts> findByAuthor(String author);
+    List<Posts> findByAuthorOrderByCreatedDateDesc(String author);
 
 //    @Modifying
 //    @Query("update Posts p set p.PostsView = p.PostsView + 1 where p.id = :id")

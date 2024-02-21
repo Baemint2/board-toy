@@ -24,13 +24,13 @@ public class Answer extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     @JsonBackReference
     private SiteUser siteUser;
 
-    @ManyToOne
-    @JoinColumn(name="posts_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "posts_id")
     @JsonBackReference
     private Posts posts;
 

@@ -22,6 +22,7 @@
             <p class="text-muted">
                 <small th:text="${#temporals.format(dto.modifiedDate, 'yyyy-MM-dd HH:mm')}">작성 시간</small>
                 <small th:text="${dto.author}">작성자</small>
+                <p>조회수: <span th:text="${dto.viewCount}">0</span></p>
             </p>
         </div>
     </div>
@@ -34,6 +35,9 @@
         </div>
     </div>
     <div class="text-end mt-2 button-container">
+        <button type="button" id="post-like"
+                class="post-like"
+                data-post-id="" data-user-id="">좋아요</button>
         <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
         <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
            sec:authorize="isAuthenticated()"
@@ -42,7 +46,7 @@
                sec:authorize="isAuthenticated()"
                th:if="${dto.author != null and #authentication.name == dto.author}"
                onclick="main.deleteEvent()" value="삭제"/>
-</div>
+    </div>
 
     <h2>답변</h2>
          <div class="comment-section">
