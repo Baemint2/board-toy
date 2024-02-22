@@ -6,12 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.board.domain.posts.dto.*;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.posts.dto.PostsListResponseDto;
-import org.example.board.domain.posts.dto.PostsResponseDto;
-import org.example.board.domain.posts.dto.PostsSaveRequestDto;
-import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -144,8 +141,22 @@ public class PostsService {
         response.addCookie(cookie);
     }
 
-    public List<Posts> getPostsSortedByDesc() {
-        return postsRepository.findAllByLatest();
+    @Transactional
+    public Page<Posts> getPostsSortedByDesc(Pageable pageable) {
+        return postsRepository.findAllByLatest(pageable);
+    }
+    @Transactional
+    public Page<PostsDetailResponseDto> getPostsSortedByAnswerDesc(Pageable pageable) {
+        return postsRepository.findAllOrderByAnswerCountDesc(pageable);
+    }
+    @Transactional
+    public Page<PostsDetailResponseDto> getPostsSortedByViewCountDesc(Pageable pageable) {
+        return postsRepository.findAllOrderByViewCountDesc(pageable);
+    }
+
+    @Transactional
+    public long getLikesCount(Long postId) {
+        return postsRepository.countById(postId);
     }
 
 

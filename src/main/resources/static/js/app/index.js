@@ -140,7 +140,7 @@ const main = {
             alert("글이 수정되었습니다.");
             window.location.href = `/posts/detail/${id}`;
         }).catch(error => {
-            // 네트워크 오류 또는 response.ok가 false인 경우 여기서 처리
+            // 네트워크 오류 또는 response.ok가 false 인 경우 여기서 처리
             alert(`오류가 발생했습니다: ${error.message}`);
         });
     },

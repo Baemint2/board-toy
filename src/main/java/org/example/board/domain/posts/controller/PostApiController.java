@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
@@ -58,9 +59,28 @@ public class PostApiController {
 
     // 최신순 게시글
     @GetMapping("/posts/desc")
-    public ResponseEntity<List<Posts>> getPostsSortedByDesc() {
-        List<Posts> postsSortedByDesc = postsService.getPostsSortedByDesc();
+    public ResponseEntity<Page<Posts>> getPostsSortedByDesc(Pageable pageable) {
+        Page<Posts> postsSortedByDesc = postsService.getPostsSortedByDesc(pageable);
         return ResponseEntity.ok(postsSortedByDesc);
     }
 
+    //댓글 순
+    @GetMapping("/posts/answer/desc")
+    public ResponseEntity<Page<PostsDetailResponseDto>> getAnswerDesc(Pageable pageable) {
+        Page<PostsDetailResponseDto> postsSortedByAnswerDesc = postsService.getPostsSortedByAnswerDesc(pageable);
+        return ResponseEntity.ok(postsSortedByAnswerDesc);
+    }
+
+    //조회수 순
+    @GetMapping("/posts/viewCount/desc")
+    public ResponseEntity<Page<PostsDetailResponseDto>> getViewCountDesc(Pageable pageable) {
+        Page<PostsDetailResponseDto> postsSortedByViewCountDesc = postsService.getPostsSortedByViewCountDesc(pageable);
+        return ResponseEntity.ok(postsSortedByViewCountDesc);
+    }
+
+    @GetMapping("/posts/{id}/likes/count")
+    public ResponseEntity<Long> getLikesCount(@PathVariable Long id) {
+        long likesCount = postsService.getLikesCount(id);
+        return ResponseEntity.ok(likesCount);
+    }
 }

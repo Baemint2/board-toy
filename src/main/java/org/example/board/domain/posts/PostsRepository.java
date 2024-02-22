@@ -17,9 +17,8 @@ public interface PostsRepository extends JpaRepository<Posts, Long>, QueryReposi
     Page<Posts> findAll(Pageable pageable);
 
     List<Posts> findByAuthorOrderByCreatedDateDesc(String author);
-
-//    @Modifying
-//    @Query("update Posts p set p.PostsView = p.PostsView + 1 where p.id = :id")
-//    Long updateView(@Param("id") Long id);
+    //좋아요 수
+    @Query("SELECT COUNT(p1) FROM PostsLike p1 where p1.posts.id = :postId")
+    long countById(@Param("postId")Long postId);
 
 }

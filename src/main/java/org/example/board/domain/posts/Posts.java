@@ -1,6 +1,7 @@
 package org.example.board.domain.posts;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import org.example.board.common.BaseTimeEntity;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.postslike.PostsLike;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +33,13 @@ public class Posts extends BaseTimeEntity {
     @JsonManagedReference
     private String author;
 
-    private int likeCount;
+    private Integer likeCount;
 
+    @JsonIgnore
     @Column(name = "View_Count", nullable = false, columnDefinition = "integer default 0")
     private int viewCount = 0;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "posts",cascade = CascadeType.ALL)
     private List<PostsLike> postsList = new ArrayList<>();
 
@@ -70,7 +74,10 @@ public class Posts extends BaseTimeEntity {
     }
 
     public void update(String title, String content) {
-        this.title=title;
-        this.content=content;
+        if(!this.title.equals(title) || !this.content.equals(content)) {
+            this.title = title;
+            this.content = content;
+            this.modifiedDate = LocalDateTime.now();
+        }
     }
 }

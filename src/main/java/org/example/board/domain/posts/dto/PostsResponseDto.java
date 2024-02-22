@@ -1,6 +1,7 @@
 package org.example.board.domain.posts.dto;
 
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.posts.Posts;
@@ -19,6 +20,7 @@ public class PostsResponseDto {
     private LocalDateTime modifiedDate;
     private List<AnswerResponseDto> answerList;
     private int viewCount;
+
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
         this.title = entity.getTitle();
@@ -27,7 +29,6 @@ public class PostsResponseDto {
         this.createdDate = entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
         this.viewCount = entity.getViewCount();
-        this.answerList=answerList;
+        this.answerList = answerList;
     }
-
 }
