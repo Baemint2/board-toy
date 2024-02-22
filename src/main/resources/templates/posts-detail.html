@@ -37,7 +37,7 @@
     <div class="text-end mt-2 button-container">
         <button type="button" id="post-like"
                 class="post-like"
-                data-post-id="" data-user-id="">좋아요</button>
+                th:data-post-id="${dto.id}" th:data-user-id="${dto.author}" th:data-liked="false"></button>
         <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
         <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
            sec:authorize="isAuthenticated()"
