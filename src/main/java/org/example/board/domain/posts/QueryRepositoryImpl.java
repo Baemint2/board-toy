@@ -1,11 +1,19 @@
 package org.example.board.domain.posts;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import org.example.board.domain.answer.QAnswer;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.postslike.QPostsLike;
+import org.hibernate.query.criteria.JpaSubQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,21 +37,8 @@ public class QueryRepositoryImpl implements QueryRepository {
 
     //최신 순
     @Override
-    public Page<Posts> findAllByLatest(Pageable pageable) {
-        QPosts posts = QPosts.posts;
-        //페이지 조회 쿼리
-        List<Posts> content = queryFactory
-                .selectFrom(posts)
-                .orderBy(posts.createdDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long total = Optional.ofNullable(queryFactory
-                .select(posts.count())
-                .from(posts)
-                .fetchOne()).orElse(0L);
-        return new PageImpl<>(content, pageable, total);
+    public Page<PostsDetailResponseDto> findAllByLatest(Pageable pageable) {
+        return findPostsSorted(pageable, QPosts.posts.createdDate.desc());
     }
 
     //조회수 순
@@ -51,18 +46,26 @@ public class QueryRepositoryImpl implements QueryRepository {
     public Page<PostsDetailResponseDto> findAllOrderByViewCountDesc(Pageable pageable) {
         return findPostsSorted(pageable, QPosts.posts.viewCount.desc());
     }
+
     //댓글 많은 순
     @Override
     public Page<PostsDetailResponseDto> findAllOrderByAnswerCountDesc (Pageable pageable){
         return findPostsSorted(pageable, QAnswer.answer.count().desc());
     }
 
+    //좋아요 순
+    @Override
+    public Page<PostsDetailResponseDto> findAllOrderByLikeCountDesc(Pageable pageable) {
+        return findPostsSorted(pageable, QPosts.posts.likeCount.desc());
+    }
+
     private PageImpl<PostsDetailResponseDto> findPostsSorted (Pageable pageable, OrderSpecifier < ?>... orderByConditions){
         QPosts posts = QPosts.posts;
         QAnswer answer = QAnswer.answer;
+
         List<Tuple> results = queryFactory
                 .select(posts.id, posts.title, posts.content,
-                        posts.author, posts.createdDate, posts.modifiedDate, posts.viewCount, answer.count())
+                        posts.author, posts.createdDate, posts.modifiedDate, posts.viewCount, answer.count(), posts.likeCount)
                 .from(posts)
                 .leftJoin(answer).on(answer.posts.eq(posts))
                 .groupBy(posts.id)
@@ -76,7 +79,7 @@ public class QueryRepositoryImpl implements QueryRepository {
 
             Integer viewCount = Optional.ofNullable(tuple.get(posts.viewCount)).orElse(0);
             Integer answerCount = Optional.ofNullable(tuple.get((answer.count()))).map(Long::intValue).orElse(0);// 댓글 수))
-
+            Integer likeCount = Optional.ofNullable(tuple.get(posts.likeCount)).orElse(0);
             return new PostsDetailResponseDto(
                     tuple.get(posts.id),
                     tuple.get(posts.title),
@@ -85,7 +88,8 @@ public class QueryRepositoryImpl implements QueryRepository {
                     tuple.get(posts.createdDate),
                     tuple.get(posts.modifiedDate),
                     viewCount,
-                    answerCount);
+                    answerCount,
+                    likeCount);
         }).collect(Collectors.toList());
 
         Long total = Optional.ofNullable(queryFactory

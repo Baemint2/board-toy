@@ -7,9 +7,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface QueryRepository {
-    Page<Posts> findAllByLatest(Pageable pageable);
+    Page<PostsDetailResponseDto> findAllByLatest(Pageable pageable);
 
     Page<PostsDetailResponseDto> findAllOrderByAnswerCountDesc(Pageable pageable);
 
     Page<PostsDetailResponseDto> findAllOrderByViewCountDesc(Pageable pageable);
+
+    Page<PostsDetailResponseDto> findAllOrderByLikeCountDesc(Pageable pageable);
+
 }
