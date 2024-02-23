@@ -87,7 +87,7 @@ const user = {
             const postsTitle = document.createElement('a')
             postsTitle.href = `/posts/detail/${post.id}`
             postsTitle.className = 'post-title';
-            postsTitle.textContent =`${post.title} `;
+            postsTitle.textContent = post.title;
 
             //작성 시간
             const postDate = document.createElement('span');
@@ -101,6 +101,8 @@ const user = {
             postsContainer.appendChild(postElement);
         })
     }),
+
+    //댓글 단 글
     loadUserAnswerPosts: (function () {
         fetch("/api/v1/user/answer")
             .then(response => response.json())
@@ -132,7 +134,7 @@ const user = {
             const answerPostsTitle = document.createElement('a')
             answerPostsTitle.href = `/posts/detail/${answer.id}`
             answerPostsTitle.className = 'post-title';
-            answerPostsTitle.textContent =`${answer.title} `;
+            answerPostsTitle.textContent = answer.title;
 
             //작성 시간
             const answerPostDate = document.createElement('span');
@@ -144,6 +146,64 @@ const user = {
             answerPosts.appendChild(answerPostDate);
 
             answerPostsContainer.appendChild(answerPosts);
+        })
+    }),
+
+    //좋아요 누른 글
+    loadUserLike: (function () {
+        fetch(`/api/v1/posts/likes`, {
+            method: "GET",
+            headers: {
+                "Content-Type":"application/json",
+            },
+        })
+            .then(response => response.json())
+            .then(posts => {
+                this.disPlayUserLikedPosts(posts);
+            }).catch(error => console.log("Error:", error));
+    }),
+    disPlayUserLikedPosts: (function (likePosts) {
+       const postsContainer = document.getElementById('tabContent')
+        postsContainer.innerHTML = '';
+       if(likePosts.length === 0) {
+           const noPostsMessage = document.createElement('div')
+           noPostsMessage.textContent = '좋아요를 누른 게시글이 없습니다';
+           noPostsMessage.className = 'no-posts-message'
+           postsContainer.appendChild(noPostsMessage);
+       }
+        likePosts.forEach((post, index) => {
+            const postElement = document.createElement('div')
+            postElement.className = 'user-post';
+
+            // 게시글 번호
+            const likePostsNumber = document.createElement('span');
+            likePostsNumber.className = 'post-number'
+            likePostsNumber.textContent = `${index + 1}. `;
+
+            //게시글 제목
+            const postsTitle = document.createElement('a')
+            postsTitle.href =`/posts/detail/${post.id}`
+            postsTitle.className = 'post-title';
+            postsTitle.textContent = post.title;
+
+            //작성 시간
+            const LikePostsDate = document.createElement('span');
+            LikePostsDate.className = 'post-date';
+            LikePostsDate.textContent = new Date(post.createdDate).toLocaleString();
+
+            // //좋아요 수
+            // const likesCount = document.createElement('span')
+            // likesCount.className = 'likes-count';
+            // likesCount.textContent = `Likes: ${post.likeCount}`;
+
+            postElement.appendChild(likePostsNumber);
+            postElement.appendChild(postsTitle);
+            postElement.appendChild(LikePostsDate);
+
+
+
+            postsContainer.appendChild(postElement);
+
         })
     }),
 
@@ -287,6 +347,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     document.getElementById('myAnswersTab').addEventListener('click', function () {
         user.loadUserAnswerPosts();
+    })
+    document.getElementById('myLikesTab').addEventListener('click', function () {
+        user.loadUserLike();
     })
     // document.querySelector('.pagination').addEventListener('click', (e) => {
     //     if(e.target.tagName === 'A') {
