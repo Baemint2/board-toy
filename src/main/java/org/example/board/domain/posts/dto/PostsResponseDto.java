@@ -20,6 +20,7 @@ public class PostsResponseDto {
     private LocalDateTime modifiedDate;
     private List<AnswerResponseDto> answerList;
     private int viewCount;
+    private int likeCount;
 
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
@@ -29,6 +30,11 @@ public class PostsResponseDto {
         this.createdDate = entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
         this.viewCount = entity.getViewCount();
+        this.likeCount = entity.getLikeCount();
         this.answerList = answerList;
+    }
+
+    public static PostsResponseDto of(Posts entity, List<AnswerResponseDto> answerList) {
+        return new PostsResponseDto(entity, answerList);
     }
 }

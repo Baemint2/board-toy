@@ -17,8 +17,10 @@ public class PostsDetailResponseDto {
     private LocalDateTime modifiedDate;
     private int viewCount;
     private int answerCount;
+    private int likeCount;
     public  PostsDetailResponseDto(Long id, String title, String content, String author,
-                                   LocalDateTime createDate, LocalDateTime modifiedDate, int viewCount, int answerCount) {
+                                   LocalDateTime createDate, LocalDateTime modifiedDate,
+                                   int viewCount, int answerCount, int likeCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -27,5 +29,6 @@ public class PostsDetailResponseDto {
         this.modifiedDate = modifiedDate;
         this.viewCount = viewCount;
         this.answerCount = answerCount;
+        this.likeCount = likeCount;
     }
 }

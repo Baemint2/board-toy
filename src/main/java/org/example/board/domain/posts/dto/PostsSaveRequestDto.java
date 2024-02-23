@@ -35,6 +35,7 @@ public class PostsSaveRequestDto {
                 .title(title)
                 .content(content)
                 .author(author)
+                .likeCount(0)
                 .build();
     }
 

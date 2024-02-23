@@ -141,17 +141,40 @@ public class PostsService {
         response.addCookie(cookie);
     }
 
+    //최신 순
     @Transactional
-    public Page<Posts> getPostsSortedByDesc(Pageable pageable) {
+    public Page<PostsDetailResponseDto> getPostsSortedByDesc(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postsRepository.findAllByLatest(pageable);
     }
+
+    //댓글 순
     @Transactional
-    public Page<PostsDetailResponseDto> getPostsSortedByAnswerDesc(Pageable pageable) {
+    public Page<PostsDetailResponseDto> getPostsSortedByAnswerDesc(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("answerCount"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postsRepository.findAllOrderByAnswerCountDesc(pageable);
     }
+
+    //조회수 순
     @Transactional
-    public Page<PostsDetailResponseDto> getPostsSortedByViewCountDesc(Pageable pageable) {
+    public Page<PostsDetailResponseDto> getPostsSortedByViewCountDesc(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("viewCount"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postsRepository.findAllOrderByViewCountDesc(pageable);
+    }
+
+    //좋아요 순
+    @Transactional
+    public Page<PostsDetailResponseDto> getPostsSortedByLikeCountDesc(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("likeCount"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postsRepository.findAllOrderByLikeCountDesc(pageable);
     }
 
     @Transactional

@@ -33,7 +33,8 @@ public class Posts extends BaseTimeEntity {
     @JsonManagedReference
     private String author;
 
-    private Integer likeCount;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int likeCount;
 
     @JsonIgnore
     @Column(name = "View_Count", nullable = false, columnDefinition = "integer default 0")
@@ -66,11 +67,12 @@ public class Posts extends BaseTimeEntity {
     private List<Answer> answerList;
 
     @Builder
-    public Posts(String title, String content, String author, int viewCount) {
+    public Posts(String title, String content, String author, int viewCount, int likeCount) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.viewCount = viewCount;
+        this.likeCount = likeCount;
     }
 
     public void update(String title, String content) {

@@ -144,9 +144,6 @@ const main = {
             alert(`오류가 발생했습니다: ${error.message}`);
         });
     },
-
-    // 댓글 삭제
-
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -155,6 +152,139 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const clock = document.querySelector("#clock")
 
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const sortByLatest = document.getElementById('sort-latest');
+    const sortByViews = document.getElementById('sort-views');
+    const sortByAnswers = document.getElementById('sort-answers');
+    const sortByLikes = document.getElementById('sort-likes');
+
+    sortByLatest.addEventListener('click', () => {
+        fetchAndDisplayPosts(0, '/posts/latest/desc');
+    });
+
+    sortByViews.addEventListener('click', () => {
+        fetchAndDisplayPosts(0, '/posts/viewCount/desc');
+    });
+
+    sortByAnswers.addEventListener('click', () => {
+        fetchAndDisplayPosts(0, '/posts/answer/desc');
+    });
+
+    sortByLikes.addEventListener('click', () => {
+        fetchAndDisplayPosts(0, '/posts/like/desc');
+    })
+
+
+    function fetchAndDisplayPosts(pageNumber, endpoint) {
+        const url =`/api/v1${endpoint}?page=${pageNumber}`
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                updateTableContent(data.content);
+                updatePagination({
+                    first: data.first,
+                    last: data.last,
+                    number: data.number,
+                    totalPages: data.totalPages,
+                }, endpoint);
+            })
+            .catch(error =>console.error('Error:',error))
+    }
+
+
+    function createTableRow(post) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+              <td>${post.id}</td>
+              <td>
+                  <a href="/posts/detail/${post.id}">${post.title}</a>
+                  <span class="text-danger small ms-2">${post.answerCount}</span>
+                  <span>${post.viewCount}</span>
+              </td>
+              <td>${post.author}</td>
+              <td>${formatDate(post.modifiedDate)}</td>
+        `;
+        return tr;
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString('ko-KR', {
+            year: "numeric",
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+    function updateTableContent(posts) {
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+        posts.forEach(post => {
+            tbody.appendChild(createTableRow(post));
+        });
+    }
+    function updatePagination(pagingData, endpoint) {
+        const existingPaginationContainer = document.querySelector('.pagination');
+        if(existingPaginationContainer) {
+            existingPaginationContainer.remove();
+        }
+
+        //이전 버튼 생성
+        const paginationContainer = document.createElement('ul');
+        paginationContainer.className = 'pagination'
+
+        const prevLi = document.createElement('li');
+        prevLi.className = pagingData.first ? 'page-item disabled' : 'page-item'
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link';
+        prevLink.href = `#${pagingData.number - 1}`;
+        prevLink.innerText = '이전';
+        prevLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchAndDisplayPosts(pagingData.number - 1, endpoint);
+        });
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+
+        // 페이지 번호 버튼 생성
+        for(let i = 0; i < pagingData.totalPages; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.className = i === pagingData.number ? 'page-item active' : 'page-item';
+            const pageLink = document.createElement('a');
+            pageLink.className = 'page-link';
+            pageLink.href = `#${i}`;
+            pageLink.innerText = i + 1;
+            pageLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                fetchAndDisplayPosts(i, endpoint);
+            });
+            pageLi.appendChild(pageLink);
+            paginationContainer.appendChild(pageLi);
+        }
+
+        // 다음 페이지 버튼 생성
+        const nextLi = document.createElement('li');
+        nextLi.className = pagingData.last ? 'page-item disabled' : 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link';
+        nextLink.href = `#${pagingData.number + 1}`;
+        nextLink.innerText = '다음';
+        nextLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchAndDisplayPosts(pagingData.number + 1, endpoint);
+        })
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+
+
+        const paginationParent = document.querySelector('#pagination-parent');
+        paginationParent.appendChild(paginationContainer);
+    }
+
+})
 
 function getClock() {
     const date = new Date();

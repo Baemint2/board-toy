@@ -8,6 +8,7 @@ import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
+import org.example.board.domain.postslike.PostsLikeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.util.List;
 public class PostApiController {
 
     private final PostsService postsService;
+    private final PostsLikeService postsLikeService;
 
     @PostMapping("/posts")
     public Long save(@Valid @RequestBody PostsSaveRequestDto requestDto) throws IOException {
@@ -58,29 +60,39 @@ public class PostApiController {
     }
 
     // 최신순 게시글
-    @GetMapping("/posts/desc")
-    public ResponseEntity<Page<Posts>> getPostsSortedByDesc(Pageable pageable) {
-        Page<Posts> postsSortedByDesc = postsService.getPostsSortedByDesc(pageable);
+    @GetMapping("/posts/latest/desc")
+    public ResponseEntity<Page<PostsDetailResponseDto>> getPostsSortedByDesc(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<PostsDetailResponseDto> postsSortedByDesc = postsService.getPostsSortedByDesc(page);
         return ResponseEntity.ok(postsSortedByDesc);
     }
 
     //댓글 순
     @GetMapping("/posts/answer/desc")
-    public ResponseEntity<Page<PostsDetailResponseDto>> getAnswerDesc(Pageable pageable) {
-        Page<PostsDetailResponseDto> postsSortedByAnswerDesc = postsService.getPostsSortedByAnswerDesc(pageable);
+    public ResponseEntity<Page<PostsDetailResponseDto>> getAnswerDesc(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<PostsDetailResponseDto> postsSortedByAnswerDesc = postsService.getPostsSortedByAnswerDesc(page);
         return ResponseEntity.ok(postsSortedByAnswerDesc);
     }
 
     //조회수 순
     @GetMapping("/posts/viewCount/desc")
-    public ResponseEntity<Page<PostsDetailResponseDto>> getViewCountDesc(Pageable pageable) {
-        Page<PostsDetailResponseDto> postsSortedByViewCountDesc = postsService.getPostsSortedByViewCountDesc(pageable);
+    public ResponseEntity<Page<PostsDetailResponseDto>> getViewCountDesc(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<PostsDetailResponseDto> postsSortedByViewCountDesc = postsService.getPostsSortedByViewCountDesc(page);
         return ResponseEntity.ok(postsSortedByViewCountDesc);
     }
 
+    //좋아요 순
+    @GetMapping("/posts/like/desc")
+    public ResponseEntity<Page<PostsDetailResponseDto>> getLikeCountDesc(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<PostsDetailResponseDto> postsSortedByLikeCountDesc = postsService.getPostsSortedByLikeCountDesc(page);
+        return ResponseEntity.ok(postsSortedByLikeCountDesc);
+    }
+
+    // 좋아요 개수 확인
     @GetMapping("/posts/{id}/likes/count")
     public ResponseEntity<Long> getLikesCount(@PathVariable Long id) {
         long likesCount = postsService.getLikesCount(id);
         return ResponseEntity.ok(likesCount);
     }
+
+
 }
