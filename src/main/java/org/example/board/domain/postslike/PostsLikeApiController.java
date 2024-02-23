@@ -2,6 +2,9 @@ package org.example.board.domain.postslike;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -54,6 +59,31 @@ public class PostsLikeApiController {
         }
 
     }
+
+    //좋아요 누른 글 확인
+    @GetMapping("/likes")
+    public ResponseEntity<List<PostsResponseDto>> getLikedPosts(Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            SiteUser siteUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 사용자명 입니다."));
+            List<Posts> likedPosts = postsLikeService.findLikePostsByUser(siteUser.getId());
+            List<PostsResponseDto> responseDto = likedPosts.stream()
+                    .map(posts -> {
+                        List<AnswerResponseDto> answerDto = posts.getAnswerList()
+                                .stream().map(AnswerResponseDto::new).toList();
+                        return new PostsResponseDto(posts, answerDto);
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(responseDto);
+        } catch (UsernameNotFoundException e) {
+            log.error("존재하지 않는 사용자명: {}", e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("오류가 발생했습니다: {}", e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
     private ResponseEntity<?> toggleLikeHandler(Long postId, Authentication authentication, boolean isToggle) {
         try{

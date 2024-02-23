@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +22,8 @@ public class PostsLikeService {
     private final PostsRepository postsRepository;
     private final UserRepository userRepository;
 
+
+    // 좋아요
     @Transactional
     public void addLike(Long postId, Long userId) {
         Posts post = postsRepository.findById(postId)
@@ -42,6 +45,7 @@ public class PostsLikeService {
         }
     }
 
+    // 좋아요 취소
     @Transactional
     public void removeLike(Long postId, Long userId) {
         if (postsLikeRepository.existsByPostsIdAndSiteUserId(postId, userId)) {
@@ -55,10 +59,16 @@ public class PostsLikeService {
         }
     }
 
+    //좋아요 체크 확인
     @Transactional(readOnly = true)
     public boolean checkLike(Long postId, Long userId) {
         return postsLikeRepository.existsByPostsIdAndSiteUserId(postId, userId);
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<Posts> findLikePostsByUser(Long userId) {
+        return postsLikeRepository.findPostsLikeBySiteUserId(userId);
     }
 
 }

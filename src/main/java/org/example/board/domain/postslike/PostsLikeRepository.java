@@ -1,9 +1,11 @@
 package org.example.board.domain.postslike;
 
+import org.example.board.domain.posts.Posts;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface PostsLikeRepository extends JpaRepository<PostsLike, Long> {
 
@@ -17,4 +19,8 @@ public interface PostsLikeRepository extends JpaRepository<PostsLike, Long> {
 //    @Modifying
 //    @Query("DELETE FROM PostsLike pl WHERE pl.posts.id = :postId AND pl.siteUser.id = :userId")
     void deleteByPostsIdAndSiteUserId(Long postId, Long userId);
+
+    @Query("SELECT p1.posts FROM PostsLike p1 WHERE p1.siteUser.id = :userId")
+    List<Posts> findPostsLikeBySiteUserId(@Param("userId")Long userId);
+
 }
