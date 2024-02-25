@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.board.domain.posts.Posts;
 import org.example.board.domain.user.SiteUser;
+import org.springframework.security.core.parameters.P;
 
 @Getter
 @NoArgsConstructor
@@ -22,12 +24,16 @@ public class Image {
     @JoinColumn(name = "site_user_ID")
     private SiteUser siteUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Posts post;
+
     @Builder
-    public Image(String url, SiteUser siteUser) {
+    public Image(String url, SiteUser siteUser, Posts post) {
         this.url = url;
         this.siteUser = siteUser;
+        this.post = post;
     }
-
     public void updateUrl(String url) {
         this.url=url;
     }
