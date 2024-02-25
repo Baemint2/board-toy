@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.example.board.domain.answer.Answer;
+import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 
@@ -21,6 +22,7 @@ public class PostsResponseDto {
     private List<AnswerResponseDto> answerList;
     private int viewCount;
     private int likeCount;
+    private Category category;
 
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
@@ -31,6 +33,7 @@ public class PostsResponseDto {
         this.modifiedDate = entity.getModifiedDate();
         this.viewCount = entity.getViewCount();
         this.likeCount = entity.getLikeCount();
+        this.category = entity.getCategory();
         this.answerList = answerList;
     }
 

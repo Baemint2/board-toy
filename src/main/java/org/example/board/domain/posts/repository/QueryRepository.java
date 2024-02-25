@@ -1,4 +1,4 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.repository;
 
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.springframework.data.domain.Page;

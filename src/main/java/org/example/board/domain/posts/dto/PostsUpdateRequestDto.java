@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.board.domain.posts.Category;
 
 @Getter
 @NoArgsConstructor
@@ -21,13 +22,13 @@ public class PostsUpdateRequestDto {
     private String content;
 
     private String author;
-//    private Long fileId;
 
-    @Builder
-    public PostsUpdateRequestDto(String title, String content) {
+    private String category;
+
+    public PostsUpdateRequestDto(String title, String content, String category) {
         this.title = title;
         this.content = content;
-//        this.fileId = entity.getFileId();
+        this.category = category;
     }
 
 }

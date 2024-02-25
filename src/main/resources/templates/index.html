@@ -7,7 +7,7 @@
 <body>
     <section layout:fragment="content">
     <div class="header-container">
-     <h1>모지히의 모지?</h1>
+     <h1>모지히의 이게모지</h1>
         <div class="user-welcome">
            <p> 어서오세요! <a href="/user/info" th:text="${loggedUser}"></a>님</p>
         </div>
@@ -37,18 +37,33 @@
                 <th>제목</th>
                 <th>작성자</th>
                 <th>최종수정일</th>
+                <th>조회수</th>
+                <th>좋아요</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post : ${paging}">
                 <td th:text="${post.id}"></td>
-                <td><a th:href="@{|/posts/detail/${post.id}|}" th:text="${post.title}"></a>
-                <span class="text-danger small ms-2"
-                      th:text="${#lists.size(post.answerList)}"></span>
-                    <span th:text="${post.viewCount}"></span>
+                <td>
+                    <span th:text=" '[' + ${post.category != null ? post.category.displayName : '기본'} + ']' "></span>
+                    <a class="post-title" th:href="@{|/posts/detail/${post.id}|}" th:text="${post.title}"></a>
+                        <span class="text-danger small ms-2" th:text=" '[' + ${#lists.size(post.answerList)} + ']'"></span>
                 </td>
                 <td th:text="${post.author}"></td>
-                <td th:text="${#temporals.format(post.modifiedDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <div th:if="${post.modifiedDate != null}"
+                         th:text="${#temporals.format(post.modifiedDate, 'yyyy-MM-dd HH:mm')}">
+                    </div>
+                    <div th:unless="${post.modifiedDate != null}"
+                         th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">>
+                    </div>
+                </td>
+                <td>
+                    <span th:text="${post.viewCount}"></span>
+                </td>
+                <td>
+                    <span th:text="${post.likeCount}"></span>
+                </td>
             </tr>
             </tbody>
         </table>

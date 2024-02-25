@@ -10,6 +10,13 @@
         <form th:action="@{/posts/save}" th:object="${requestDto}" method="post" enctype="multipart/form-data">
 <!--            <div th:replace="~{form_error::formErrorsFragment}"></div>-->
             <div class="form-group">
+                <label th:for="category">카테고리</label>
+                <select class="form-control" id="category" th:field="*{category}">
+                    <option value="">카테고리를 선택하세요</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category}"
+                            th:text="${category.displayName}">카테고리</option>
+                </select>
                 <label th:for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" placeholder="제목을 입력하세요" th:field="*{title}" id="title">
                 <div class="alert alert-danger" id="title-error" style="display: none;"></div>

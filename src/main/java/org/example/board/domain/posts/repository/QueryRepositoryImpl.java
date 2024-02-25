@@ -1,26 +1,18 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.repository;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import org.example.board.domain.answer.QAnswer;
+import org.example.board.domain.posts.Category;
+import org.example.board.domain.posts.QPosts;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
-import org.example.board.domain.posts.dto.PostsResponseDto;
-import org.example.board.domain.postslike.QPostsLike;
-import org.hibernate.query.criteria.JpaSubQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,7 +57,7 @@ public class QueryRepositoryImpl implements QueryRepository {
 
         List<Tuple> results = queryFactory
                 .select(posts.id, posts.title, posts.content,
-                        posts.author, posts.createdDate, posts.modifiedDate, posts.viewCount, answer.count(), posts.likeCount)
+                        posts.author, posts.createdDate, posts.modifiedDate, posts.viewCount, answer.count(), posts.likeCount, posts.category)
                 .from(posts)
                 .leftJoin(answer).on(answer.posts.eq(posts))
                 .groupBy(posts.id)
@@ -80,6 +72,7 @@ public class QueryRepositoryImpl implements QueryRepository {
             Integer viewCount = Optional.ofNullable(tuple.get(posts.viewCount)).orElse(0);
             Integer answerCount = Optional.ofNullable(tuple.get((answer.count()))).map(Long::intValue).orElse(0);// 댓글 수))
             Integer likeCount = Optional.ofNullable(tuple.get(posts.likeCount)).orElse(0);
+            String koreanName = Optional.ofNullable(tuple.get(posts.category)).map(Category::getDisplayName).orElse("기본");
             return new PostsDetailResponseDto(
                     tuple.get(posts.id),
                     tuple.get(posts.title),
@@ -89,7 +82,8 @@ public class QueryRepositoryImpl implements QueryRepository {
                     tuple.get(posts.modifiedDate),
                     viewCount,
                     answerCount,
-                    likeCount);
+                    likeCount,
+                    koreanName);
         }).collect(Collectors.toList());
 
         Long total = Optional.ofNullable(queryFactory

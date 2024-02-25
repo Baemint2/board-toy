@@ -1,9 +1,9 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.repository;
 
+import org.example.board.domain.posts.Posts;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

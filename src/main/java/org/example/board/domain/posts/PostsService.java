@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.posts.dto.*;
+import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,6 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,6 +46,7 @@ public class PostsService {
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .author(user.getUsername())
+                .category(requestDto.getCategory())
                 .build();
         return postsRepository.save(posts);
     }
@@ -59,7 +60,7 @@ public class PostsService {
         if(!posts.getAuthor().equals(username)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        posts.update(requestDto.getTitle(), requestDto.getContent());
+        posts.update(requestDto);
         return id;
     }
 
@@ -109,7 +110,7 @@ public class PostsService {
 
     //조회수
     @Transactional
-    public void viewCountValidation(Long postId, HttpServletRequest request,
+    public int viewCountValidation(Long postId, HttpServletRequest request,
                                      HttpServletResponse response) {
         Posts posts = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
@@ -132,6 +133,7 @@ public class PostsService {
         if(!isCookie) {
             posts.addViewCount();
             cookie = new Cookie("postView", "[" + posts.getId() + "]");
+//            response.addCookie(cookie);
         }
 
         long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
@@ -139,6 +141,8 @@ public class PostsService {
         cookie.setPath("/");
         cookie.setMaxAge((int) (todayEndSecond - currentSecond));
         response.addCookie(cookie);
+
+        return posts.getViewCount();
     }
 
     //최신 순

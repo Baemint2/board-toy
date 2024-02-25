@@ -4,16 +4,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.answer.Answer;
+import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.service.UserService;
-import org.example.board.domain.posts.dto.PostsResponseDto;
-import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,11 +21,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PostsController {
@@ -43,6 +43,7 @@ public class PostsController {
             model.addAttribute("loggedUser", loggedUser);
         }
         // 빈 객체를 모델에 추가
+        model.addAttribute("categories", Arrays.asList(Category.values()));
         model.addAttribute("requestDto", new PostsSaveRequestDto());
         return "posts-save";
     }
@@ -51,7 +52,8 @@ public class PostsController {
     public String postsSave(@Valid PostsSaveRequestDto requestDto,
                             BindingResult bindingResult,
                             Principal principal,
-                            Model model) {
+                            Model model,
+                            @RequestParam("images") List<MultipartFile> files) {
         if(bindingResult.hasErrors()) {
             model.addAttribute("requestDto", requestDto);
             return "posts-save";
@@ -73,6 +75,7 @@ public class PostsController {
         if(!dto.getAuthor().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
+        model.addAttribute("categories", Arrays.asList(Category.values()));
         model.addAttribute("post", dto);
         return "posts-update";
     }
@@ -86,7 +89,8 @@ public class PostsController {
             return "posts-update"; // 검증 오류가 있는 경우, 업데이트 폼으로 다시 리턴
         }
 
-        postsService.update(id, requestDto, principal.getName());
+        Long update = postsService.update(id, requestDto, principal.getName());
+        log.info("게시글 수정 = {}", update);
         return String.format("redirect:/posts/detail/%s", id); // 성공적으로 업데이트된 경우, 상세 페이지로 리다이렉션
     }
 

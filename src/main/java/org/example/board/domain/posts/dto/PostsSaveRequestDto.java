@@ -5,8 +5,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.board.domain.image.Image;
+import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.Posts;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -22,12 +26,17 @@ public class PostsSaveRequestDto {
 
     private String author;
 
+    private Category category;
+
+    private List<MultipartFile> images;
+
     @Builder
-    public PostsSaveRequestDto(String title, String content, String author) {
+    public PostsSaveRequestDto(String title, String content, String author, Category category, List<MultipartFile> images) {
         this.title = title;
         this.content = content;
         this.author = author;
-//        this.fileId = fileId;
+        this.category = category;
+        this.images = images;
     }
 
     public Posts toEntity() {
@@ -36,6 +45,7 @@ public class PostsSaveRequestDto {
                 .content(content)
                 .author(author)
                 .likeCount(0)
+                .category(category)
                 .build();
     }
 

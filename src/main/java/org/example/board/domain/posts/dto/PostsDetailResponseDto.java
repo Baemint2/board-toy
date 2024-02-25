@@ -2,6 +2,7 @@ package org.example.board.domain.posts.dto;
 
 import lombok.Getter;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.posts.Category;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,9 +19,10 @@ public class PostsDetailResponseDto {
     private int viewCount;
     private int answerCount;
     private int likeCount;
+    private String category;
     public  PostsDetailResponseDto(Long id, String title, String content, String author,
                                    LocalDateTime createDate, LocalDateTime modifiedDate,
-                                   int viewCount, int answerCount, int likeCount) {
+                                   int viewCount, int answerCount, int likeCount, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -30,5 +32,6 @@ public class PostsDetailResponseDto {
         this.viewCount = viewCount;
         this.answerCount = answerCount;
         this.likeCount = likeCount;
+        this.category = category;
     }
 }
