@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
 import org.example.board.domain.answer.Answer;
+import org.example.board.domain.image.Image;
+import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.postslike.PostsLike;
 
 import java.time.LocalDateTime;
@@ -44,9 +46,11 @@ public class Posts extends BaseTimeEntity {
     @OneToMany(mappedBy = "posts",cascade = CascadeType.ALL)
     private List<PostsLike> postsList = new ArrayList<>();
 
-    //게시글 조회수
-//    @Column(columnDefinition = "Long default 0", nullable = false)
-//    private Long PostsView;
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     //좋아요 증가
     public void addCount() {
@@ -67,18 +71,21 @@ public class Posts extends BaseTimeEntity {
     private List<Answer> answerList;
 
     @Builder
-    public Posts(String title, String content, String author, int viewCount, int likeCount) {
+    public Posts(String title, String content, String author, int viewCount, int likeCount, Category category, List<Image> images) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.viewCount = viewCount;
         this.likeCount = likeCount;
+        this.category = category;
+        this.images = images;
     }
 
-    public void update(String title, String content) {
-        if(!this.title.equals(title) || !this.content.equals(content)) {
-            this.title = title;
-            this.content = content;
+    public void update(PostsUpdateRequestDto requestDto) {
+        if(!this.title.equals(requestDto.getTitle()) || !this.content.equals(requestDto.getContent())) {
+            this.title = requestDto.getTitle();
+            this.content = requestDto.getContent();
+            this.category = Category.valueOf(requestDto.getCategory());
             this.modifiedDate = LocalDateTime.now();
         }
     }

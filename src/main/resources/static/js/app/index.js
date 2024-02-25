@@ -85,6 +85,7 @@ const main = {
     // 글 등록
     save: function () {
         const data = {
+            category: document.getElementById('category').value,
             title: document.getElementById('title').value,
             author: document.getElementById('author').value,
             content: document.getElementById('content').value
@@ -120,6 +121,7 @@ const main = {
     // 글 수정
     update: function () {
         const data = {
+            category: document.getElementById('category').value,
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
         };
@@ -161,25 +163,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const sortByLikes = document.getElementById('sort-likes');
 
     sortByLatest.addEventListener('click', () => {
-        fetchAndDisplayPosts(0, '/posts/latest/desc');
+        fetchAndDisplayPosts(0, 'latest');
     });
 
     sortByViews.addEventListener('click', () => {
-        fetchAndDisplayPosts(0, '/posts/viewCount/desc');
+        fetchAndDisplayPosts(0, 'viewCount');
     });
 
     sortByAnswers.addEventListener('click', () => {
-        fetchAndDisplayPosts(0, '/posts/answer/desc');
+        fetchAndDisplayPosts(0, 'answer');
     });
 
     sortByLikes.addEventListener('click', () => {
-        fetchAndDisplayPosts(0, '/posts/like/desc');
+        fetchAndDisplayPosts(0, 'like');
     })
 
 
-    function fetchAndDisplayPosts(pageNumber, endpoint) {
-        const url =`/api/v1${endpoint}?page=${pageNumber}`
-        fetch(url)
+    function fetchAndDisplayPosts(pageNumber, sort) {
+        fetch(`/api/v1/posts/${sort}/desc?page=${pageNumber}`)
             .then(response => response.json())
             .then(data => {
                 updateTableContent(data.content);
@@ -188,7 +189,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     last: data.last,
                     number: data.number,
                     totalPages: data.totalPages,
-                }, endpoint);
+                }, sort);
+                window.history.pushState({}, "", `/?page=${pageNumber}&sort=${sort}`)
             })
             .catch(error =>console.error('Error:',error))
     }
@@ -196,16 +198,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createTableRow(post) {
         const tr = document.createElement('tr');
+        const formattedDate = post.modifiedDate ? formatDate(post.modifiedDate) : formatDate(post.createdDate);
+        const categoryName= post.category || '기본';
+
         tr.innerHTML = `
               <td>${post.id}</td>
               <td>
-                  <a href="/posts/detail/${post.id}">${post.title}</a>
-                  <span class="text-danger small ms-2">${post.answerCount}</span>
-                  <span>${post.viewCount}</span>
+                  <span>[${categoryName}]</span>
+                  <a class="post-title" href="/posts/detail/${post.id}">${post.title}</a>
+                  <span class="text-danger small ms-2">[${post.answerCount}]</span>
               </td>
               <td>${post.author}</td>
-              <td>${formatDate(post.modifiedDate)}</td>
+              <td>${formattedDate}</td>
+              <td>${post.viewCount}</td>
+              <td>${post.likeCount}</td>
         `;
+        console.log(post);
+
         return tr;
     }
 
@@ -234,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //이전 버튼 생성
         const paginationContainer = document.createElement('ul');
-        paginationContainer.className = 'pagination'
+        paginationContainer.className = 'pagination justify-content-center'
 
         const prevLi = document.createElement('li');
         prevLi.className = pagingData.first ? 'page-item disabled' : 'page-item'

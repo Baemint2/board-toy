@@ -1,5 +1,7 @@
 package org.example.board.domain.posts.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
@@ -10,15 +12,14 @@ import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.postslike.PostsLikeService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,11 +27,11 @@ import java.util.List;
 public class PostApiController {
 
     private final PostsService postsService;
-    private final PostsLikeService postsLikeService;
 
     @PostMapping("/posts")
-    public Long save(@Valid @RequestBody PostsSaveRequestDto requestDto) throws IOException {
-        return postsService.save(requestDto);
+    public ResponseEntity<Long> save(@Valid @RequestBody PostsSaveRequestDto requestDto) throws IOException {
+        Long savedPost = postsService.save(requestDto);
+        return ResponseEntity.ok(savedPost);
     }
 
     //수정
@@ -57,6 +58,13 @@ public class PostApiController {
         List<Posts> userPosts = postsService.findPostsByCurrentUser();
         return ResponseEntity.ok(userPosts);
 
+    }
+
+    // 조회수 증가
+    @GetMapping("/posts/{postId}/increaseViewCount")
+    public ResponseEntity<Integer> increaseViewCount(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
+        int updatedViewCount = postsService.viewCountValidation(postId, request, response);
+        return ResponseEntity.ok(updatedViewCount);
     }
 
     // 최신순 게시글
@@ -88,9 +96,9 @@ public class PostApiController {
     }
 
     // 좋아요 개수 확인
-    @GetMapping("/posts/{id}/likes/count")
-    public ResponseEntity<Long> getLikesCount(@PathVariable Long id) {
-        long likesCount = postsService.getLikesCount(id);
+    @GetMapping("/posts/{postId}/likes/count")
+    public ResponseEntity<Long> getLikesCount(@PathVariable Long postId) {
+        long likesCount = postsService.getLikesCount(postId);
         return ResponseEntity.ok(likesCount);
     }
 

@@ -2,7 +2,7 @@ package org.example.board.domain.answer;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.PostsRepository;
+import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
 import org.example.board.domain.answer.dto.AnswerResponseDto;

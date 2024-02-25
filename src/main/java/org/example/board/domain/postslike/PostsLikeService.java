@@ -3,10 +3,9 @@ package org.example.board.domain.postslike;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.PostsRepository;
+import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
