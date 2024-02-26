@@ -1,5 +1,6 @@
 package org.example.board.domain.image;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Image {
     @JoinColumn(name = "site_user_ID")
     private SiteUser siteUser;
 
+    @JsonBackReference("postToImage")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Posts post;
@@ -36,5 +38,9 @@ public class Image {
     }
     public void updateUrl(String url) {
         this.url=url;
+    }
+
+    public void setPosts(Posts post) {
+        this.post = post;
     }
 }

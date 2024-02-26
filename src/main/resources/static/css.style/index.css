@@ -29,7 +29,12 @@ a.post-title {
 .content-box {
     display: flex;
     flex-direction: column;
-    height: 150px;
+    height: 350px;
+}
+
+.img-test {
+    width: 225px;
+    height: 225px;
 }
 
 .button-container {
@@ -223,3 +228,4 @@ a.post-title {
     margin-right: auto;
     width: 500px;
 }
+

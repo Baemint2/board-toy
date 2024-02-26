@@ -5,9 +5,7 @@ import org.example.board.domain.image.Image;
 import org.example.board.domain.image.ImageRepository;
 import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.dto.ImageUploadDto;
-import org.example.board.domain.image.dto.ImagesUploadDto;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
@@ -18,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,11 +64,15 @@ public class ImageService {
         }
     }
 
-    // Todo: 게시판 이미지 업로드
-    public void uploadBoard(ImagesUploadDto uploadDto, Long postId) {
+    // 게시판 이미지 업로드
+    public List<Image> uploadPosts(List<MultipartFile> files, Long postId) {
+        List<Image> savedImages = new ArrayList<>();
         Posts posts = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하는 게시글이 없습니다."));
-        List<MultipartFile> files= uploadDto.getFiles();
+
+        if(files == null || files.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         for (MultipartFile multipartFile : files) {
             UUID uuid = UUID.randomUUID();
@@ -78,7 +82,7 @@ public class ImageService {
             try {
                 multipartFile.transferTo(destinationFile);
                 Image image = Image.builder()
-                        .url("/images/" + imageFileName)
+                        .url("images/" + imageFileName)
                         .post(posts)
                         .build();
                 imageRepository.save(image);
@@ -86,14 +90,14 @@ public class ImageService {
                 throw new RuntimeException(e);
             }
         }
-
+        return savedImages;
     }
 
     public ImageResponseDto findImage(String username) {
         SiteUser siteuser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("유저네임이 존재하지 않습니다."));
         Image image = imageRepository.findBySiteUser(siteuser);
 
-        String defaultImageUrl = "/image/anonymous.png";
+        String defaultImageUrl = "/profiles/anonymous.png";
 
         if(image == null) {
             return ImageResponseDto.builder()

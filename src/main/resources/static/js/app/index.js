@@ -84,18 +84,24 @@ const main = {
 
     // 글 등록
     save: function () {
-        const data = {
-            category: document.getElementById('category').value,
+        const postDto = {
             title: document.getElementById('title').value,
             author: document.getElementById('author').value,
-            content: document.getElementById('content').value
-        };
+            content: document.getElementById('content').value,
+            category: document.getElementById('category').value,
+        }
+
+        const formData = new FormData();
+            formData.append('post', new Blob([JSON.stringify(postDto)], {type: "application/json"}));
+
+        const files = document.getElementById('files').files;
+        for(let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
         fetch('/api/v1/posts', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            body: formData
         }).then(response => {
             if (response.ok) {
                 alert("글이 등록되었습니다.")

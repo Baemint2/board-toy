@@ -49,6 +49,7 @@ public class Posts extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @JsonManagedReference("postToImage")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
@@ -66,6 +67,12 @@ public class Posts extends BaseTimeEntity {
         this.viewCount+= 1;
     }
 
+    public void addImages(List<Image> newImages) {
+        for (Image image : newImages) {
+            this.images.add(image);
+            image.setPosts(this);
+        }
+    }
 
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;

@@ -5,7 +5,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.board.domain.answer.AnswerService;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.image.dto.ImageResponseDto;
+import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsResponseDto;
@@ -32,9 +35,9 @@ import java.util.List;
 public class PostsController {
 
     private final PostsService postsService;
+    private final AnswerService answerService;
     private final UserService userService;
-//    private final FileService fileService;
-
+    private final ImageService imageService;
     @GetMapping("/posts/save")
     public String postsSave(Model model, Principal principal) {
 
@@ -42,8 +45,8 @@ public class PostsController {
             String loggedUser = principal.getName();
             model.addAttribute("loggedUser", loggedUser);
         }
-        // 빈 객체를 모델에 추가
         model.addAttribute("categories", Arrays.asList(Category.values()));
+        // 빈 객체를 모델에 추가
         model.addAttribute("requestDto", new PostsSaveRequestDto());
         return "posts-save";
     }
@@ -55,6 +58,7 @@ public class PostsController {
                             Model model,
                             @RequestParam("images") List<MultipartFile> files) {
         if(bindingResult.hasErrors()) {
+            model.addAttribute("categories", Arrays.asList(Category.values()));
             model.addAttribute("requestDto", requestDto);
             return "posts-save";
         }
@@ -62,7 +66,7 @@ public class PostsController {
         // loggedUser 는 현재 홈페이지에 로그인한 사용자 정보.
         SiteUser siteUser = userService.getUser(principal.getName());
         // 유효성 검사를 통과한 경우에만 create 메서드 호출
-        postsService.create(requestDto, siteUser);
+        postsService.create(requestDto, siteUser, files);
 
         return "redirect:/";
     }
@@ -99,13 +103,20 @@ public class PostsController {
                               Model model,
                               @ModelAttribute("message") String message,
                               HttpServletRequest request,
-                              HttpServletResponse response) {
+                              HttpServletResponse response,
+                              Principal principal) {
+        SiteUser siteUser = userService.getUser(principal.getName());
         PostsResponseDto dto = postsService.findById(id);
+        ImageResponseDto image = imageService.findImage(siteUser.getUsername());
+        List<AnswerResponseDto> answerImages = answerService.getAnswerImages(id);
+
         model.addAttribute("dto", dto);
         model.addAttribute("answer", new AnswerResponseDto());
+        model.addAttribute("image", image);
+        model.addAttribute("answerImages", answerImages);
 
         postsService.viewCountValidation(id, request, response);
-        if (!message.isEmpty()) {
+        if (message != null && !message.isEmpty()) {
             model.addAttribute("message", message);
         }
         return "posts-detail";

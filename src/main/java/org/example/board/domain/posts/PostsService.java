@@ -6,10 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.image.Image;
+import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.posts.dto.*;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
-import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,20 +35,30 @@ import java.util.stream.Collectors;
 public class PostsService {
 
     private final PostsRepository postsRepository;
+    private final ImageService imageService;
 
     @Transactional
     // 글 등록
-    public Long save(PostsSaveRequestDto requestDto){
-      return postsRepository.save(requestDto.toEntity()).getId();
+    public Long save(PostsSaveRequestDto requestDto, List<MultipartFile> files){
+        Posts posts = requestDto.toEntity();
+        Posts savedPosts = postsRepository.save(posts);
+        List<Image> images = imageService.uploadPosts(files, savedPosts.getId());
+        savedPosts.addImages(images);
+        postsRepository.save(savedPosts);
+
+        return savedPosts.getId();
     }
 
     @Transactional
     // 글 화면에 등록?
-    public Posts create(PostsSaveRequestDto requestDto,SiteUser user) {
+    public Posts create(PostsSaveRequestDto requestDto, SiteUser user, List<MultipartFile> files) {
+        List<Image> images = imageService.uploadPosts(files, requestDto.toEntity().getId());
+
         Posts posts = Posts.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .author(user.getUsername())
+                .images(images)
                 .category(requestDto.getCategory())
                 .build();
         return postsRepository.save(posts);

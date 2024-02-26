@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.board.domain.image.dto.ImagesUploadDto;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -29,9 +31,10 @@ public class PostApiController {
     private final PostsService postsService;
 
     @PostMapping("/posts")
-    public ResponseEntity<Long> save(@Valid @RequestBody PostsSaveRequestDto requestDto) throws IOException {
-        Long savedPost = postsService.save(requestDto);
-        return ResponseEntity.ok(savedPost);
+    public ResponseEntity<Long> save(@Valid @RequestPart("post") PostsSaveRequestDto requestDto,
+                                     @RequestPart(value = "files", required = false)List<MultipartFile> files) throws IOException {
+        Long savedPostId = postsService.save(requestDto, files);
+        return ResponseEntity.ok(savedPostId);
     }
 
     //수정

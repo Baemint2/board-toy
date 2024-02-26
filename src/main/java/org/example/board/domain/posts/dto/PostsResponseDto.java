@@ -1,12 +1,10 @@
 package org.example.board.domain.posts.dto;
 
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.example.board.domain.answer.Answer;
+import org.example.board.domain.answer.dto.AnswerResponseDto;
+import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.answer.dto.AnswerResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +21,7 @@ public class PostsResponseDto {
     private int viewCount;
     private int likeCount;
     private Category category;
+    private List<Image> images;
 
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
@@ -34,6 +33,7 @@ public class PostsResponseDto {
         this.viewCount = entity.getViewCount();
         this.likeCount = entity.getLikeCount();
         this.category = entity.getCategory();
+        this.images = entity.getImages();
         this.answerList = answerList;
     }
 

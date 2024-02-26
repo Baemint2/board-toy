@@ -5,10 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.Posts;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,15 +26,15 @@ public class PostsSaveRequestDto {
 
     private Category category;
 
-    private List<MultipartFile> images;
+    private List<String> imageUrls;
 
     @Builder
-    public PostsSaveRequestDto(String title, String content, String author, Category category, List<MultipartFile> images) {
+    public PostsSaveRequestDto(String title, String content, String author, Category category, List<String> imageUrls) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.category = category;
-        this.images = images;
+        this.imageUrls = imageUrls;
     }
 
     public Posts toEntity() {

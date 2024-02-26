@@ -32,6 +32,7 @@
                             placeholder="내용을 입력하세요" th:field="*{content}" id="content"></textarea>
                 <div class="alert alert-danger" id="content-error" style="display: none;"></div>
             </div>
+            <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
         </form>
         <a href="/"  role="button" class="btn btn-secondary">취소</a>
         <button type="button" class="btn btn-primary" id="btn-save">등록</button>
