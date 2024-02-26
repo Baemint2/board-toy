@@ -1,6 +1,7 @@
 package org.example.board.domain.answer;
 
 import lombok.RequiredArgsConstructor;
+import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -66,5 +68,29 @@ public class AnswerService {
     public List<Posts> findPostsContentByUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return answerRepository.findPostsContentByUser(username);
+    }
+
+    //댓글 프로필 사진
+    public List<AnswerResponseDto> getAnswerImages(Long postId) {
+        List<Answer> answers = answerRepository.findByPostsId(postId);
+        List<AnswerResponseDto> answerDto = new ArrayList<>();
+
+        for(Answer answer : answers) {
+            SiteUser user = answer.getSiteUser();
+            Image profileImage = user.getImage();
+            String imageUrl;
+
+            if(profileImage != null) {
+                imageUrl = profileImage.getUrl();
+            }
+            else  {
+                imageUrl = "/profiles/anonymous.png";
+            }
+
+            AnswerResponseDto dto = new AnswerResponseDto(answer, imageUrl);
+            answerDto.add(dto);
+        }
+
+        return answerDto;
     }
 }

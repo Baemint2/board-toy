@@ -31,9 +31,14 @@
     </div>
     <hr/>
     <input type="hidden" id="id" th:value="${dto.id}">
-    <div class="my=3 class-bottom">
+    <div class="my-3 class-bottom">
         <div class="card-body content-box">
             <div class="card-text" th:text="${dto.content}"></div>
+                <div class="row">
+                    <div th:each="image: ${dto.images}" class="col-md-4 mb-3">
+                        <img th:src="@{|/posts/${image.url}|}" class="img-fluid rounded img-test" th:alt="${dto.title}">
+                    </div>
+                </div>
             <div class="d-flex justify-content-end"></div>
         </div>
     </div>
@@ -73,22 +78,14 @@
 
         </div>
         <!-- 댓글 목록 -->
-        <div th:each="answer : ${dto.answerList}" class="answerList" th:attr="data-answer-id=${answer.id}">
+        <div th:each="answer : ${answerImages}" class="answerList" th:attr="data-answer-id=${answer.id}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
             <div class="answer-details">
-            <span class="answer-author"> 작성자: <strong th:text="${answer.author}"></strong></span>
+                <img th:src="${answer.profileImageUrl}" class="img-fluid rounded-circle" alt="Profile picture">
+                <span class="answer-author"> 작성자: <strong th:text="${answer.author}"></strong></span>
             <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
             </div>
             <p class="answer-content" th:text="${answer.content}">댓글 내용</p>
-<!--            &lt;!&ndash; 대댓글 목록 &ndash;&gt;-->
-<!--            <div th:each="childAnswer : ${answer.children}" class="child-answer">-->
-<!--                <div class="answer-details">-->
-<!--                    <span class="answer-author">작성자 <strong th:text="${childAnswer.author}"></strong></span>-->
-<!--                    <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>-->
-<!--                </div>-->
-<!--                <p class="answer-content" th:text="${childAnswer.content}">대댓글 내용</p>-->
-<!--            </div>-->
-<!--            <button type="button" class="btn btn-sm btn-outline-primary" th:attr="data-answer-id=${answer.id}" id="submitButton">대댓글 작성</button>-->
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"

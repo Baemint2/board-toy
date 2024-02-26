@@ -13,4 +13,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("SELECT a.posts FROM Answer a WHERE a.siteUser.username = :username")
     List<Posts> findPostsContentByUser(@Param("username") String username);
+
+    List<Answer> findByPostsId(Long id);
 }
