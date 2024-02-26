@@ -34,7 +34,7 @@ a.post-title {
 
 .img-test {
     width: 225px;
-    height: 225px;
+    height: auto;
 }
 
 .button-container {
@@ -47,10 +47,8 @@ a.post-title {
 .like-section {
     display: flex;
     align-items: center;
-}
-
-.post-like {
-    margin-right: 10px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .like-count {
@@ -69,6 +67,8 @@ a.post-title {
 .post-like {
     margin-left: auto;
     margin-right: auto;
+    background: none;
+
 }
 
 .input-error {
@@ -229,3 +229,17 @@ a.post-title {
     width: 500px;
 }
 
+#answer-profile {
+    width: 35px;
+    height: 35px;
+}
+
+.answer-header{
+    display: flex;
+    flex-direction: row;
+}
+
+.answer-content {
+    margin-top: 10px;
+    margin-bottom: 0;
+}

@@ -47,7 +47,7 @@
             <button type="button" id="post-like"
                     class="post-like"
                     th:data-post-id="${dto.id}" th:data-user-id="${dto.author}" th:data-liked="false">
-                Unlike
+                <i class="fa-regular fa-heart"></i>
             </button>
             <span id="like-count" class="like-count" th:text="${dto.likeCount}">1</span>
         </div>
@@ -81,12 +81,14 @@
         <div th:each="answer : ${answerImages}" class="answerList" th:attr="data-answer-id=${answer.id}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
             <div class="answer-details">
-                <img th:src="${answer.profileImageUrl}" class="img-fluid rounded-circle" alt="Profile picture">
-                <span class="answer-author"> 작성자: <strong th:text="${answer.author}"></strong></span>
-            <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
+                <div class="answer-header">
+                <img th:src="${answer.profileImageUrl}" id="answer-profile" class="img-fluid rounded-circle" alt="Profile picture">
+                <h5 class="mt-0" th:text="${answer.author}">작성자 이름</h5>
+                <small class="answer-time" th:text="${#temporals.format(answer.createdDate, '(yyyy-MM-dd HH:mm)')}">작성 시간</small>
+                </div>
+                    <p class="answer-content" th:text="${answer.content}">댓글 내용</p>
             </div>
-            <p class="answer-content" th:text="${answer.content}">댓글 내용</p>
-            <div class="text-end mt-2">
+            <div class="text-end">
                 <button type="button" class="btn btn-sm btn-outline-secondary editAnswerBtn"
                    sec:authorize="isAuthenticated()"
                    th:if="${dto.author != null and #authentication.name == answer.author}"

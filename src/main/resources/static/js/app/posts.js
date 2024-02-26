@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 likeButton.setAttribute('data-liked', data.isLiked);
-                likeButton.textContent = data.isLiked ? 'Unlike' : 'Like';
+                    likeButton.innerHTML = data.isLiked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
                 fetch(`/api/v1/posts/${postId}/likes/count`)
                     .then(response => response.json())
                     .then(likesCount => {
