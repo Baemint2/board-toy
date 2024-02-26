@@ -4,16 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.image.dto.ImagesUploadDto;
 import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
-import org.example.board.domain.postslike.PostsLikeService;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,8 +35,11 @@ public class PostApiController {
 
     //수정
     @PutMapping("/posts/{id}")
-    public Long update(@PathVariable Long id, @Valid @RequestBody PostsUpdateRequestDto requestDto, Principal principal) {
-        return postsService.update(id, requestDto, principal.getName());
+    public ResponseEntity<Long> update(@PathVariable Long id,
+                       @Valid @RequestPart("post") PostsUpdateRequestDto requestDto, Principal principal,
+                       @RequestPart(value = "files", required = false)List<MultipartFile> files) {
+        Long updatedPostId = postsService.update(id, requestDto, principal.getName(), files);
+        return ResponseEntity.ok(updatedPostId);
     }
     //특정 글 조회
     @GetMapping("/posts/{id}")

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.domain.posts.Category;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class PostsUpdateRequestDto {
@@ -24,6 +26,8 @@ public class PostsUpdateRequestDto {
     private String author;
 
     private String category;
+
+    private List<String> imageUrls;
 
     public PostsUpdateRequestDto(String title, String content, String category) {
         this.title = title;

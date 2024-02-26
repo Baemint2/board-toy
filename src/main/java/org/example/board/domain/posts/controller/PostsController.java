@@ -87,13 +87,14 @@ public class PostsController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/posts/update/{id}")
     public String postsUpdate(@PathVariable Long id, @Valid PostsUpdateRequestDto requestDto,
-                              BindingResult bindingResult, Principal principal, Model model) {
+                              BindingResult bindingResult, Principal principal, Model model,
+                              @RequestParam("images") List<MultipartFile> files) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", requestDto);
             return "posts-update"; // 검증 오류가 있는 경우, 업데이트 폼으로 다시 리턴
         }
 
-        Long update = postsService.update(id, requestDto, principal.getName());
+        Long update = postsService.update(id, requestDto, principal.getName(), files);
         log.info("게시글 수정 = {}", update);
         return String.format("redirect:/posts/detail/%s", id); // 성공적으로 업데이트된 경우, 상세 페이지로 리다이렉션
     }

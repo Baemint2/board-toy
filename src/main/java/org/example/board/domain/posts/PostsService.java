@@ -12,11 +12,13 @@ import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.posts.dto.*;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
 public class PostsService {
 
     private final PostsRepository postsRepository;
+    private final UserRepository userRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -66,15 +69,22 @@ public class PostsService {
 
     // 글 수정
     @Transactional
-    public Long update(Long id, PostsUpdateRequestDto requestDto, String username) {
+    public Long update(Long id, PostsUpdateRequestDto requestDto, String username, List<MultipartFile> files) {
         Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+        // 게시글 정보 업데이트
+        posts.update(requestDto);
 
         if(!posts.getAuthor().equals(username)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        posts.update(requestDto);
-        return id;
+        // 파일 처리
+        if (!files.isEmpty()) {
+            List<Image> images = imageService.uploadPosts(files, posts.getId());
+            posts.addImages(images);
+        }
+
+        return posts.getId();
     }
 
     //특정 글 조회

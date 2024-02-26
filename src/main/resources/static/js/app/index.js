@@ -126,18 +126,24 @@ const main = {
     },
     // 글 수정
     update: function () {
-        const data = {
-            category: document.getElementById('category').value,
+        const updatePostDto = {
             title: document.getElementById('title').value,
-            content: document.getElementById('content').value
-        };
+            author: document.getElementById('author').value,
+            content: document.getElementById('content').value,
+            category: document.getElementById('category').value,
+        }
+
+        const formData = new FormData();
+        formData.append('post', new Blob([JSON.stringify(updatePostDto)], {type: "application/json"}));
+
+        const files = document.getElementById('files').files;
+        for(let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
         const id = document.getElementById('id').value;
         fetch(`/api/v1/posts/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            body: formData
         }).then(response => {
             if (!response.ok) {
                 // 서버로부터의 응답이 오류를 나타내는 경우 (예: 상태 코드가 400 이상)

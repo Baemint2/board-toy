@@ -12,6 +12,7 @@ import org.example.board.domain.answer.Answer;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.postslike.PostsLike;
+import org.example.board.domain.user.SiteUser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
