@@ -6,19 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.user.SiteUser;
-import org.example.board.domain.user.service.UserService;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.domain.user.service.UserService;
 import org.example.board.validator.CheckEmailValidator;
+import org.example.board.validator.CheckNicknameValidator;
 import org.example.board.validator.CheckUsernameValidator;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.Map;
@@ -32,16 +33,18 @@ public class UserController {
     private final UserService userService;
     private final CheckUsernameValidator usernameValidator;
     private final CheckEmailValidator emailValidator;
+    private final CheckNicknameValidator nicknameValidator;
     private final ImageService imageService;
     @InitBinder
     public void validatorBinder(WebDataBinder binder) {
         binder.addValidators(usernameValidator);
         binder.addValidators(emailValidator);
+        binder.addValidators(nicknameValidator);
     }
 
     @GetMapping("/signup")
     public String signup(UserCreateDto userCreateDto) {
-        return "signup_form";
+        return "user/signup-form";
     }
 
 
@@ -56,7 +59,7 @@ public class UserController {
             for (String key : validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));
             }
-            return "signup_form";
+            return "user/signup-form";
         }
         try{
             Long siteUser = userService.create(userCreateDto);
@@ -65,11 +68,11 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             errors.reject("signupFailed", "이미 등록된 사용자입니다.");
             log.info("이미 등록된 사용자입니다.", e);
-            return "signup_form";
+            return "user/signup-form";
         } catch (Exception e) {
             e.printStackTrace();
             errors.reject("signupFailed", e.getMessage());
-            return "signup_form";
+            return "user/signup-form";
         }
     }
 
@@ -82,11 +85,16 @@ public class UserController {
         model.addAttribute("siteUser", siteUser);
         model.addAttribute("image", image);
 
-        return "/user/info";
+        return "user/info";
+    }
+
+    @GetMapping("/info/update")
+    public String userInfoUpdate(Model model, Principal principal) {
+        return "user/info-update";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "login_form";
+        return "user/login-form";
     }
 }

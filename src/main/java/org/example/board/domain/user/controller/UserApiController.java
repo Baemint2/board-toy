@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.dto.NicknameUpdateDto;
 import org.example.board.domain.user.dto.UserDeleteDto;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.domain.user.dto.UserCreateDto;
@@ -18,6 +19,7 @@ import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +52,14 @@ public class UserApiController {
         return ResponseEntity.ok(Map.of("isEmailDuplicate", isEmailDuplicate));
     }
 
+    @GetMapping("/nickname/check")
+    public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) {
+        boolean isNicknameDuplicate = userService.checkNicknameDuplicate(nickname);
+        log.info("중복된 닉네임 = {}", isNicknameDuplicate);
+        return ResponseEntity.ok(Map.of("isNickNameDuplicate", isNicknameDuplicate));
+    }
+
+    // 회원 탈퇴
     @DeleteMapping("/{username}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteUser(@PathVariable String username,
@@ -67,6 +77,19 @@ public class UserApiController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 삭제 실패: 사용자명 또는 비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    // 닉네임 변경
+    @PostMapping("/updateNickname")
+    public ResponseEntity<?> updateNickname(@RequestParam("nickname") NicknameUpdateDto nicknameUpdateDto, Principal principal) {
+        String username = principal.getName();
+        // 중복 닉네임 검사
+        if (userService.checkNicknameDuplicate(nicknameUpdateDto.getNickname())) {
+            return ResponseEntity.badRequest().body(Map.of("errorMessage", "이미 사용 중인 닉네임입니다."));
+        }
+        // 닉네임 업데이트
+        userService.updateNickName(username, nicknameUpdateDto);
+        return ResponseEntity.ok().body(Map.of("redirect", "닉네임이 성공적으로 업데이트되었습니다."));
     }
 
 }

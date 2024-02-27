@@ -2,17 +2,20 @@ const user = {
     init: function() {
         const _this = this;
 
-        document.getElementById('btn-signup').addEventListener('click', function () {
+        document.getElementById('btn-signup')?.addEventListener('click', function () {
             _this.signup();
         })
-        document.getElementById('username').addEventListener("blur", function () {
+        document.getElementById('username')?.addEventListener("blur", function () {
             _this.checkUsernameDuplicate();
         })
-        document.getElementById("email").addEventListener("blur", function () {
+        document.getElementById("email")?.addEventListener("blur", function () {
             _this.checkEmailDuplicate();
         })
-        document.getElementById("password2").addEventListener("input", function () {
+        document.getElementById("password2")?.addEventListener("input", function () {
             _this.validatePasswordsMatch();
+        })
+        document.getElementById("editNickname").addEventListener("click",   function () {
+            user.updateNickname.call(this);
         })
     },
 
@@ -20,6 +23,7 @@ const user = {
     signup: function () {
         const data = {
             username: document.getElementById('username').value,
+            nickname: document.getElementById('nickname').value,
             password1: document.getElementById('password1').value,
             password2: document.getElementById('password2').value,
             email: document.getElementById('email').value
@@ -258,6 +262,48 @@ const user = {
             errorMessage.style.display = 'none'; // 오류 메시지 숨김
         }
     }),
+    updateNickname: (function (){
+        const nicknameField = document.getElementById('nickname');
+        const nickNameError = document.getElementById('nickname-error');
+        const button = this;
+
+        if(nicknameField.readOnly) {
+            nicknameField.readOnly = false;
+            button.textContent = "변경";
+        } else {
+            const updatedNickname = nicknameField.value;
+            fetch('/api/v1/user/updateNickname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                nickname: updatedNickname
+            }).toString()
+            }).then(response => {
+                if(!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.errorMessage || '알 수 없는 오류가 발생했습니다.');
+                    })
+                }
+                return response.json();
+            })
+                .then(data => {
+                    if(data.redirect) {
+                        console.log(data);
+                        nicknameField.readOnly = true;
+                        button.textContent = "수정";
+                        nickNameError.style.display = 'none';
+                        window.location.href = data.redirect;
+                    }
+                })
+                .catch(error => {
+                    console.log("Error:", error);
+                    nickNameError.textContent = error.message;  // 네트워크 오류 메시지 표시
+                    nickNameError.style.display = 'block'; // 오류 메시지 div를 보이게 함
+                })
+        }
+    })
 
 }
 
@@ -339,6 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
             })
         }
+
 })
 
 document.addEventListener('DOMContentLoaded', function () {

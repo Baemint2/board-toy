@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{common/layout}">
 <head>
-    <title th:text="|${siteUser.getUsername()}의 정보|"></title>
+    <title th:text="|${siteUser.getNickname()}의 정보|"></title>
 </head>
 <body>
 <div class="container" layout:fragment="content">
     <a class="btn btn-primary" href="/">홈으로</a>
+    <a href="/user/logout" role="button" class="btn btn-danger">로그아웃</a>
     <div class="card mb-4">
         <div class="card-header">
             <h4 th:text="|Hello ${siteUser.getUsername()}!|"></h4>
             <div class="myInfo-button">
-                <a th:href="@{/user/update/username}" class="btn btn-outline-warning ">정보 수정</a>
+                <a th:href="@{/user/info/update}" class="btn btn-outline-warning ">정보 수정</a>
                 <button type="button" class="btn btn-outline-danger" id="btn-withdrawal">회원 탈퇴</button>
             </div>
         </div>
         <div class="card-body">
             <div class="row">
                 <!-- Profile Picture -->
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <img th:src="${image.getUrl()}" class="img-fluid rounded-circle" alt="Profile picture">
+                    <div class="edit-nickname">
+                        <input type="text" id="nickname" th:value="${siteUser.getNickname()}" readonly/>
+                        <button id="editNickname">수정</button>
+                    </div>
+                    <div class="alert alert-danger" id="nickname-error" style="display: none;"></div>
                     <form th:action="@{/image/upload}" th:method="post" enctype="multipart/form-data" class="mt-2">
                         <div class="mb-3">
                             <input type="file" class="form-control" name="file" accept="image/*" required>
@@ -28,7 +34,7 @@
                         <button type="submit" class="btn btn-primary">Update Profile Picture</button>
                     </form>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div id="tabs" class="tabs">
                         <button id="myPostsTab">내가 쓴 글</button>
                         <button id="myAnswersTab">댓글 단 글</button>

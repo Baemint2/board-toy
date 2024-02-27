@@ -9,6 +9,7 @@ import org.example.board.domain.image.ImageRepository;
 import org.example.board.domain.user.Role;
 import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.UserRepository;
+import org.example.board.domain.user.dto.NicknameUpdateDto;
 import org.example.board.domain.user.dto.UserCreateDto;
 import org.example.board.exception.CustomException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +34,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    // 회원 가입
     @Transactional
     public Long create(UserCreateDto createDto) {
 
@@ -45,6 +47,10 @@ public class UserService {
             throw new CustomException("username","이미 사용중인 사용자명입니다.");
         }
 
+        // 닉네임 중복 검사
+        if (userRepository.existsByNickname(createDto.getNickname())) {
+            throw new CustomException("nickname", "이미 사용중인 닉네임입니다.");
+        }
         // 이메일 중복 검사
         if (userRepository.existsByEmail(createDto.getEmail())) {
             throw new CustomException("email","이미 등록된 이메일입니다.");
@@ -53,13 +59,14 @@ public class UserService {
 
         SiteUser user = SiteUser.builder()
                 .username(createDto.getUsername())
+                .nickname(createDto.getNickname())
                 .email(createDto.getEmail())
                 .password(passwordEncoder.encode(createDto.getPassword1()))
                 .role(Role.USER)
                 .build();
 
         Image image = Image.builder()
-                .url("/image/anonymous.png")
+                .url("/profiles/anonymous.png")
                 .siteUser(user)
                 .build();
 
@@ -78,6 +85,7 @@ public class UserService {
         }
     }
 
+    //회원 탈퇴
     @Transactional
     public boolean deleteUser(String username, String password) {
         Optional<SiteUser> userOptional = userRepository.findByUsername(username);
@@ -109,6 +117,13 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    public boolean checkUpdatedNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
         for (FieldError error : errors.getFieldErrors()) {
@@ -116,5 +131,13 @@ public class UserService {
             validatorResult.put(validKeyName, error.getDefaultMessage());
         }
         return validatorResult;
+    }
+
+    // 닉네임 변경
+    public void updateNickName(String username, NicknameUpdateDto updateDto) {
+        SiteUser siteUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
+        String newNickname = updateDto.getNickname();
+        siteUser.updateNickname(newNickname);
+        userRepository.save(siteUser);
     }
 }

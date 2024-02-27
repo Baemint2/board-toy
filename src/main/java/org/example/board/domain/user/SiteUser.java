@@ -24,6 +24,9 @@ public class SiteUser extends BaseTimeEntity {
     @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
+    private String nickname;
+
     @Column(nullable = false)
     private String password;
 
@@ -44,10 +47,15 @@ public class SiteUser extends BaseTimeEntity {
     private List<PostsLike> postsLikesUser = new ArrayList<>();
 
     @Builder
-    public SiteUser(String username, String password, String email, Role role) {
+    public SiteUser(String username, String nickname, String password, String email, Role role) {
         this.username = username;
+        this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
     }
 }
