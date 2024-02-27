@@ -48,7 +48,7 @@ public class PostsController {
         model.addAttribute("categories", Arrays.asList(Category.values()));
         // 빈 객체를 모델에 추가
         model.addAttribute("requestDto", new PostsSaveRequestDto());
-        return "posts-save";
+        return "post/posts-save";
     }
 
     @PostMapping("/posts/save")
@@ -60,7 +60,7 @@ public class PostsController {
         if(bindingResult.hasErrors()) {
             model.addAttribute("categories", Arrays.asList(Category.values()));
             model.addAttribute("requestDto", requestDto);
-            return "posts-save";
+            return "post/posts-save";
         }
 
         // loggedUser 는 현재 홈페이지에 로그인한 사용자 정보.
@@ -81,7 +81,7 @@ public class PostsController {
         }
         model.addAttribute("categories", Arrays.asList(Category.values()));
         model.addAttribute("post", dto);
-        return "posts-update";
+        return "post/posts-update";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -91,7 +91,7 @@ public class PostsController {
                               @RequestParam("images") List<MultipartFile> files) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", requestDto);
-            return "posts-update"; // 검증 오류가 있는 경우, 업데이트 폼으로 다시 리턴
+            return "post/posts-update"; // 검증 오류가 있는 경우, 업데이트 폼으로 다시 리턴
         }
 
         Long update = postsService.update(id, requestDto, principal.getName(), files);
@@ -115,11 +115,13 @@ public class PostsController {
         model.addAttribute("answer", new AnswerResponseDto());
         model.addAttribute("image", image);
         model.addAttribute("answerImages", answerImages);
+        model.addAttribute("loggedUser", siteUser.getUsername());
 
         postsService.viewCountValidation(id, request, response);
         if (message != null && !message.isEmpty()) {
             model.addAttribute("message", message);
         }
-        return "posts-detail";
+
+        return "post/posts-detail";
     }
 }

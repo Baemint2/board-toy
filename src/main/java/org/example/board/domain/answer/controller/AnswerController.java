@@ -55,6 +55,6 @@ public class AnswerController {
     public String updateAnswer(@PathVariable Long id, Model model) {
         AnswerResponseDto answerDto = answerService.findById(id);
         model.addAttribute("answer", answerDto);
-        return "answer-update";
+        return "answer/answer-update";
     }
 }
