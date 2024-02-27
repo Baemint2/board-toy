@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{common/layout}">
 <head>
     <title>회원가입</title>
 </head>
@@ -9,7 +9,7 @@
 <div class="container my-3" layout:fragment="content">
     <div class="my-3 class-bottom">
         <div>
-            <h4>회원가입</h4>
+            <a class="signup-header" href="/"><h1>모지히의 이게모지</h1></a>
         </div>
         <form th:action="@{/user/signup}" th:object="${userCreateDto}" method="post">
             <div th:replace="~{form_error::formErrorsFragment}"></div>
@@ -17,6 +17,11 @@
                 <label th:for="username" class="form-label">사용자 ID</label>
                 <input type="text" th:field="*{username}" class="form-control" id="username">
                 <div class="alert alert-danger" id="username-error" style="display: none;"></div>
+            </div>
+            <div class="mb-3">
+                <label th:for="nickname" class="form-label">닉네임</label>
+                <input type="text" th:field="*{nickname}" class="form-control" id="nickname">
+                <div class="alert alert-danger" id="nickname-error" style="display: none;"></div>
             </div>
             <div class="mb-3">
                 <label th:for="password1" class="form-label">비밀번호</label>

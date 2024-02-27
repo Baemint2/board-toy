@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{layout}">
+      layout:decorate="~{common/layout}">
 <head>
     <style>
         .field-error {
@@ -16,7 +16,8 @@
 
  <div class="container my-3">
      <section layout:fragment="content">
-    <div class="row mb-3">
+     <div th:replace="common/header :: header"></div>
+        <div class="row mb-3">
         <div class="col">
             <h2 th:text="${dto.title}">게시글 제목</h2>
             <p class="text-muted">
@@ -52,7 +53,6 @@
             <span id="like-count" class="like-count" th:text="${dto.likeCount}">1</span>
         </div>
         <div class="action-buttons">
-            <a th:href="@{/}" class="btn btn-sm btn-secondary">home</a>
             <a th:href="@{|/posts/update/${dto.id}|}" class="btn btn-sm btn-outline-secondary"
                sec:authorize="isAuthenticated()"
                th:if="${dto.author != null and #authentication.name == dto.author}" th:text="수정"></a>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
  xmlns:layout= "http://www.ultraq.net.nz/thymeleaf/layout"
- layout:decorate="~{layout}">
+ layout:decorate="~{common/layout}">
 <head>
 </head>
 <body>
@@ -40,7 +40,7 @@
                 <input type="file" class="form-control" id="files" name="files" accept="image/*" multiple>
             </div>
         </form>
-        <a href="/" role="button" class="btn btn-secondary">취소</a>
+        <a th:href="@{|/posts/detail/${post.id}|}" role="button" class="btn btn-secondary">취소</a>
         <button type="button" class="btn btn-primary" id="btn-update">수정완료</button>
         <button type="button" class="btn btn-danger" id="btn-delete" >삭제</button>
     </div>
