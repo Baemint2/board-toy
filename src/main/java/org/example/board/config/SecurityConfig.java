@@ -1,5 +1,7 @@
 package org.example.board.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -29,9 +31,11 @@ public class SecurityConfig {
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(config ->
                         config
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/user/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/posts/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/posts/detail/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/posts/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/user/**")).hasRole("USER")
@@ -40,7 +44,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**")))
                 .formLogin(login -> login
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/"))
+                        .successHandler(new CustomLoginSuccessHandler()))
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")

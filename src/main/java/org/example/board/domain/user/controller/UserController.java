@@ -16,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
@@ -94,7 +91,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(@RequestParam(value = "redirect", required = false) String redirectUrl, Model model) {
+        model.addAttribute("redirectUrl", redirectUrl);
         return "user/login-form";
     }
 }

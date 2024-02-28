@@ -6,39 +6,39 @@
     <title>회원가입</title>
 </head>
 <body>
-<div class="container my-3" layout:fragment="content">
-    <div class="my-3 class-bottom">
+<div class="container my-3 signup-container" layout:fragment="content">
+    <div class="my-3">
         <div>
-            <a class="signup-header" href="/"><h1>모지히의 이게모지</h1></a>
+            <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
         </div>
-        <form th:action="@{/user/signup}" th:object="${userCreateDto}" method="post">
+        <form class="signup-form" th:action="@{/user/signup}" th:object="${userCreateDto}" method="post">
             <div th:replace="~{form_error::formErrorsFragment}"></div>
             <div class="mb-3">
                 <label th:for="username" class="form-label">사용자 ID</label>
-                <input type="text" th:field="*{username}" class="form-control" id="username">
-                <div class="alert alert-danger" id="username-error" style="display: none;"></div>
+                <input type="text" th:field="*{username}" class="form-control" id="username" placeholder="아이디">
+                <div class="error-message" id="username-error" style="display: none;"></div>
             </div>
             <div class="mb-3">
                 <label th:for="nickname" class="form-label">닉네임</label>
-                <input type="text" th:field="*{nickname}" class="form-control" id="nickname">
-                <div class="alert alert-danger" id="nickname-error" style="display: none;"></div>
+                <input type="text" th:field="*{nickname}" class="form-control" id="nickname" placeholder="닉네임">
+                <div class="error-message" id="nickname-error" style="display: none;"></div>
             </div>
             <div class="mb-3">
                 <label th:for="password1" class="form-label">비밀번호</label>
-                <input type="password" th:field="*{password1}" class="form-control" id="password1">
-                <div class="alert alert-danger" id="password1-error" style="display: none;"></div>
+                <input type="password" th:field="*{password1}" class="form-control" id="password1" placeholder="비밀번호">
+                <div class="error-message" id="password1-error" style="display: none;"></div>
 
             </div>
             <div class="mb-3">
                 <label th:for="password2" class="form-label">비밀번호 확인</label>
-                <input type="password"  th:field="*{password2}" class="form-control" id="password2">
-                <div class="alert alert-danger" id="password2-error" style="display: none;"></div>
+                <input type="password"  th:field="*{password2}" class="form-control" id="password2" placeholder="비밀번호 확인">
+                <div class="error-message" id="password2-error" style="display: none;"></div>
             </div>
             <div id="password2-error-message" class="error-message"></div>
             <div class="mb-3">
                 <label th:for="email" class="form-label">이메일</label>
-                <input type="email" th:field="*{email}" class="form-control" id="email">
-                <div class="alert alert-danger" id="email-error" style="display: none;"></div>
+                <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="이메일">
+                <div class="error-message" id="email-error" style="display: none;"></div>
             </div>
             <button type="button" class="btn btn-primary" id="btn-signup">회원가입</button>
         </form>
