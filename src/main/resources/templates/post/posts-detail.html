@@ -65,16 +65,21 @@
 
     <h2>답변</h2>
          <div class="comment-section">
-         <form th:action="@{/answer/create/{id}(id=${dto.id})}" th:object="${answer}" method="post" class="comment-form">
-        <textarea name="content" class="form-control answer-box" rows="2"
-              th:field="*{content}"
-              placeholder="댓글을 입력하세요"></textarea>
-             <div class="field-error" th:errors="*{content}"></div>
-             <div th:if="${answerError}" class="alert alert-danger" th:text="${answerError}"></div>
-             <div class="answer-register">
-                <button type="submit" class="btn btn-primary">등록</button>
+             <div th:if="${!isUserLogin}">
+                 <textarea id="noLoggedUser" name="content" class="form-control answer-box" rows="2"
+                           placeholder="댓글을 작성하려면 로그인 해주세요" readonly
+                           th:attr="data-post-id=${dto.id}"></textarea>
              </div>
-         </form>
+                <form th:if="${isUserLogin}" th:action="@{/answer/create/{id}(id=${dto.id})}" th:object="${answer}" method="post" class="comment-form">
+                    <textarea  name="content" class="form-control answer-box" rows="2"
+                          th:field="*{content}"
+                          placeholder="댓글을 입력하세요"></textarea>
+                         <div class="field-error" th:errors="*{content}"></div>
+                         <div th:if="${answerError}" class="error-message" th:text="${answerError}"></div>
+                         <div class="answer-register">
+                            <button type="submit" class="btn btn-primary">등록</button>
+                         </div>
+                </form>
 
         </div>
         <!-- 댓글 목록 -->
@@ -104,9 +109,9 @@
             <div th:id="'editForm-' + ${answer.id}" class="editAnswerForm" style="display:none;">
                 <textarea th:id="'editContent-' + ${answer.id}" class="form-control"></textarea>
                 <button class="btn btn-primary"
-                        th:onclick="'main.submitEdit(' + ${answer.id} + ')'">수정 완료</button>
+                        th:id="'submitEditBtn-' + ${answer.id}">수정 완료</button>
                 <button class="btn btn-secondary"
-                        th:onclick="'main.cancelEdit(' + ${answer.id} + ')'">취소</button>
+                        th:id="'cancelEditBtn-' + ${answer.id}">취소</button>
             </div>
         </div>
 

@@ -17,9 +17,10 @@
                             th:value="${category}"
                             th:text="${category.displayName}">카테고리</option>
                 </select>
+                <div class="error-message" id="category-error" style="display: none;"></div>
                 <label th:for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" placeholder="제목을 입력하세요" th:field="*{title}" id="title">
-                <div class="alert alert-danger" id="title-error" style="display: none;"></div>
+                <div class="error-message" id="title-error" style="display: none;"></div>
             </div>
             <div class="form-group">
                 <label th:for="author" class="form-label">작성자</label>
@@ -30,11 +31,11 @@
                 <label th:for="content" class="form-label">내용</label>
                 <textarea class="form-control"
                             placeholder="내용을 입력하세요" th:field="*{content}" id="content"></textarea>
-                <div class="alert alert-danger" id="content-error" style="display: none;"></div>
+                <div class="error-message" id="content-error" style="display: none;"></div>
             </div>
             <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
         </form>
-        <a href="/static" role="button" class="btn btn-secondary">취소</a>
+        <a href="/" role="button" class="btn btn-secondary">취소</a>
         <button type="button" class="btn btn-primary" id="btn-save">등록</button>
     </div>
 </div>

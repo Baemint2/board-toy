@@ -1,8 +1,11 @@
 package org.example.board.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +49,18 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(ex.getField(), ex.getMessage());
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        Map<String, String> errorMessage = new HashMap<>();
+        if(ex.getCause() instanceof JsonMappingException || ex.getCause() instanceof JsonParseException) {
+            errorMessage.put("category","카테고리를 선택해주세요");
+        } else {
+            errorMessage.put("category","잘못된 요청 데이터입니다. 요청 데이터를 확인해주세요.");
+        }
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
 }

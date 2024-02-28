@@ -2,12 +2,15 @@ package org.example.board.domain.posts;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
+import org.example.board.deserializer.CategoryDeserializer;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
@@ -48,6 +51,7 @@ public class Posts extends BaseTimeEntity {
     private List<PostsLike> postsList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @JsonDeserialize(using = CategoryDeserializer.class)
     private Category category;
 
     @JsonManagedReference("postToImage")
