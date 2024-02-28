@@ -106,16 +106,21 @@ public class PostsController {
                               HttpServletRequest request,
                               HttpServletResponse response,
                               Principal principal) {
-        SiteUser siteUser = userService.getUser(principal.getName());
+        if(principal != null) {
+            SiteUser siteUser = userService.getUser(principal.getName());
+            ImageResponseDto image = imageService.findImage(siteUser.getUsername());
+            model.addAttribute("loggedUser", siteUser.getUsername());
+            model.addAttribute("image", image);
+        }
+
         PostsResponseDto dto = postsService.findById(id);
-        ImageResponseDto image = imageService.findImage(siteUser.getUsername());
         List<AnswerResponseDto> answerImages = answerService.getAnswerImages(id);
+        boolean isUserLogin = principal != null;
 
         model.addAttribute("dto", dto);
         model.addAttribute("answer", new AnswerResponseDto());
-        model.addAttribute("image", image);
         model.addAttribute("answerImages", answerImages);
-        model.addAttribute("loggedUser", siteUser.getUsername());
+        model.addAttribute("isUserLogin", isUserLogin);
 
         postsService.viewCountValidation(id, request, response);
         if (message != null && !message.isEmpty()) {
