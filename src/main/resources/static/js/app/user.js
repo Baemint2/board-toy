@@ -1,3 +1,6 @@
+import {myPagePosts} from "./myPagePosts.js";
+import {validator} from "./validator.js";
+
 const user = {
     init: function() {
         const _this = this;
@@ -5,18 +8,7 @@ const user = {
         document.getElementById('btn-signup')?.addEventListener('click', function () {
             _this.signup();
         })
-        document.getElementById('username')?.addEventListener("blur", function () {
-            _this.checkUsernameDuplicate();
-        })
-        document.getElementById("email")?.addEventListener("blur", function () {
-            _this.checkEmailDuplicate();
-        })
-        document.getElementById("password2")?.addEventListener("input", function () {
-            _this.validatePasswordsMatch();
-        })
-        document.getElementById("editNickname").addEventListener("click",   function () {
-            user.updateNickname.call(this);
-        })
+
     },
 
     //회원가입
@@ -60,255 +52,12 @@ const user = {
         })
 
     },
-    //내가 쓴 글
-    loadUserPosts: (function () {
-        fetch("/api/v1/user/posts")
-            .then(response => response.json())
-            .then(posts => {
-                this.displayUserPosts(posts);
-            }).catch(error => console.log("Error:", error));
-    }),
-    //페이지 번호 클릭 이벤트 연결
-    displayUserPosts: (function (posts) {
-        const postsContainer = document.getElementById('tabContent');
-        postsContainer.innerHTML = '';
-        if(posts.length === 0) {
-            const noPostsMessage = document.createElement('div')
-            noPostsMessage.textContent = '아직 작성한 게시글이 없습니다.'
-            noPostsMessage.className = 'no-posts-message';
-            postsContainer.appendChild(noPostsMessage);
-        }
-        posts.forEach((post, index) => {
-            const postElement = document.createElement('div');
-            postElement.className = 'user-post';
-
-            // 게시글 번호
-            const postNumber = document.createElement('span');
-            postNumber.className = 'post-number'
-            postNumber.textContent = `${index + 1}. `;
-
-            //게시글 제목
-            const postsTitle = document.createElement('a')
-            postsTitle.href = `/posts/detail/${post.id}`
-            postsTitle.className = 'post-title';
-            postsTitle.textContent = post.title;
-
-            //작성 시간
-            const postDate = document.createElement('span');
-            postDate.className = 'post-date';
-            postDate.textContent = new Date(post.createdDate).toLocaleString();
-
-            postElement.appendChild(postNumber);
-            postElement.appendChild(postsTitle);
-            postElement.appendChild(postDate);
-
-            postsContainer.appendChild(postElement);
-        })
-    }),
-
-    //댓글 단 글
-    loadUserAnswerPosts: (function () {
-        fetch("/api/v1/user/answer")
-            .then(response => response.json())
-            .then(answer => {
-                this.displayUserAnswerPosts(answer);
-            }).catch(error => console.log("Error:", error));
-    }),
-    displayUserAnswerPosts: (function (answerPosts) {
-        const answerPostsContainer = document.getElementById('tabContent')
-        answerPostsContainer.innerHTML = '';
-
-        if(answerPosts.length === 0) {
-            const noAnswerPostsMessage = document.createElement('div')
-            noAnswerPostsMessage.textContent = '아직 작성한 댓글이 없습니다.'
-            noAnswerPostsMessage.className = 'no-posts-message';
-            answerPostsContainer.appendChild(noAnswerPostsMessage);
-        }
-
-        answerPosts.forEach((answer, index) => {
-            const answerPosts  = document.createElement('div');
-            answerPosts.className = 'user-post';
-
-            // 게시글 번호
-            const answerPostsNumber = document.createElement('span');
-            answerPostsNumber.className = 'post-number'
-            answerPostsNumber.textContent = `${index + 1}. `;
-
-            //게시글 제목
-            const answerPostsTitle = document.createElement('a')
-            answerPostsTitle.href = `/posts/detail/${answer.id}`
-            answerPostsTitle.className = 'post-title';
-            answerPostsTitle.textContent = answer.title;
-
-            //작성 시간
-            const answerPostDate = document.createElement('span');
-            answerPostDate.className = 'post-date';
-            answerPostDate.textContent = new Date(answer.createdDate).toLocaleString();
-
-            answerPosts.appendChild(answerPostsNumber);
-            answerPosts.appendChild(answerPostsTitle);
-            answerPosts.appendChild(answerPostDate);
-
-            answerPostsContainer.appendChild(answerPosts);
-        })
-    }),
-
-    //좋아요 누른 글
-    loadUserLike: (function () {
-        fetch(`/api/v1/posts/likes`, {
-            method: "GET",
-            headers: {
-                "Content-Type":"application/json",
-            },
-        })
-            .then(response => response.json())
-            .then(posts => {
-                this.disPlayUserLikedPosts(posts);
-            }).catch(error => console.log("Error:", error));
-    }),
-    disPlayUserLikedPosts: (function (likePosts) {
-       const postsContainer = document.getElementById('tabContent')
-        postsContainer.innerHTML = '';
-       if(likePosts.length === 0) {
-           const noPostsMessage = document.createElement('div')
-           noPostsMessage.textContent = '좋아요를 누른 게시글이 없습니다';
-           noPostsMessage.className = 'no-posts-message'
-           postsContainer.appendChild(noPostsMessage);
-       }
-        likePosts.forEach((post, index) => {
-            const postElement = document.createElement('div')
-            postElement.className = 'user-post';
-
-            // 게시글 번호
-            const likePostsNumber = document.createElement('span');
-            likePostsNumber.className = 'post-number'
-            likePostsNumber.textContent = `${index + 1}. `;
-
-            //게시글 제목
-            const postsTitle = document.createElement('a')
-            postsTitle.href =`/posts/detail/${post.id}`
-            postsTitle.className = 'post-title';
-            postsTitle.textContent = post.title;
-
-            //작성 시간
-            const LikePostsDate = document.createElement('span');
-            LikePostsDate.className = 'post-date';
-            LikePostsDate.textContent = new Date(post.createdDate).toLocaleString();
-
-            // //좋아요 수
-            // const likesCount = document.createElement('span')
-            // likesCount.className = 'likes-count';
-            // likesCount.textContent = `Likes: ${post.likeCount}`;
-
-            postElement.appendChild(likePostsNumber);
-            postElement.appendChild(postsTitle);
-            postElement.appendChild(LikePostsDate);
-
-
-
-            postsContainer.appendChild(postElement);
-
-        })
-    }),
-
-    // 중복 사용자명 체크
-    checkUsernameDuplicate: (function () {
-        const username = document.getElementById('username').value;
-        fetch(`/api/v1/user/username/check?username=${username}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.isUserNameDuplicate) {
-                    const errorElement = document.getElementById('username-error');
-                    errorElement.textContent = '이미 사용중인 사용자명입니다.';
-                    errorElement.style.display = 'block';
-                } else {
-                    document.getElementById('username-error').style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-
-    }),
-
-    // 중복 이메일 체크
-    checkEmailDuplicate: (function () {
-        const email = document.getElementById("email").value;
-        fetch(`/api/v1/user/email/check?email=${email}`)
-            .then(response => response.json())
-            .then(data => {
-                if(data.isEmailDuplicate) {
-                    const errorElement = document.getElementById("email-error");
-                    errorElement.classList.add('input-error'); // 테두리 색 변경
-                    errorElement.textContent = '이미 사용중인 이메일입니다.';
-                    errorElement.style.display = 'block';
-                } else {
-                    document.getElementById('email-error').style.display = 'none';
-                }
-            }).catch(error => console.error('Error:', error));
-    }),
-
-    //비밀번호 일치 확인
-    validatePasswordsMatch: (function () {
-        const password1 = document.getElementById('password1').value;
-        const password2 = document.getElementById('password2').value;
-        const password2Field = document.getElementById('password2');
-        const errorMessage = document.getElementById('password2-error-message');
-
-        if (password1 !== password2) {
-            password2Field.classList.add('input-error'); // 테두리 색 변경
-            errorMessage.style.display = 'block'; // 오류 메시지 표시
-            errorMessage.textContent = '비밀번호가 일치하지 않습니다.';
-        } else {
-            password2Field.classList.remove('input-error'); // 테두리 색 제거
-            errorMessage.style.display = 'none'; // 오류 메시지 숨김
-        }
-    }),
-    updateNickname: (function (){
-        const nicknameField = document.getElementById('nickname');
-        const nickNameError = document.getElementById('nickname-error');
-        const button = this;
-
-        if(nicknameField.readOnly) {
-            nicknameField.readOnly = false;
-            button.textContent = "변경";
-        } else {
-            const updatedNickname = nicknameField.value;
-            fetch('/api/v1/user/updateNickname', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                nickname: updatedNickname
-            }).toString()
-            }).then(response => {
-                if(!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.errorMessage || '알 수 없는 오류가 발생했습니다.');
-                    })
-                }
-                return response.json();
-            })
-                .then(data => {
-                    if(data.redirect) {
-                        console.log(data);
-                        nicknameField.readOnly = true;
-                        button.textContent = "수정";
-                        nickNameError.style.display = 'none';
-                        window.location.href = data.redirect;
-                    }
-                })
-                .catch(error => {
-                    console.log("Error:", error);
-                    nickNameError.textContent = error.message;  // 네트워크 오류 메시지 표시
-                    nickNameError.style.display = 'block'; // 오류 메시지 div를 보이게 함
-                })
-        }
-    })
-
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     user.init();
+    myPagePosts.init();
+    validator.init();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -386,24 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         }
 
-})
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('myPostsTab').addEventListener('click', function () {
-        user.loadUserPosts();
-    })
-    document.getElementById('myAnswersTab').addEventListener('click', function () {
-        user.loadUserAnswerPosts();
-    })
-    document.getElementById('myLikesTab').addEventListener('click', function () {
-        user.loadUserLike();
-    })
-    // document.querySelector('.pagination').addEventListener('click', (e) => {
-    //     if(e.target.tagName === 'A') {
-    //         const page = e.target.getAttribute('data-page')
-    //         user.loadUserPosts(page);
-    //     }
-    // })
 })
 
 
