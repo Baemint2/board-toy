@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.user.SiteUser;
-import org.springframework.security.core.parameters.P;
+import org.example.board.domain.user.entity.SiteUser;
 
 @Getter
 @NoArgsConstructor

@@ -1,8 +1,6 @@
 package org.example.board.domain.posts;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
@@ -15,7 +13,6 @@ import org.example.board.domain.answer.Answer;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.postslike.PostsLike;
-import org.example.board.domain.user.SiteUser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

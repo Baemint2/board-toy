@@ -3,12 +3,10 @@ package org.example.board.domain.answer.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.AnswerService;
-import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
-import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,13 +46,5 @@ public class AnswerController {
         answerService.saveAnswer(id, requestDto);
         redirectAttributes.addFlashAttribute("message", "댓글이 성공적으로 등록되었습니다.");
         return String.format("redirect:/posts/detail/%s", id);
-    }
-
-    // 댓글 수정
-    @PostMapping("/update/{id}")
-    public String updateAnswer(@PathVariable Long id, Model model) {
-        AnswerResponseDto answerDto = answerService.findById(id);
-        model.addAttribute("answer", answerDto);
-        return "answer/answer-update";
     }
 }

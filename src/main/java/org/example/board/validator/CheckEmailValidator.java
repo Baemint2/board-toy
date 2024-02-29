@@ -1,7 +1,7 @@
 package org.example.board.validator;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.user.UserRepository;
+import org.example.board.domain.user.repository.UserRepository;
 import org.example.board.domain.user.dto.UserCreateDto;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

@@ -14,7 +14,7 @@ import org.example.board.domain.posts.PostsService;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
-import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;

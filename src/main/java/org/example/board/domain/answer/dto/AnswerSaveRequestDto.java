@@ -1,16 +1,12 @@
 package org.example.board.domain.answer.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.example.board.domain.answer.Answer;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.user.SiteUser;
-
-import java.time.LocalDateTime;
+import org.example.board.domain.user.entity.SiteUser;
 
 @Getter
 @NoArgsConstructor

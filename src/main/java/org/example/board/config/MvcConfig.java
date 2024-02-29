@@ -11,6 +11,6 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/profiles/**", "/posts/images/**")
                 .addResourceLocations("file:///Users/baeyeong-ug/Desktop/image/profiles/")
                 .addResourceLocations("file:///Users/baeyeong-ug/Desktop/image/images/");
-
     }
+
 }

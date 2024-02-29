@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.example.board.domain.posts.Posts;
-import org.example.board.domain.user.Role;
-import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.entity.SiteUser;
 
 import java.time.LocalDateTime;
 
