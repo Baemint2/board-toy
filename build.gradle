@@ -38,12 +38,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security:3.2.2'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.2'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    testImplementation 'org.springframework.security:spring-security-test'
+
 
     //queryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
