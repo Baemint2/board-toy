@@ -1,25 +1,34 @@
 import {myPagePosts} from "./myPagePosts.js";
 import {validator} from "./validator.js";
+import {stateManager} from "./stateManager.js";
 
 const user = {
+    initialized: false,
     init: function() {
         const _this = this;
-
+        if (this.initialized) return;
         document.getElementById('btn-signup')?.addEventListener('click', function () {
             _this.signup();
         })
+
+        this.initialized = true;
 
     },
 
     //회원가입
     signup: function () {
-        const data = {
-            username: document.getElementById('username').value,
-            nickname: document.getElementById('nickname').value,
-            password1: document.getElementById('password1').value,
-            password2: document.getElementById('password2').value,
-            email: document.getElementById('email').value
-        };
+        if (!stateManager.getIsVerified()) {
+            alert('인증번호가 확인되지 않았습니다.');
+            return; // 인증 실패 상태면 함수 종료
+        }
+            const data = {
+                username: document.getElementById('username').value,
+                nickname: document.getElementById('nickname').value,
+                password1: document.getElementById('password1').value,
+                password2: document.getElementById('password2').value,
+                email: document.getElementById('email').value,
+            }
+
         fetch('/api/v1/user/sign', {
             method: 'POST',
             headers: {
@@ -31,7 +40,7 @@ const user = {
                 alert("회원가입이 완료되었습니다.");
                 window.location.href = '/user/login';
             } else {
-                return response.json();
+                throw new Error('회원가입 처리 중 문제가 발생했습니다.');
             }
         }).then(data => {
 
@@ -55,9 +64,11 @@ const user = {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    user.init();
-    myPagePosts.init();
-    validator.init();
+    if (!user.initialized) {
+        user.init();
+        validator.init();
+        myPagePosts.init();
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {

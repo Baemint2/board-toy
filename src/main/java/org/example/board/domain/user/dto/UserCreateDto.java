@@ -3,12 +3,10 @@ package org.example.board.domain.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.entity.SiteUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter

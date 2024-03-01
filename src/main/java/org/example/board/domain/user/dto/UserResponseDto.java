@@ -3,8 +3,8 @@ package org.example.board.domain.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.user.Role;
-import org.example.board.domain.user.SiteUser;
+import org.example.board.domain.user.entity.Role;
+import org.example.board.domain.user.entity.SiteUser;
 
 @Getter
 @NoArgsConstructor

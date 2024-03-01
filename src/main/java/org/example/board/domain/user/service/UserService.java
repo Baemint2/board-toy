@@ -6,11 +6,11 @@ import org.example.board.config.DataNotFoundException;
 import org.example.board.domain.answer.AnswerRepository;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.image.ImageRepository;
-import org.example.board.domain.user.Role;
-import org.example.board.domain.user.SiteUser;
-import org.example.board.domain.user.UserRepository;
 import org.example.board.domain.user.dto.NicknameUpdateDto;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.domain.user.entity.Role;
+import org.example.board.domain.user.entity.SiteUser;
+import org.example.board.domain.user.repository.UserRepository;
 import org.example.board.exception.CustomException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +31,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final AnswerRepository answerRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     // 회원 가입
@@ -56,7 +55,6 @@ public class UserService {
             throw new CustomException("email","이미 등록된 이메일입니다.");
         }
 
-
         SiteUser user = SiteUser.builder()
                 .username(createDto.getUsername())
                 .nickname(createDto.getNickname())
@@ -72,6 +70,7 @@ public class UserService {
 
         userRepository.save(user);
         imageRepository.save(image);
+
         return user.getId();
     }
 
@@ -104,6 +103,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public SiteUser findUserIdByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
@@ -121,9 +121,6 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    public boolean checkUpdatedNicknameDuplicate(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
         for (FieldError error : errors.getFieldErrors()) {
@@ -134,10 +131,13 @@ public class UserService {
     }
 
     // 닉네임 변경
+    @Transactional
     public void updateNickName(String username, NicknameUpdateDto updateDto) {
         SiteUser siteUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
         String newNickname = updateDto.getNickname();
         siteUser.updateNickname(newNickname);
         userRepository.save(siteUser);
     }
+
+
 }

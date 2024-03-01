@@ -1,9 +1,9 @@
 package org.example.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.user.Role;
-import org.example.board.domain.user.SiteUser;
-import org.example.board.domain.user.UserRepository;
+import org.example.board.domain.user.entity.Role;
+import org.example.board.domain.user.entity.SiteUser;
+import org.example.board.domain.user.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

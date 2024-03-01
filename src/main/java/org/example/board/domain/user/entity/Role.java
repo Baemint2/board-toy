@@ -1,4 +1,4 @@
-package org.example.board.domain.user;
+package org.example.board.domain.user.entity;
 
 import lombok.Getter;
 

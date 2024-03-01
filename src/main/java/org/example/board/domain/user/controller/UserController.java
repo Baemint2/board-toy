@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.service.ImageService;
-import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.validator.CheckEmailValidator;
 import org.example.board.validator.CheckNicknameValidator;
@@ -61,13 +61,13 @@ public class UserController {
         try{
             Long siteUser = userService.create(userCreateDto);
             log.info("createUser = {}", siteUser);
-            return "redirect:/";
+            return "redirect:/user/login";
         } catch (DataIntegrityViolationException e) {
             errors.reject("signupFailed", "이미 등록된 사용자입니다.");
             log.info("이미 등록된 사용자입니다.", e);
             return "user/signup-form";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("예상치 못한 오류가 발생했습니다.", e);
             errors.reject("signupFailed", e.getMessage());
             return "user/signup-form";
         }

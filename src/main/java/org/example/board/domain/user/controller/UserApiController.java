@@ -5,22 +5,17 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.user.SiteUser;
 import org.example.board.domain.user.dto.NicknameUpdateDto;
+import org.example.board.domain.user.dto.UserCreateDto;
 import org.example.board.domain.user.dto.UserDeleteDto;
 import org.example.board.domain.user.service.UserService;
-import org.example.board.domain.user.dto.UserCreateDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.method.MethodValidationException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -31,20 +26,23 @@ public class UserApiController {
 
     private final UserService userService;
 
+    //회원 가입
     @PostMapping("/sign")
-    public ResponseEntity<Long> join(@Valid @RequestBody UserCreateDto userCreateDto) {
+    public ResponseEntity<?> join(@Valid @RequestBody UserCreateDto userCreateDto) {
         Long userId = userService.create(userCreateDto);
         log.info("회원 가입 = {}", userId);
         return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 
+    // 아이디 중복 체크
     @GetMapping("/username/check")
     public ResponseEntity<?> checkUsername(@RequestParam("username") String userName) {
         boolean isUserNameDuplicate = userService.checkUsernameDuplicate(userName);
-        log.info("중복된 사용자명 = {}", isUserNameDuplicate);
+        log.info("중복된 아이디 = {}", isUserNameDuplicate);
         return ResponseEntity.ok(Map.of("isUserNameDuplicate", isUserNameDuplicate));
     }
 
+    // 이메일 중복 체크
     @GetMapping("/email/check")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
         boolean isEmailDuplicate = userService.checkEmailDuplicate(email);
@@ -52,6 +50,7 @@ public class UserApiController {
         return ResponseEntity.ok(Map.of("isEmailDuplicate", isEmailDuplicate));
     }
 
+    // 닉네임 중복 체크
     @GetMapping("/nickname/check")
     public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) {
         boolean isNicknameDuplicate = userService.checkNicknameDuplicate(nickname);
