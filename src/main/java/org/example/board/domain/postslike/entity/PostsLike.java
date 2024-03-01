@@ -1,10 +1,10 @@
-package org.example.board.domain.postslike;
+package org.example.board.domain.postslike.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.user.entity.SiteUser;
 
 import java.time.LocalDateTime;

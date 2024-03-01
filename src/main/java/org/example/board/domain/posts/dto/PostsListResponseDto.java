@@ -2,7 +2,7 @@ package org.example.board.domain.posts.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Posts;
 
 import java.time.LocalDateTime;
 

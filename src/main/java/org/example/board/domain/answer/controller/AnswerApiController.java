@@ -3,10 +3,10 @@ package org.example.board.domain.answer.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.answer.AnswerService;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
 import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.answer.service.AnswerService;
+import org.example.board.domain.posts.entity.Posts;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

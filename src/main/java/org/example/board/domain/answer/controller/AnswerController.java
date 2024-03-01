@@ -2,8 +2,8 @@ package org.example.board.domain.answer.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.answer.AnswerService;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
+import org.example.board.domain.answer.service.AnswerService;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.stereotype.Controller;

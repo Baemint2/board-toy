@@ -1,4 +1,4 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.entity;
 
 import lombok.Getter;
 

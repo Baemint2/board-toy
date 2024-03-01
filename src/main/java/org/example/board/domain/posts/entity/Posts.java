@@ -1,4 +1,4 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
 import org.example.board.deserializer.CategoryDeserializer;
-import org.example.board.domain.answer.Answer;
-import org.example.board.domain.image.Image;
+import org.example.board.domain.answer.entity.Answer;
+import org.example.board.domain.image.entity.Image;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
-import org.example.board.domain.postslike.PostsLike;
+import org.example.board.domain.postslike.entity.PostsLike;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,5 +1,6 @@
-package org.example.board.domain.image;
+package org.example.board.domain.image.repository;
 
+import org.example.board.domain.image.entity.Image;
 import org.example.board.domain.user.entity.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 

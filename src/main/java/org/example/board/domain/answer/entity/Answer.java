@@ -1,4 +1,4 @@
-package org.example.board.domain.answer;
+package org.example.board.domain.answer.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.user.entity.SiteUser;
 
 @Getter

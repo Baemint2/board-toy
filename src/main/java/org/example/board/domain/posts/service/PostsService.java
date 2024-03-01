@@ -1,4 +1,4 @@
-package org.example.board.domain.posts;
+package org.example.board.domain.posts.service;
 
 
 import jakarta.servlet.http.Cookie;
@@ -7,9 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.image.Image;
+import org.example.board.domain.image.entity.Image;
 import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.posts.dto.*;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.repository.UserRepository;

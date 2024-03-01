@@ -2,10 +2,8 @@ package org.example.board.domain.posts.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.posts.Category;
 
 import java.util.List;
 

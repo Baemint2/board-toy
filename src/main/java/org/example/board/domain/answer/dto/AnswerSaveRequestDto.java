@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.answer.Answer;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.answer.entity.Answer;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.user.entity.SiteUser;
 
 @Getter

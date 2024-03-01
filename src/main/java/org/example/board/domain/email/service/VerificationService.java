@@ -1,10 +1,8 @@
-package org.example.board.domain.user;
+package org.example.board.domain.email.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.user.entity.TemporaryUser;
 import org.example.board.domain.user.repository.TemporaryRepository;
-import org.example.board.domain.user.service.UserService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,8 +13,6 @@ import java.util.Optional;
 public class VerificationService {
 
     private final TemporaryRepository temporaryRepository;
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     //인증 번호 검증 로직
     public boolean verifyCode(String email, String code) {

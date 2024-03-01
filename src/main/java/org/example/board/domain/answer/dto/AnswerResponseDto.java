@@ -2,12 +2,10 @@ package org.example.board.domain.answer.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.answer.Answer;
-import org.example.board.domain.image.Image;
+import org.example.board.domain.answer.entity.Answer;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor

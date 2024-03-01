@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
-import org.example.board.domain.email.VerificationCode;
-import org.example.board.domain.image.Image;
-import org.example.board.domain.postslike.PostsLike;
+import org.example.board.domain.email.entity.VerificationCode;
+import org.example.board.domain.image.entity.Image;
+import org.example.board.domain.postslike.entity.PostsLike;
 
 import java.util.ArrayList;
 import java.util.List;

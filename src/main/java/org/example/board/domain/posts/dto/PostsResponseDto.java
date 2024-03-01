@@ -2,9 +2,9 @@ package org.example.board.domain.posts.dto;
 
 import lombok.Getter;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.image.Image;
-import org.example.board.domain.posts.Category;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.image.entity.Image;
+import org.example.board.domain.posts.entity.Category;
+import org.example.board.domain.posts.entity.Posts;
 
 import java.time.LocalDateTime;
 import java.util.List;

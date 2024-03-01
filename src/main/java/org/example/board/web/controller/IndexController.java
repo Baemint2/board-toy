@@ -2,8 +2,8 @@ package org.example.board.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.image.service.ImageService;
-import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.PostsService;
+import org.example.board.domain.posts.entity.Posts;
+import org.example.board.domain.posts.service.PostsService;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;

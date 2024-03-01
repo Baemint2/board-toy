@@ -1,14 +1,16 @@
-package org.example.board.domain.answer;
+package org.example.board.domain.answer.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.image.Image;
-import org.example.board.domain.posts.Posts;
-import org.example.board.domain.posts.repository.PostsRepository;
-import org.example.board.domain.user.entity.SiteUser;
-import org.example.board.domain.user.repository.UserRepository;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.answer.dto.AnswerSaveRequestDto;
 import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
+import org.example.board.domain.answer.entity.Answer;
+import org.example.board.domain.answer.repository.AnswerRepository;
+import org.example.board.domain.image.entity.Image;
+import org.example.board.domain.posts.entity.Posts;
+import org.example.board.domain.posts.repository.PostsRepository;
+import org.example.board.domain.user.entity.SiteUser;
+import org.example.board.domain.user.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,6 @@
-package org.example.board.domain.user.service;
+package org.example.board.domain.email.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.email.EmailService;
 import org.example.board.domain.user.entity.TemporaryUser;
 import org.example.board.domain.user.repository.TemporaryRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

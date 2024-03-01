@@ -1,4 +1,4 @@
-package org.example.board.domain.email;
+package org.example.board.domain.email.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

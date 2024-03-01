@@ -2,16 +2,16 @@ package org.example.board.domain.posts.repository;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.example.board.domain.answer.QAnswer;
-import org.example.board.domain.posts.Category;
 import org.example.board.domain.posts.QPosts;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
+import org.example.board.domain.posts.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.util.List;
 import java.util.Optional;

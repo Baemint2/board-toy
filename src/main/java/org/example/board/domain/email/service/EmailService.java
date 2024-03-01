@@ -1,10 +1,9 @@
-package org.example.board.domain.email;
+package org.example.board.domain.email.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.user.VerificationService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,6 @@ public class EmailService {
     public static final String SENDER_EMAIL = "moz1mozi@example.com";
     public static int number;
     private final JavaMailSender javaMailSender;
-    private final VerificationRepository verificationRepository;
-    private final VerificationService verificationService;
 
     //인증 번호 생성
     @Transactional

@@ -1,10 +1,11 @@
-package org.example.board.domain.postslike;
+package org.example.board.domain.postslike.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.posts.Posts;
 import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.entity.Posts;
+import org.example.board.domain.postslike.service.PostsLikeService;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.repository.UserRepository;
 import org.springframework.http.ResponseEntity;

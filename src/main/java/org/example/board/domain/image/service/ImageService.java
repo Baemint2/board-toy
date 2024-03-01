@@ -1,11 +1,11 @@
 package org.example.board.domain.image.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.image.Image;
-import org.example.board.domain.image.ImageRepository;
 import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.dto.ImageUploadDto;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.image.entity.Image;
+import org.example.board.domain.image.repository.ImageRepository;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.repository.UserRepository;

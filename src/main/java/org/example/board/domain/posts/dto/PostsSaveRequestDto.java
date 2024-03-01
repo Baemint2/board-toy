@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.posts.Category;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Category;
+import org.example.board.domain.posts.entity.Posts;
 
 import java.util.List;
 

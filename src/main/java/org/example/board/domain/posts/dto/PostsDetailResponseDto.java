@@ -1,11 +1,8 @@
 package org.example.board.domain.posts.dto;
 
 import lombok.Getter;
-import org.example.board.domain.answer.dto.AnswerResponseDto;
-import org.example.board.domain.posts.Category;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class PostsDetailResponseDto {

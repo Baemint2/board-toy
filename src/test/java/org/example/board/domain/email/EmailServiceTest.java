@@ -1,6 +1,7 @@
 package org.example.board.domain.email;
 
 import jakarta.mail.internet.MimeMessage;
+import org.example.board.domain.email.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

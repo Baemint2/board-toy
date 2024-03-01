@@ -1,6 +1,7 @@
-package org.example.board.domain.postslike;
+package org.example.board.domain.postslike.repository;
 
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Posts;
+import org.example.board.domain.postslike.entity.PostsLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

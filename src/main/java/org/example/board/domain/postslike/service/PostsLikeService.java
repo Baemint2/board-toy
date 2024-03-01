@@ -1,9 +1,11 @@
-package org.example.board.domain.postslike;
+package org.example.board.domain.postslike.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.posts.Posts;
+import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
+import org.example.board.domain.postslike.entity.PostsLike;
+import org.example.board.domain.postslike.repository.PostsLikeRepository;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
