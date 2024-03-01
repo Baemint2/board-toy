@@ -1,11 +1,11 @@
-package org.example.board.domain.user;
+package org.example.board.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
-import org.example.board.domain.answer.Answer;
+import org.example.board.domain.email.VerificationCode;
 import org.example.board.domain.image.Image;
 import org.example.board.domain.postslike.PostsLike;
 
@@ -46,6 +46,8 @@ public class SiteUser extends BaseTimeEntity {
     @OneToMany(mappedBy = "siteUser",cascade = CascadeType.ALL)
     private List<PostsLike> postsLikesUser = new ArrayList<>();
 
+    @OneToMany(mappedBy = "siteUser")
+    private List<VerificationCode> verificationCodes = new ArrayList<>();
     @Builder
     public SiteUser(String username, String nickname, String password, String email, Role role) {
         this.username = username;
