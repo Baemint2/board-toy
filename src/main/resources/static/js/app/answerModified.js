@@ -58,7 +58,3 @@ export const answerModified = {
         editForm.style.display = 'none';
     },
 };
-
-document.addEventListener("DOMContentLoaded", function () {
-    answerModified.init();
-});

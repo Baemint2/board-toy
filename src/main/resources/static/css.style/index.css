@@ -3,10 +3,12 @@
     box-sizing: border-box;
     margin: 0;
 }
-
-a.post-title {
+/* index */
+.post-title {
     color: black;
     text-decoration: none;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .current-time-container {
@@ -17,14 +19,7 @@ a.post-title {
     font-size: 24px;
 }
 
-.header-container {
-    width: 100%;
-}
-
-.user-welcome {
-    align-items: end;
-}
-
+/* 댓글 폼 */
 .content-box {
     display: flex;
     flex-direction: column;
@@ -36,6 +31,7 @@ a.post-title {
     height: auto;
 }
 
+/* posts-detail 좋아요 버튼 */
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -62,7 +58,6 @@ a.post-title {
     align-items: center;
 }
 
-
 .post-like {
     margin-left: auto;
     margin-right: auto;
@@ -70,15 +65,10 @@ a.post-title {
 
 }
 
-.input-error {
-    border: 1px solid #dc3545; /* 빨간색 테두리 색상 */
-}
-
 .error-message {
     color: #dc3545; /* 빨간색 텍스트 색상 */
     font-size: 0.875em; /* 글씨 크기 */
     margin-top: 0.25rem; /* 필드 위에 조금의 여백을 제공 */
-    display: none; /* 기본적으로는 보이지 않도록 설정 */
 }
 
 .modal {
@@ -201,10 +191,6 @@ a.post-title {
     font-weight: bold;
 }
 
-.post-title {
-    margin-left: 5px;
-    margin-right: 5px;
-}
 
 .post-date {
     font-size: 0.9em;
@@ -227,6 +213,20 @@ a.post-title {
     margin-right: auto;
     width: 500px;
 }
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+}
+
+.signup-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 600px;
+    height: 600px;
+}
+
 
 #answer-profile {
     width: 35px;
@@ -262,7 +262,27 @@ a.post-title {
     align-items: center;
 }
 
-.signup-header {
+.nav-header {
     color: black;
     text-decoration: none;
+}
+
+.find-wrap{
+    padding: 20px 0 35px;
+    text-align: center;
+}
+
+.find-wrap li {
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.find-text {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 17px;
+    text-decoration: none;
+    color: #888;
 }

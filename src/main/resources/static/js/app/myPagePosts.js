@@ -66,7 +66,3 @@ loadUserPosts: function () {
         return 'tabContent'
     }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    myPagePosts.init();
-})
