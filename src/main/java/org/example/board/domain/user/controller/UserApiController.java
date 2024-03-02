@@ -6,14 +6,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.user.dto.NicknameUpdateDto;
+import org.example.board.domain.user.dto.PasswordResetDto;
 import org.example.board.domain.user.dto.UserCreateDto;
 import org.example.board.domain.user.dto.UserDeleteDto;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class UserApiController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     //회원 가입
     @PostMapping("/sign")
@@ -33,13 +35,13 @@ public class UserApiController {
         try {
             Long userId = userService.create(userCreateDto);
             log.info("회원 가입 = {}", userId);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "회원가입이 성공적으로 완료되었습니다.", "userId", userId));
+            return ResponseEntity.ok().body(Map.of("message", "회원가입이 성공적으로 완료되었습니다.", "userId", userId));
         } catch (DataIntegrityViolationException e) {
             log.error("회원 가입 실패 : 데이터 무결성 위반 ", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("signupFailed", "이미 등록된 사용자입니다."));
+            return ResponseEntity.badRequest().body(Map.of("signupFailed", "이미 등록된 사용자입니다."));
         } catch (Exception e) {
             log.error("회원 가입 실패: 예상치 못한 오류", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("signupFailed", "예상치 못한 오류가 발생했습니다."));
+            return ResponseEntity.internalServerError().body(Map.of("signupFailed", "예상치 못한 오류가 발생했습니다."));
         }
     }
 
@@ -83,7 +85,7 @@ public class UserApiController {
             }
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 삭제 실패: 사용자명 또는 비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.badRequest().body("사용자 삭제 실패: 사용자명 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -98,6 +100,25 @@ public class UserApiController {
         // 닉네임 업데이트
         userService.updateNickName(username, nicknameUpdateDto);
         return ResponseEntity.ok().body(Map.of("redirect", "닉네임이 성공적으로 업데이트되었습니다."));
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/password/reset")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto) {
+        // 현재 비밀번호 확인
+        if(!userService.checkIfValidOldPassword(passwordResetDto.getCurrentPassword())) {
+            return ResponseEntity.badRequest().body("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 새 비밀번호와 비밀번호 확인 일치 확인
+        if(!passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body("새 비밀번호와 일치하지 않습니다.");
+        }
+
+        userService.changeUserPassword(passwordResetDto.getNewPassword());
+
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+
     }
 
 }

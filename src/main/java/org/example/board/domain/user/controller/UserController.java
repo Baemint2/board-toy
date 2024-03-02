@@ -72,12 +72,9 @@ public class UserController {
 
     // 비밀번호 변경
     @GetMapping("/password/reset")
-    public String resetPassword(PasswordResetDto passwordResetDto) {
+    public String resetPassword(Model model, PasswordResetDto passwordResetDto) {
+        model.addAttribute("passwordResetDto", passwordResetDto);
         return "user/password-reset";
     }
 
-    // Todo: 비밀번호 변경 기능 구현하기
-//    @PostMapping("/password/reset")
-//    public String resetPassword(@Valid @ModelAttribute("passwordResetDto") PasswordResetDto passwordResetDto,
-//                                BindingResult bindingResult, Principal principal, Model model)
 }

@@ -12,15 +12,13 @@ import org.example.board.domain.user.entity.Role;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.repository.UserRepository;
 import org.example.board.exception.CustomException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -121,13 +119,26 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
+    // 비밀번호 확인
+    @Transactional
+    public boolean checkIfValidOldPassword(String oldPassword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        SiteUser siteUser = userRepository.findByUsername(currentUser)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        return passwordEncoder.matches(oldPassword, siteUser.getPassword());
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changeUserPassword(String newPassword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        SiteUser siteUser = userRepository.findByUsername(currentUser)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        siteUser.changePassword(encodedPassword);
+        userRepository.save(siteUser);
     }
 
     // 닉네임 변경

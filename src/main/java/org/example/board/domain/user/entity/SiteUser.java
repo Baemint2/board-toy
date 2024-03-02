@@ -37,9 +37,6 @@ public class SiteUser extends BaseTimeEntity {
     @Enumerated
     private Role role;
 
-//    @OneToMany(mappedBy = "site_user", cascade = CascadeType.REMOVE)
-//    private List<Answer> answerList;
-
     @OneToOne(mappedBy = "siteUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
 
@@ -57,7 +54,13 @@ public class SiteUser extends BaseTimeEntity {
         this.role = role;
     }
 
+    // 닉네임 변경을 위한 setter 메소드
     public void updateNickname(String newNickname) {
         this.nickname = newNickname;
+    }
+
+    // 비밀번호 변경을 위한 setter 메소드
+    public void changePassword(String password) {
+        this.password = password;
     }
 }
