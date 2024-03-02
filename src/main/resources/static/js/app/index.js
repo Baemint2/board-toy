@@ -102,17 +102,24 @@ const main = {
             method: 'PUT',
             body: formData
         }).then(response => {
-            if (!response.ok) {
-                // 서버로부터의 응답이 오류를 나타내는 경우 (예: 상태 코드가 400 이상)
-                throw new Error(`서버 오류: ${response.status}`);
-            }
+            if(!response.ok)
+                return response.json().then(data => {
+                // 서버로부터 받은 오류 메시지를 표시
+                    Object.keys(data).forEach(function (field) {
+                        const errorElement = document.getElementById(`${field}-error`);
+                        if (errorElement) {
+                            errorElement.textContent = data[field];
+                            errorElement.style.display = 'block';
+                        }
+                    });
+                    return Promise.reject(new Error("글 수정 중 문제가 발생했습니다."));
+                });
             return response.json();
         }).then(() => {
-            alert("글이 수정되었습니다.");
             window.location.href = `/posts/detail/${id}`;
         }).catch(error => {
             // 네트워크 오류 또는 response.ok가 false 인 경우 여기서 처리
-            alert(`오류가 발생했습니다: ${error.message}`);
+            console.error('Error : ', error.message)
         });
     },
 }

@@ -14,7 +14,8 @@ const posts = {
 
         const answerBox = document.getElementById('noLoggedUser');
         if (answerBox) {
-            answerBox.addEventListener('click', () => this.promptLogin(answerBox));
+            const postId = answerBox.getAttribute('data-post-id');
+            answerBox.addEventListener('click', () => this.promptLogin(postId));
         }
 
         this.updateViewCountChange(postId);
@@ -89,7 +90,9 @@ const posts = {
             return viewedPostsArray.includes(postId.toString());
         }
         return false;
-    }, promptLogin: function (postId) {
+    },
+
+    promptLogin: function (postId) {
         const userResponse = confirm("로그인을 하신 후 이용해 주시기 바랍니다.");
         if (userResponse) {
             const redirectUrl = encodeURIComponent(`/posts/detail/${postId}`);
