@@ -1,25 +1,25 @@
 package org.example.board.domain.user.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.service.ImageService;
+import org.example.board.domain.user.dto.PasswordResetDto;
 import org.example.board.domain.user.dto.UserCreateDto;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.validator.CheckEmailValidator;
 import org.example.board.validator.CheckNicknameValidator;
 import org.example.board.validator.CheckUsernameValidator;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -39,41 +39,14 @@ public class UserController {
         binder.addValidators(nicknameValidator);
     }
 
+    // 회원가입 화면
     @GetMapping("/signup")
-    public String signup(UserCreateDto userCreateDto) {
+    public String signup(Model model,UserCreateDto userCreateDto) {
+        model.addAttribute("userCreateDto", userCreateDto);
         return "user/signup-form";
     }
 
-
-
-    @PostMapping("/signup")
-    public String signup(@Valid UserCreateDto userCreateDto,
-                         Errors errors, Model model) {
-
-        if(errors.hasErrors()) {
-            model.addAttribute("userCreateDto", userCreateDto);
-            Map<String, String> validatorResult = userService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
-            }
-            return "user/signup-form";
-        }
-        try{
-            Long siteUser = userService.create(userCreateDto);
-            log.info("createUser = {}", siteUser);
-            return "redirect:/user/login";
-        } catch (DataIntegrityViolationException e) {
-            errors.reject("signupFailed", "이미 등록된 사용자입니다.");
-            log.info("이미 등록된 사용자입니다.", e);
-            return "user/signup-form";
-        } catch (Exception e) {
-            log.info("예상치 못한 오류가 발생했습니다.", e);
-            errors.reject("signupFailed", e.getMessage());
-            return "user/signup-form";
-        }
-    }
-
-
+    // 유저 My Page
     @GetMapping("/info")
     public String userInfo(Model model, Principal principal) {
         SiteUser siteUser = userService.findUserIdByUsername(principal.getName());
@@ -90,9 +63,21 @@ public class UserController {
         return "user/info-update";
     }
 
+    // 로그인
     @GetMapping("/login")
     public String login(@RequestParam(value = "redirect", required = false) String redirectUrl, Model model) {
         model.addAttribute("redirectUrl", redirectUrl);
         return "user/login-form";
     }
+
+    // 비밀번호 변경
+    @GetMapping("/password/reset")
+    public String resetPassword(PasswordResetDto passwordResetDto) {
+        return "user/password-reset";
+    }
+
+    // Todo: 비밀번호 변경 기능 구현하기
+//    @PostMapping("/password/reset")
+//    public String resetPassword(@Valid @ModelAttribute("passwordResetDto") PasswordResetDto passwordResetDto,
+//                                BindingResult bindingResult, Principal principal, Model model)
 }

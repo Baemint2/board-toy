@@ -13,13 +13,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 public class UserCreateDto {
 
+    @NotEmpty
     @Pattern(regexp = "^[a-z0-9_-]{5,20}$", message = "사용자명은 5자~20자 사이의 알파벳 소문자, 숫자, 특수문자(_),(-)만 가능합니다.")
     private String username;
 
+    @NotEmpty
     @Pattern(regexp = "^[a-zA-Z0-9가-힣]{2,}", message = "닉네임은 2자 이상의 알파벳 대소문자, 숫자, 한글만 가능합니다.")
     private String nickname;
 
 
+    @NotEmpty
     @Pattern(regexp="^[a-zA-Z0-9!@#$%^&*()_+]{6,}$", message="비밀번호는 6자 이상의 알파벳, 숫자, 특정 특수문자만 가능합니다.")
     private String password1;
 

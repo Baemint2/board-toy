@@ -10,6 +10,7 @@ import org.example.board.domain.posts.entity.Posts;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -20,9 +21,11 @@ public class AnswerApiController {
     private final AnswerService answerService;
 
     //댓글 등록
-    @PostMapping("/api/v1/answer/{id}")
-    public Long save(@PathVariable Long id, @Valid AnswerSaveRequestDto saveRequestDto) {
-        return answerService.saveAnswer(id, saveRequestDto);
+    @PostMapping("/api/v1/answer/{postId}")
+    public ResponseEntity<Long> save(@PathVariable Long postId, @Valid @RequestBody AnswerSaveRequestDto saveRequestDto, Principal principal) {
+        String username = principal.getName();
+        Long savedAnswer = answerService.saveAnswer(postId, saveRequestDto, username);
+        return ResponseEntity.ok().body(savedAnswer);
     }
 
     //댓글 업데이트

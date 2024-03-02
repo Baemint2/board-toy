@@ -27,11 +27,11 @@ public class AnswerService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long saveAnswer(Long id, AnswerSaveRequestDto requestDto) {
-        Posts posts = postsRepository.findById(requestDto.getPostId())
+    public Long saveAnswer(Long postId, AnswerSaveRequestDto requestDto, String username) {
+        Posts posts = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다. ID =" + requestDto.getPostId()));
 
-        SiteUser siteUser = userRepository.findById(requestDto.getSiteUserId())
+        SiteUser siteUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("작성자가 존재하지 않습니다. ID =" + requestDto.getSiteUserId()));
 
         Answer answer = Answer.builder()
