@@ -3,20 +3,19 @@ package org.example.board.domain.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.board.domain.user.entity.Role;
 import org.example.board.domain.user.entity.SiteUser;
 
 @Getter
 @NoArgsConstructor
 public class UserResponseDto {
-    private String email;
     private String username;
-    private Role role;
+    private String email;
+    private String nickname;
 
     @Builder
     public UserResponseDto(SiteUser siteUser) {
-        this.email = siteUser.getEmail();
         this.username = siteUser.getUsername();
-        this.role = siteUser.getRole();
+        this.email = siteUser.getEmail();
+        this.nickname = siteUser.getNickname();
     }
 }

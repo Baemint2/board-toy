@@ -6,6 +6,7 @@ import org.example.board.domain.image.dto.ImageResponseDto;
 import org.example.board.domain.image.service.ImageService;
 import org.example.board.domain.user.dto.PasswordResetDto;
 import org.example.board.domain.user.dto.UserCreateDto;
+import org.example.board.domain.user.dto.UserResponseDto;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.example.board.validator.CheckEmailValidator;
@@ -49,7 +50,7 @@ public class UserController {
     // 유저 My Page
     @GetMapping("/info")
     public String userInfo(Model model, Principal principal) {
-        SiteUser siteUser = userService.findUserIdByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName());
         ImageResponseDto image = imageService.findImage(siteUser.getUsername());
 
         model.addAttribute("siteUser", siteUser);
@@ -58,9 +59,11 @@ public class UserController {
         return "user/info";
     }
 
-    @GetMapping("/info/update")
-    public String userInfoUpdate(Model model, Principal principal) {
-        return "user/info-update";
+    // 아이디 찾기
+    @GetMapping("/find/username")
+    public String userInfoUpdate(Model model, UserResponseDto userResponseDto) {
+        model.addAttribute("userResponseDto", userResponseDto);
+        return "user/find-username";
     }
 
     // 로그인
@@ -76,5 +79,15 @@ public class UserController {
         model.addAttribute("passwordResetDto", passwordResetDto);
         return "user/password-reset";
     }
+
+    // 비밀번호 찾기 -> 1. 아이디 입력
+    @GetMapping("/find/password")
+    public String findPassword(Model model, UserResponseDto userResponseDto) {
+        model.addAttribute("userResponseDto", userResponseDto);
+        return "user/find-password";
+    }
+
+    // 비밀번호 찾기 -> 2. 이메일 인증
+
 
 }

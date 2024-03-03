@@ -1,6 +1,7 @@
 import {myPagePosts} from "./myPagePosts.js";
 import {validator} from "./validator.js";
 import {stateManager} from "./stateManager.js";
+import {emailVerify} from "./emailVerification.js";
 
 const user = {
     initialized: false,
@@ -43,7 +44,6 @@ const user = {
                 throw new Error('회원가입 처리 중 문제가 발생했습니다.');
             }
         }).then(data => {
-
                 document.querySelectorAll('.alert-danger').forEach(errorContainer => {
                     errorContainer.style.display = 'none';
                     errorContainer.textContent = '';
@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         user.init();
         validator.init();
         myPagePosts.init();
+        emailVerify.init();
     }
 });
 

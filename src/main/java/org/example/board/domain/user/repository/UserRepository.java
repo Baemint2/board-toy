@@ -3,12 +3,14 @@ package org.example.board.domain.user.repository;
 import org.example.board.domain.user.entity.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<SiteUser, Long> {
 
-    Optional<SiteUser> findByUsername(String username);
+    @Query("SELECT u.username FROM SiteUser u WHERE u.username = :username")
+    Optional<SiteUser> findByUsername(@Param("username") String username);
 
 
     boolean existsByUsername(String username);
@@ -19,8 +21,8 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
 
     void deleteById(Long id);
 
-
-    @Query("SELECT username FROM SiteUser WHERE email = :email")
-    Optional<String> findSiteUserByEmail(String email);
+    @Query("SELECT u.username FROM SiteUser u WHERE u.email = :email AND u.nickname = :nickname")
+    Optional<String> findByEmailAndNickname(@Param("email") String email,
+                                            @Param("nickname") String nickname);
 
 }

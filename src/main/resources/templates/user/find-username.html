@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css.style/findInfo.css" rel="stylesheet">
+    <title>아이디 찾기</title>
+</head>
+<body>
+<div class="findContainer">
+    <!-- 아이디 찾기 클릭시 이름, 이메일주소 (인증번호 받기), 인증번호 입력 폼(readonly) 인증번호 받으면 그때 입력가능 -->
+    <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
+    <div class="findHeader">
+        <h2>아이디/비밀번호 찾기</h2>
+    </div>
+    <form id="findIdForm" th:object="${userResponseDto}" >
+        <label th:for="nickname">닉네임:</label>
+        <input class="find-id-wrap" id="nickname" required th:field="*{nickname}" type="text"><br>
+        <label th:for="email">이메일 주소:</label>
+        <input class="find-id-wrap" id="email" required th:field="*{email}" type="email">
+        <button class="emailValidateBtn" th:data-action="findId" type="button">인증번호 받기</button><br>
+        <label th:for="verificationCode">인증번호:</label>
+        <input class="find-id-wrap" id="verificationCode" name="authCode" readonly required type="text"><br>
+        <button id="checkVerificationCode" type="button">인증번호 확인</button>
+        <button id="findUsernameBtn" type="button">아이디 찾기</button>
+        <button id="findPasswordBtn" type="button">비밀번호 찾기</button>
+        <div id="usernameResult"></div>
+    </form>
+</div>
+<script src="/js/app/user.js" type="module"></script>
+</body>
+</html>

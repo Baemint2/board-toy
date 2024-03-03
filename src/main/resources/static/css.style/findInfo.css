@@ -1,0 +1,60 @@
+.findContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.findHeader {
+    text-align: center;
+    margin-bottom: 20px; /* 폼과의 간격 */
+}
+
+#findIdForm {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.find-id-wrap {
+    width: calc(100% - 20px); /* 인풋 필드 너비를 폼 너비에 맞춤, 경계선과 패딩 고려 */
+    padding: 10px; /* 인풋 필드 내부의 패딩 */
+    margin-bottom: 16px; /* 인풋 필드 사이의 여백 */
+    border: 1px solid #ccc; /* 경계선 스타일 */
+    border-radius: 4px; /* 경계선 둥글게 처리 */
+    box-sizing: border-box; /* border와 padding을 너비에 포함 */
+}
+
+.nav-header {
+    color: black;
+    text-decoration: none;
+}
+
+/* 비밀번호 */
+#findPasswordContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+#findPasswordForm input {
+    width: 378px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+}
+
+#findPasswordForm button {
+    width: 100%;
+    padding: 10px;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

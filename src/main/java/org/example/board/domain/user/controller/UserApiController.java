@@ -5,10 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.domain.user.dto.NicknameUpdateDto;
-import org.example.board.domain.user.dto.PasswordResetDto;
-import org.example.board.domain.user.dto.UserCreateDto;
-import org.example.board.domain.user.dto.UserDeleteDto;
+import org.example.board.domain.user.dto.*;
+import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +33,8 @@ public class UserApiController {
         try {
             Long userId = userService.create(userCreateDto);
             log.info("회원 가입 = {}", userId);
-            return ResponseEntity.ok().body(Map.of("message", "회원가입이 성공적으로 완료되었습니다.", "userId", userId));
+            return ResponseEntity.ok().body(Map.of("message", "회원가입이 성공적으로 완료되었습니다.",
+                                                    "userId", userId));
         } catch (DataIntegrityViolationException e) {
             log.error("회원 가입 실패 : 데이터 무결성 위반 ", e);
             return ResponseEntity.badRequest().body(Map.of("signupFailed", "이미 등록된 사용자입니다."));
@@ -102,6 +101,34 @@ public class UserApiController {
         return ResponseEntity.ok().body(Map.of("redirect", "닉네임이 성공적으로 업데이트되었습니다."));
     }
 
+    //아이디 찾기
+    @PostMapping("/findUsername")
+    public ResponseEntity<?> findUsernameByEmail(@RequestBody UserResponseDto responseDto) {
+        String username = userService.findUsernameByEmail(responseDto.getEmail(), responseDto.getNickname());
+
+        if(username != null) {
+            log.info("사용자 아이디 찾기 성공 email = {}, nickname = {}, username = {}", responseDto.getEmail(), responseDto.getNickname(), username);
+            return ResponseEntity.ok(Map.of("username", username));
+        } else {
+            log.info("해당 이메일로 등록된 사용자 없음 email = {}", responseDto.getEmail());
+            return ResponseEntity.badRequest().body(Map.of("error", "해당 이메일로 등록된 사용자가 없습니다."));
+        }
+    }
+
+    // 비밀번호 찾기 1. 아이디 입력
+    // 비밀번호 찾기 2. 아이디 입력 한 사용자의 이메일 인증
+    // 비밀번호 찾기 3. 비밀번호 변경
+    @PostMapping("/verifyUserId")
+    public ResponseEntity<?> verifyUserId(@Valid @RequestBody UserResponseDto responseDto) {
+
+        SiteUser siteUser = userService.findByUsername(responseDto.getUsername());
+        if(siteUser != null) {
+            return  ResponseEntity.ok(Map.of("siteUser", siteUser));
+        }
+
+        return ResponseEntity.badRequest().body(Map.of("error", "존재하지 않는 사용자입니다."));
+    }
+
     // 비밀번호 변경
     @PostMapping("/password/reset")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto) {
@@ -121,18 +148,6 @@ public class UserApiController {
 
     }
 
-    //아이디 찾기
-    @PostMapping("/findUsername")
-    public ResponseEntity<?> findUsernameByEmail(@RequestParam("email") String email) {
-        String username = userService.findUsernameByEmail(email);
 
-        if(username != null) {
-            log.info("사용자 아이디 찾기 성공 email = {}, username = {}", email, username);
-            return ResponseEntity.ok(Map.of("username", username));
-        } else {
-            log.info("해당 이메일로 등록된 사용자 없음 email = {}", email);
-            return ResponseEntity.badRequest().body(Map.of("error", "해당 이메일로 등록된 사용자가 없습니다."));
-        }
-    }
 
 }
