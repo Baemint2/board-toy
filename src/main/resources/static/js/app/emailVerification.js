@@ -12,14 +12,10 @@ export const emailVerify = {
     },
     requestVerificationCode: function () {
         const email = document.getElementById('email').value;
-        const username = document.getElementById('username').value;
-        const nickname = document.getElementById('nickname').value;
-        const password =  document.getElementById('password1').value;
-        const password2 = document.getElementById('password2').value;
         fetch('/api/email/sendVerificationCode', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email: email, username: username, nickname: nickname, password: password, password2: password2})
+            body: JSON.stringify({email: email})
         })
             .then(response => response.json())
             .then(data => {

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor
-public class TemporaryUser {
+public class EmailVerification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,21 +23,11 @@ public class TemporaryUser {
 
     private String verificationCode;
 
-    private String username;
-
-    private String nickname;
-
-    private String password;
-
     private LocalDateTime expiryDateTime;
 
     @Builder
-    public TemporaryUser(String email, String verificationCode, LocalDateTime expiryDateTime,
-                         String username, String nickname, String password) {
+    public EmailVerification(String email, String verificationCode, LocalDateTime expiryDateTime) {
         this.email = email;
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
         this.verificationCode = verificationCode;
         this.expiryDateTime = expiryDateTime;
     }

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.email.service.AuthenticationService;
 import org.example.board.domain.email.service.VerificationService;
-import org.example.board.domain.user.entity.TemporaryUser;
-import org.example.board.domain.user.repository.TemporaryRepository;
+import org.example.board.domain.user.entity.EmailVerification;
+import org.example.board.domain.user.repository.EmailVerificationRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,17 +22,14 @@ public class EmailApiController {
 
     private final AuthenticationService authenticationService;
     private final VerificationService verificationService;
-    private final TemporaryRepository temporaryRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
     // 인증 코드 전송
     @PostMapping("/api/email/sendVerificationCode")
     public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
         String email = request.get("email");
-        String username = request.get("username");
-        String nickname = request.get("nickname");
-        String password = request.get("password");
 
         try {
-            authenticationService.generateAndSendVerificationCode(email, username, nickname, password);
+            authenticationService.sendAndSaveVerificationCode(email);
             return ResponseEntity.ok().body(Map.of("message", "인증번호가 전송되었습니다."));
         } catch (Exception ex) {
             log.error("인증번호 전송 중 오류 발생: {}", ex.getMessage());
@@ -47,13 +44,13 @@ public class EmailApiController {
         String code = request.get("code");
         log.info("인증 코드 검증 요청: email={}, code={}", email, code);
         try {
-            Optional<TemporaryUser> optionalTemporaryUser = temporaryRepository.findByEmail(email);
+            Optional<EmailVerification> optionalTemporaryUser = emailVerificationRepository.findByEmail(email);
             if (optionalTemporaryUser.isPresent()) {
-                TemporaryUser temporaryUser = optionalTemporaryUser.get();
-                log.info("임시 사용자 정보: email={}, savedCode={}, expiryDateTime={}",
-                        temporaryUser.getEmail(), temporaryUser.getVerificationCode(), temporaryUser.getExpiryDateTime());
+                EmailVerification emailVerification = optionalTemporaryUser.get();
+                log.info("인증 정보: email={}, savedCode={}, expiryDateTime={}",
+                        emailVerification.getEmail(), emailVerification.getVerificationCode(), emailVerification.getExpiryDateTime());
             } else {
-                log.info("임시 사용자 정보 없음: email={}", email);
+                log.info("인증 이메일 정보 없음: email={}", email);
             }
 
             boolean isCodeValid = verificationService.verifyCode(email, code);

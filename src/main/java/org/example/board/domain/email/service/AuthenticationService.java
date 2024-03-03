@@ -1,9 +1,8 @@
 package org.example.board.domain.email.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.user.entity.TemporaryUser;
-import org.example.board.domain.user.repository.TemporaryRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.example.board.domain.user.entity.EmailVerification;
+import org.example.board.domain.user.repository.EmailVerificationRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,29 +14,23 @@ import static org.example.board.config.VerificationCodeUtils.generateVerificatio
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final TemporaryRepository temporaryRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
     private final EmailService emailService;
-    private final PasswordEncoder passwordEncoder;
 
-    public void generateAndSendVerificationCode(String email, String username, String nickname ,String password) {
+    public void sendAndSaveVerificationCode(String email) {
+        Optional<EmailVerification> existingUser = emailVerificationRepository.findByEmail(email);
 
-        Optional<TemporaryUser> existingUser = temporaryRepository.findByEmail(email);
+        existingUser.ifPresent(emailVerificationRepository::delete);
 
-        existingUser.ifPresent(temporaryRepository::delete);
-
-        String verificationCode = generateVerificationCode(); // 인증 코드 생성 메소드
-        String encodedPassword = passwordEncoder.encode(password);
-        TemporaryUser temporaryUser = TemporaryUser.builder()
+        String verificationCode = generateVerificationCode();
+        EmailVerification emailVerification = EmailVerification.builder()
                 .email(email)
-                .username(username)
-                .nickname(nickname)
-                .password(encodedPassword)
                 .verificationCode(verificationCode)
                 .expiryDateTime(LocalDateTime.now().plusMinutes(5))
                 .build();
 
-        temporaryRepository.save(temporaryUser);
+        emailVerificationRepository.save(emailVerification);
 
-        emailService.sendVerificationEmail(email, verificationCode); // 이메일 전송 로직
+        emailService.sendVerificationEmail(email, verificationCode);
     }
 }
