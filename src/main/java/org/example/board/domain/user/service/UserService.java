@@ -150,5 +150,11 @@ public class UserService {
         userRepository.save(siteUser);
     }
 
+    //아이디 찾기
+    @Transactional
+    public String findUsernameByEmail(String email) {
+        return userRepository.findSiteUserByEmail(email).orElse(null);
+    }
+
 
 }

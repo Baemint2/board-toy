@@ -121,4 +121,18 @@ public class UserApiController {
 
     }
 
+    //아이디 찾기
+    @PostMapping("/findUsername")
+    public ResponseEntity<?> findUsernameByEmail(@RequestParam("email") String email) {
+        String username = userService.findUsernameByEmail(email);
+
+        if(username != null) {
+            log.info("사용자 아이디 찾기 성공 email = {}, username = {}", email, username);
+            return ResponseEntity.ok(Map.of("username", username));
+        } else {
+            log.info("해당 이메일로 등록된 사용자 없음 email = {}", email);
+            return ResponseEntity.badRequest().body(Map.of("error", "해당 이메일로 등록된 사용자가 없습니다."));
+        }
+    }
+
 }

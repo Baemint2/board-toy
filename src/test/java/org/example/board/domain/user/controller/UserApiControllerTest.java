@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -82,7 +82,62 @@ class UserApiControllerTest {
                 .content(requestBody)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("비밀번호가 성공적으로 변경되었습니다."));
+                .andExpect(content().string("비밀번호가 성공적으로 변경되었습니다."));
 
+    }
+
+    @Test
+    @WithMockUser
+    public void 비밀번호_변경_실패() throws Exception {
+        //Given
+        String requestBody = """
+                {
+                    "currentPassword": "oldPassword",
+                    "newPassword": "newPassword123",
+                    "confirmPassword": "newPassword124"
+                }
+                """;
+        //When && Then
+        mockMvc.perform(post("/api/v1/user/password/reset")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string("비밀번호가 성공적으로 변경되었습니다."));
+
+    }
+
+    @Test
+    @WithMockUser
+    public void 아이디찾기_성공() throws Exception {
+        //Given
+        String email = "test@example.com";
+        String username = "tester";
+
+        Mockito.when(userService.findUsernameByEmail(email)).thenReturn(username);
+
+        //When & Then
+        mockMvc.perform(post("/api/v1/user/findUsername")
+                .param("email", email)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"username\":\"" + username + "\"}"));
+
+    }
+
+    @Test
+    @WithMockUser
+    public void 아이디찾기_실패() throws Exception {
+        //Given
+        String email = "test@example.com";
+
+        Mockito.when(userService.findUsernameByEmail(email)).thenReturn(null);
+
+        //When & Then
+        mockMvc.perform(post("/api/v1/user/findUsername")
+                .param("email", email)
+                .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"error\":\"해당 이메일로 등록된 사용자가 없습니다.\"}"));
     }
 }
