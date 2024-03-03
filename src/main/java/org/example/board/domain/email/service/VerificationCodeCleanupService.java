@@ -3,7 +3,8 @@ package org.example.board.domain.email.service;
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.email.entity.VerificationCode;
 import org.example.board.domain.email.repository.VerificationRepository;
-import org.example.board.domain.user.repository.TemporaryRepository;
+import org.example.board.domain.user.entity.EmailVerification;
+import org.example.board.domain.user.repository.EmailVerificationRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VerificationCodeCleanupService {
     private final VerificationRepository verificationRepository;
-    private final TemporaryRepository temporaryRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void cleanupExpiredVerificationCodes() {
@@ -26,7 +27,8 @@ public class VerificationCodeCleanupService {
     }
 
     public void cleanupExpiredTemporaryUsers(LocalDateTime now) {
-        temporaryRepository.findAllByExpiryDateTimeBefore(now);
+        List<EmailVerification> expiredCodes = emailVerificationRepository.findAllByExpiryDateTimeBefore(now);
+        emailVerificationRepository.deleteAll(expiredCodes);
 
     }
 
