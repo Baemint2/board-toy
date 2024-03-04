@@ -17,7 +17,7 @@ public class JwtService {
     public static final int EXP = 900000;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER = "Authorization";
-    public static final SecretKey key = Jwts.SIG.HS512.key().build();
+    public SecretKey key = Jwts.SIG.HS512.key().build();
 
     public String create(Authentication authentication) {
 
