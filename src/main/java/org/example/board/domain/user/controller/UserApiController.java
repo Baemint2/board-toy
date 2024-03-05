@@ -1,15 +1,18 @@
 package org.example.board.domain.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.board.common.utils.CookieUtils;
 import org.example.board.config.auth.JwtService;
 import org.example.board.domain.user.dto.*;
 import org.example.board.domain.user.entity.SiteUser;
 import org.example.board.domain.user.service.UserService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,7 +54,8 @@ public class UserApiController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequestDto,
+                                   HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequestDto.getUsername(),
@@ -60,11 +64,30 @@ public class UserApiController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String jwt = jwtService.create(authentication);
-            return ResponseEntity.ok(Map.of("accessToken", jwt, "tokenType", "Bearer"));
+            // 액세스 토큰 생성
+            String jwt = jwtService.createAccessToken(authentication);
+            log.info("액세스 토큰이 생성되었습니다 = {} ", jwt);
+            CookieUtils.create(response, "accessToken", jwt, false, 60 * 60 * 250, "/");
+
+            // 리프레쉬 토큰 생성
+            String refreshJwt = jwtService.createRefreshToken(authentication);
+            log.info("리프레쉬 토큰이 생성되었습니다 = {} ", refreshJwt);
+            CookieUtils.create(response, "refreshToken", refreshJwt, false, 7 * 24 * 60 * 60, "/");
+
+            return ResponseEntity.ok(Map.of("accessToken", jwt, "refreshToken", refreshJwt, "tokenType", "Bearer "));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "로그인 정보가 유효하지 않습니다."));
         }
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(HttpServletResponse response) {
+        //액세스 토큰 삭제
+        CookieUtils.create(response, "refreshToken", "", false, 0, "/");
+        // 액세스 토큰 삭제
+        CookieUtils.create(response, "accessToken", "", false, 0, "/");
     }
 
 

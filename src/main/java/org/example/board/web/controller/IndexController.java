@@ -1,10 +1,10 @@
 package org.example.board.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.domain.image.service.ImageService;
+import lombok.extern.slf4j.Slf4j;
+import org.example.board.config.auth.JwtService;
 import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.service.PostsService;
-import org.example.board.domain.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,18 +15,21 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class IndexController {
 
     private final PostsService postsService;
-    private final UserService userService;
-    private final ImageService imageService;
+    private final JwtService jwtService;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal,
-                        @RequestParam(value = "page", defaultValue = "0")int page) {
+    public String index(Principal principal,
+                        Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
         if (principal != null) {
-            String loggedUser = principal.getName();
-            model.addAttribute("loggedUser", loggedUser);
+                String loggedUser = principal.getName();
+                model.addAttribute("loggedUser", loggedUser);
+                model.addAttribute("isLogin", true);
+            } else {
+            model.addAttribute("isLogin", false);
         }
 
         Page<Posts> paging = postsService.getList(page);

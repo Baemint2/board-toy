@@ -40,7 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Jws<Claims> jws;
         try{
             jws = Jwts.parser()
-                    .verifyWith(jwtService.key)
+                    .verifyWith(jwtService.getKey())
                     .build()
                     .parseSignedClaims(jwt);
 
