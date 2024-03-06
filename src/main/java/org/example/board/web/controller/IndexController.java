@@ -2,7 +2,7 @@ package org.example.board.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.board.config.auth.JwtService;
+import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.service.PostsService;
 import org.springframework.data.domain.Page;
@@ -19,21 +19,28 @@ import java.security.Principal;
 public class IndexController {
 
     private final PostsService postsService;
-    private final JwtService jwtService;
 
     @GetMapping("/")
-    public String index(Principal principal,
-                        Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
+    public String index(@RequestParam(value = "page", defaultValue = "0")int page,
+                        @RequestParam(value = "type", required = false) String type,
+                        @RequestParam(value = "keyword", required = false) String keyword,
+                        Principal principal,
+                        Model model) {
         if (principal != null) {
                 String loggedUser = principal.getName();
                 model.addAttribute("loggedUser", loggedUser);
-                model.addAttribute("isLogin", true);
-            } else {
-            model.addAttribute("isLogin", false);
-        }
+            }
 
-        Page<Posts> paging = postsService.getList(page);
-        model.addAttribute("paging", paging);
+
+        Page<Posts> paging;
+        if(type != null && keyword != null && !type.isEmpty() && !keyword.isEmpty()) {
+            Page<PostsDetailResponseDto> searchResult = postsService.searchPosts(type, keyword, page);
+
+            model.addAttribute("paging", searchResult);
+        } else {
+            paging = postsService.getList(page);
+            model.addAttribute("paging", paging);
+        }
         return "index";
     }
 }

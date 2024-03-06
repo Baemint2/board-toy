@@ -209,5 +209,10 @@ public class PostsService {
         return postsRepository.countById(postId);
     }
 
+    // 검색
+    public Page<PostsDetailResponseDto> searchPosts(String type, String keyword, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        return postsRepository.searchByKeyword(type, keyword, PageRequest.of(page, 10, Sort.by(sorts)));
+    }
 
 }

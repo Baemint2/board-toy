@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.posts.dto.PostsDetailResponseDto;
 import org.example.board.domain.posts.dto.PostsResponseDto;
 import org.example.board.domain.posts.dto.PostsSaveRequestDto;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -102,6 +104,15 @@ public class PostApiController {
     public ResponseEntity<Long> getLikesCount(@PathVariable Long postId) {
         long likesCount = postsService.getLikesCount(postId);
         return ResponseEntity.ok(likesCount);
+    }
+
+    // 검색
+    @GetMapping("/posts/search")
+    public ResponseEntity<Page<PostsDetailResponseDto>> searchPosts(@RequestParam("type") String type,
+                                                            @RequestParam("keyword") String keyword,
+                                                            @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<PostsDetailResponseDto> searchResult = postsService.searchPosts(type, keyword, page);
+        return ResponseEntity.ok(searchResult);
     }
 
 

@@ -1,3 +1,5 @@
+import {searchResult} from "./searchResult.js";
+
 export const sortPosts = {
     init: function () {
         this.sortEvent();
@@ -15,6 +17,7 @@ export const sortPosts = {
         document.getElementById('sort-likes').addEventListener('click', () => {
             this.fetchAndDisplayPosts(0, 'like');
         });
+
     },
     fetchAndDisplayPosts: function(pageNumber, sort) {
         fetch(`/api/v1/posts/${sort}/desc?page=${pageNumber}`)
@@ -109,3 +112,7 @@ export const sortPosts = {
         container.appendChild(li);
     },
 };
+
+document.addEventListener('DOMContentLoaded', function () {
+    searchResult.init();
+})
