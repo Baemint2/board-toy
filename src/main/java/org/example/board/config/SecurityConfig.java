@@ -1,7 +1,6 @@
 package org.example.board.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.board.config.auth.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -24,9 +22,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+//    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
     private final AuthenticationConfiguration authenticationConfiguration;
+
+
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/css/**", "/js/**","/img/**", "/font/**");
@@ -47,6 +48,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/posts/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/user/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/posts/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/posts/detail/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/posts/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/email/**")).permitAll()
@@ -54,7 +56,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/**/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/user/info")).hasRole("USER")
                                 .anyRequest().permitAll())
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**"))
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/api/email/**")))
