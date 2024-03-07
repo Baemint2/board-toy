@@ -162,6 +162,7 @@ public ResponseEntity<?> findUsernameByEmail(@RequestBody UserResponseDto respon
 public ResponseEntity<?> verifyUserId(@Valid @RequestBody UserResponseDto responseDto) {
 
     SiteUser siteUser = userService.findByUsername(responseDto.getUsername());
+    log.info("유저 정보 ={}", siteUser);
     if (siteUser != null) {
         return ResponseEntity.ok(Map.of("siteUser", siteUser));
     }
@@ -174,17 +175,16 @@ public ResponseEntity<?> verifyUserId(@Valid @RequestBody UserResponseDto respon
 public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto) {
     // 현재 비밀번호 확인
     if (!userService.checkIfValidOldPassword(passwordResetDto.getCurrentPassword())) {
-        return ResponseEntity.badRequest().body("현재 비밀번호가 일치하지 않습니다.");
+        return ResponseEntity.badRequest().body(Map.of("error","현재 비밀번호가 일치하지 않습니다."));
     }
 
     // 새 비밀번호와 비밀번호 확인 일치 확인
     if (!passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmPassword())) {
-        return ResponseEntity.badRequest().body("새 비밀번호와 일치하지 않습니다.");
+        return ResponseEntity.badRequest().body(Map.of("error","새 비밀번호와 일치하지 않습니다."));
     }
 
-    userService.changeUserPassword(passwordResetDto.getNewPassword());
-
-    return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        userService.changeUserPassword(passwordResetDto.getNewPassword());
+    return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
 
 }
 

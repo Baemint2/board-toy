@@ -33,6 +33,7 @@ public class UserController {
     private final CheckEmailValidator emailValidator;
     private final CheckNicknameValidator nicknameValidator;
     private final ImageService imageService;
+
     @InitBinder
     public void validatorBinder(WebDataBinder binder) {
         binder.addValidators(usernameValidator);
@@ -42,7 +43,7 @@ public class UserController {
 
     // 회원가입 화면
     @GetMapping("/signup")
-    public String signup(Model model,UserCreateDto userCreateDto) {
+    public String signup(Model model, UserCreateDto userCreateDto) {
         model.addAttribute("userCreateDto", userCreateDto);
         return "user/signup-form";
     }
@@ -75,8 +76,13 @@ public class UserController {
 
     // 비밀번호 변경
     @GetMapping("/password/reset")
-    public String resetPassword(Model model, PasswordResetDto passwordResetDto) {
-        model.addAttribute("passwordResetDto", passwordResetDto);
+    public String changePassword(Model model, PasswordResetDto passwordResetDto, Principal principal) {
+        if (principal != null) {
+            String username = principal.getName();
+            model.addAttribute("username", username);
+            model.addAttribute("passwordResetDto", passwordResetDto);
+
+        }
         return "user/password-reset";
     }
 

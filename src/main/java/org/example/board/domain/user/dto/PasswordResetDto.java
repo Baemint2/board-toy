@@ -5,10 +5,13 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.board.domain.user.entity.SiteUser;
 
 @Getter
 @NoArgsConstructor
 public class PasswordResetDto {
+
+    private String username;
 
     @NotEmpty(message = "변경될 패스워드를 입력해주세요.")
     private String newPassword;
@@ -22,10 +25,11 @@ public class PasswordResetDto {
     private String currentPassword;
 
     @Builder
-    public PasswordResetDto(String newPassword, String confirmPassword, String currentPassword) {
+    public PasswordResetDto(SiteUser siteUser, String newPassword, String confirmPassword) {
+        this.username = siteUser.getUsername();
         this.newPassword = newPassword;
         this.confirmPassword = confirmPassword;
-        this.currentPassword = currentPassword;
+        this.currentPassword = siteUser.getPassword();
     }
 
 }

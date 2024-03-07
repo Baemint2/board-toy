@@ -102,7 +102,7 @@ public class UserService {
     }
 
     @Transactional
-    public SiteUser findUserIdByUsername(String username) {
+    public SiteUser findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
     }
@@ -124,6 +124,7 @@ public class UserService {
     public boolean checkIfValidOldPassword(String oldPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
+        log.info("현재 로그인 된 유저 = {}", currentUser);
         SiteUser siteUser = userRepository.findByUsername(currentUser)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         return passwordEncoder.matches(oldPassword, siteUser.getPassword());
@@ -134,10 +135,12 @@ public class UserService {
     public void changeUserPassword(String newPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
+        log.info("현재 로그인 된 유저 = {}", currentUser);
         SiteUser siteUser = userRepository.findByUsername(currentUser)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         String encodedPassword = passwordEncoder.encode(newPassword);
         siteUser.changePassword(encodedPassword);
+        log.info("변경된 비밀번호 = {}", encodedPassword);
         userRepository.save(siteUser);
     }
 
@@ -152,8 +155,8 @@ public class UserService {
 
     //아이디 찾기
     @Transactional
-    public String findUsernameByEmail(String email) {
-        return userRepository.findSiteUserByEmail(email).orElse(null);
+    public String findUsernameByEmail(String email, String nickname) {
+        return userRepository.findByEmailAndNickname(email, nickname).orElse(null);
     }
 
 

@@ -12,7 +12,7 @@
     <div class="findHeader">
         <h2>아이디/비밀번호 찾기</h2>
     </div>
-    <form id="findIdForm" th:object="${userResponseDto}" >
+    <form id="findIdForm" th:object="${userResponseDto}">
         <label th:for="nickname">닉네임:</label>
         <input class="find-id-wrap" id="nickname" required th:field="*{nickname}" type="text"><br>
         <label th:for="email">이메일 주소:</label>
