@@ -13,6 +13,7 @@ import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.service.PostsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,7 @@ public class PostApiController {
 
     private final PostsService postsService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/posts")
     public ResponseEntity<Long> save(@Valid @RequestPart("post") PostsSaveRequestDto requestDto,
                                      @RequestPart(value = "files", required = false)List<MultipartFile> files) throws IOException {
@@ -36,6 +38,7 @@ public class PostApiController {
     }
 
     //수정
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/posts/{id}")
     public ResponseEntity<Long> update(@PathVariable Long id,
                        @Valid @RequestPart("post") PostsUpdateRequestDto requestDto, Principal principal,
@@ -50,6 +53,7 @@ public class PostApiController {
     }
 
     //삭제
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/posts/{id}")
     public Long delete(@PathVariable Long id) {
         postsService.delete(id);
@@ -57,6 +61,7 @@ public class PostApiController {
     }
 
     // 내가 작성한 글
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/posts")
     public ResponseEntity<List<Posts>> getUserPosts() {
         List<Posts> userPosts = postsService.findPostsByCurrentUser();

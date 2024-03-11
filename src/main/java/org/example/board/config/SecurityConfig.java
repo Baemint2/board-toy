@@ -19,7 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
 //    private final JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -46,15 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(config ->
                         config
                                 .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/posts/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/user/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/posts/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/posts/detail/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/posts/images/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/email/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/posts/**")).hasRole("USER")
-                                .requestMatchers(new AntPathRequestMatcher("/api/**/**")).hasRole("USER")
-                                .requestMatchers(new AntPathRequestMatcher("/user/info")).hasRole("USER")
+                                .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/posts/**")).permitAll()
                                 .anyRequest().permitAll())
 //                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf

@@ -8,6 +8,7 @@ import org.example.board.domain.answer.dto.AnswerUpdateRequestDto;
 import org.example.board.domain.answer.service.AnswerService;
 import org.example.board.domain.posts.entity.Posts;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,6 +22,7 @@ public class AnswerApiController {
     private final AnswerService answerService;
 
     //댓글 등록
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/v1/answer/{postId}")
     public ResponseEntity<Long> save(@PathVariable Long postId, @Valid @RequestBody AnswerSaveRequestDto saveRequestDto, Principal principal) {
         String username = principal.getName();
@@ -29,6 +31,7 @@ public class AnswerApiController {
     }
 
     //댓글 업데이트
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/api/v1/answer/{id}")
     public Long update(@PathVariable Long id, @RequestBody AnswerUpdateRequestDto requestDto) {
         log.info("Updating answer with id: {}, request: {}", id, requestDto);
@@ -36,6 +39,7 @@ public class AnswerApiController {
     }
 
     //댓글 삭제
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/v1/answer/{id}")
     public Long delete(@PathVariable Long id) {
         answerService.delete(id);
@@ -43,6 +47,7 @@ public class AnswerApiController {
     }
 
     //댓글 단 글
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/v1/user/answer")
     public ResponseEntity<List<Posts>> getUserAnswerPosts() {
         List<Posts> userAnswerPosts = answerService.findPostsContentByUser();

@@ -9,11 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.image.entity.Image;
 import org.example.board.domain.image.service.ImageService;
-import org.example.board.domain.posts.dto.*;
+import org.example.board.domain.posts.dto.PostsDetailResponseDto;
+import org.example.board.domain.posts.dto.PostsResponseDto;
+import org.example.board.domain.posts.dto.PostsSaveRequestDto;
+import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
-import org.example.board.domain.user.entity.SiteUser;
-import org.example.board.domain.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,6 @@ import java.util.stream.Collectors;
 public class PostsService {
 
     private final PostsRepository postsRepository;
-    private final UserRepository userRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -50,21 +50,6 @@ public class PostsService {
         postsRepository.save(savedPosts);
 
         return savedPosts.getId();
-    }
-
-    @Transactional
-    // 글 화면에 등록?
-    public Posts create(PostsSaveRequestDto requestDto, SiteUser user, List<MultipartFile> files) {
-        List<Image> images = imageService.uploadPosts(files, requestDto.toEntity().getId());
-
-        Posts posts = Posts.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .author(user.getUsername())
-                .images(images)
-                .category(requestDto.getCategory())
-                .build();
-        return postsRepository.save(posts);
     }
 
     // 글 수정
@@ -87,6 +72,14 @@ public class PostsService {
         return posts.getId();
     }
 
+    // 공통 메소드
+    private static Pageable getPageable(int page, String sortProperty) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc(sortProperty));
+        return PageRequest.of(page, 10, Sort.by(sorts));
+    }
+
+
     //특정 글 조회
     @Transactional
     public PostsResponseDto findById(Long id) {
@@ -99,13 +92,6 @@ public class PostsService {
 
                 return new PostsResponseDto(entity, answerDto);
     }
-    // 글 조회 id 내림차순
-    @Transactional(readOnly = true)
-    public List<PostsListResponseDto> findAllDesc() {
-        return postsRepository.findAllDesc().stream()
-                .map(PostsListResponseDto::new)
-                .collect(Collectors.toList());
-    }
 
     // 글 삭제
     @Transactional
@@ -114,15 +100,6 @@ public class PostsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + id));
 
         postsRepository.delete(posts);
-    }
-
-
-    //페이징 처리
-    public Page<Posts> getList(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdDate"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.postsRepository.findAll(pageable);
     }
 
     //현재 로그인한 사용자가 작성한 글 조회
@@ -156,7 +133,6 @@ public class PostsService {
         if(!isCookie) {
             posts.addViewCount();
             cookie = new Cookie("postView", "[" + posts.getId() + "]");
-//            response.addCookie(cookie);
         }
 
         long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
@@ -168,40 +144,31 @@ public class PostsService {
         return posts.getViewCount();
     }
 
+    //페이징 처리
+    public Page<Posts> getList(int page) {
+        Pageable pageable = getPageable(page, "createdDate");
+        return this.postsRepository.findAll(pageable);
+    }
+
     //최신 순
     @Transactional
     public Page<PostsDetailResponseDto> getPostsSortedByDesc(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdDate"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Pageable pageable = getPageable(page, "createdDate");
         return postsRepository.findAllByLatest(pageable);
     }
 
     //댓글 순
     @Transactional
     public Page<PostsDetailResponseDto> getPostsSortedByAnswerDesc(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("answerCount"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Pageable pageable = getPageable(page, "answerCount");
         return postsRepository.findAllOrderByAnswerCountDesc(pageable);
     }
 
     //조회수 순
     @Transactional
     public Page<PostsDetailResponseDto> getPostsSortedByViewCountDesc(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("viewCount"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Pageable pageable = getPageable(page, "ViewCount");
         return postsRepository.findAllOrderByViewCountDesc(pageable);
-    }
-
-    //좋아요 순
-    @Transactional
-    public Page<PostsDetailResponseDto> getPostsSortedByLikeCountDesc(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("likeCount"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return postsRepository.findAllOrderByLikeCountDesc(pageable);
     }
 
     @Transactional
@@ -213,6 +180,13 @@ public class PostsService {
     public Page<PostsDetailResponseDto> searchPosts(String type, String keyword, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         return postsRepository.searchByKeyword(type, keyword, PageRequest.of(page, 10, Sort.by(sorts)));
+    }
+
+    //좋아요 순
+    @Transactional
+    public Page<PostsDetailResponseDto> getPostsSortedByLikeCountDesc(int page) {
+        Pageable pageable = getPageable(page, "likeCount");
+        return postsRepository.findAllOrderByLikeCountDesc(pageable);
     }
 
 }
