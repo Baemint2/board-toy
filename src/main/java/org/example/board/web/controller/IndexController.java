@@ -21,7 +21,7 @@ public class IndexController {
     private final PostsService postsService;
 
     @GetMapping("/")
-    public String index(@RequestParam(value = "page", defaultValue = "0")int page,
+    public String index(@RequestParam(value = "page", defaultValue = "1")int page,
                         @RequestParam(value = "type", required = false) String type,
                         @RequestParam(value = "keyword", required = false) String keyword,
                         Principal principal,
@@ -31,6 +31,7 @@ public class IndexController {
                 model.addAttribute("loggedUser", loggedUser);
             }
 
+        int adjustedPage = page - 1;
 
         Page<Posts> paging;
         if(type != null && keyword != null && !type.isEmpty() && !keyword.isEmpty()) {
@@ -38,7 +39,7 @@ public class IndexController {
 
             model.addAttribute("paging", searchResult);
         } else {
-            paging = postsService.getList(page);
+            paging = postsService.getList(adjustedPage);
             model.addAttribute("paging", paging);
         }
         return "index";

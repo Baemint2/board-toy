@@ -12,6 +12,7 @@ import org.example.board.domain.user.service.UserService;
 import org.example.board.validator.CheckEmailValidator;
 import org.example.board.validator.CheckNicknameValidator;
 import org.example.board.validator.CheckUsernameValidator;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,6 +49,7 @@ public class UserController {
         return "user/signup-form";
     }
 
+    @PreAuthorize("hasRole('USER')")
     // 유저 My Page
     @GetMapping("/info")
     public String userInfo(Model model, Principal principal) {
