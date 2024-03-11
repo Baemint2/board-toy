@@ -28,7 +28,12 @@ export const emailVerify = {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({email: email})
     })
-        .then(response => response.json())
+        .then(response => {
+            if(!response.ok) {
+                throw response;
+            }
+            return response.json();
+        })
         .then(data => {
             console.log("Success:", data);
             alert(data.message || "인증번호가 전송되었습니다.");
@@ -40,8 +45,18 @@ export const emailVerify = {
             }
         })
         .catch((error) => {
-            console.error("Error:", error);
+
+            error.json().then(errorData => {
+                Object.keys(errorData).forEach(function(field) {
+                    const errorElement = document.getElementById(`${field}-error`);
+                    if (errorElement) {
+                        errorElement.textContent = errorData[field];
+                        errorElement.style.display = 'block';
+                    }
+            })
             alert("인증번호 전송에 실패했습니다.");
+
+            });
         });
 },
 

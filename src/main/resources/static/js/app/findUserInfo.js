@@ -1,5 +1,5 @@
 const findUserInfo = {
-    init: function() {
+    init: function () {
         const _this = this;
         document.getElementById('submitId')?.addEventListener('click', () => {
             _this.verifyUserIdAndRedirect();
@@ -11,14 +11,14 @@ const findUserInfo = {
 
     },
 
-    verifyUserIdAndRedirect: function() {
+    verifyUserIdAndRedirect: function () {
         const userId = document.getElementById('userId').value;
         fetch('/api/v1/user/verifyUserId', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ userId: userId })
+            body: JSON.stringify({userId: userId})
         })
             .then(response => {
                 if (!response.ok) {
@@ -49,27 +49,31 @@ const findUserInfo = {
         fetch('/api/v1/user/password/reset', {
             method: 'POST',
             headers: {
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json().then(data => {
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
                     alert(data.message);
                     window.location.href = "/user/info";
-                });
-            } else {
-                return response.json().then(data => {
-                    alert(data.message);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('비밀번호 변경 중 오류가 발생했습니다.');
-        });
+                } else {
+                    Object.keys(data).forEach(function (field) {
+                        const errorElement = document.getElementById(`${field}-error`);
+                        if (errorElement) {
+                            errorElement.textContent = data[field];
+                            errorElement.style.display = 'block';
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('비밀번호 변경 중 오류가 발생했습니다.');
+            });
     }
+
 };
 
 document.addEventListener('DOMContentLoaded', function () {

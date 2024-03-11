@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("username", "이미 사용중인 아이디입니다.");
+        errors.put("username", "이미 등록된 사용자입니다.");
         errors.put("email", "이미 등록된 이메일입니다");
-        errors.put("nickname", "이미 등록된 닉네임입니다.");
+        errors.put("nickname", "이미 사용중인 닉네임입니다.");
         return ResponseEntity.badRequest().body(errors);
     }
 

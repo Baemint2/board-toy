@@ -15,8 +15,10 @@
     <form id="findIdForm" th:object="${userResponseDto}">
         <label th:for="nickname">닉네임:</label>
         <input class="find-id-wrap" id="nickname" required th:field="*{nickname}" type="text"><br>
+        <div class="error-message" id="nickname-error" style="display: none;"></div>
         <label th:for="email">이메일 주소:</label>
         <input class="find-id-wrap" id="email" required th:field="*{email}" type="email">
+        <div class="error-message" id="email-error" style="display: none;"></div>
         <button class="emailValidateBtn" th:data-action="findId" type="button">인증번호 받기</button><br>
         <label th:for="verificationCode">인증번호:</label>
         <input class="find-id-wrap" id="verificationCode" name="authCode" readonly required type="text"><br>
