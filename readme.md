@@ -1,7 +1,7 @@
 ## 스프링 공부를 위한 게시판 개인 프로젝트
 
 ---
-제작 기간 : 2024.01.24 ~ ing      
+제작 기간 : 2024.01.24 ~ 2024.03.10
 
 --- 
 기술 스택
@@ -11,7 +11,7 @@
 * JDK 17   
 * MySQL
 * Spring-data-JPA   
-* Spring-security   
+* Spring-security
 * Thymeleaf   
 * Querydsl   
 * lombok
@@ -33,11 +33,8 @@
 * My page 에서 작성한 글, 댓글 단 글, 좋아요 누른 글 ajax 통신으로 버튼 클릭 시 확인 가능
   * 제목 클릭시 해당 게시글로 이동
 ![마이페이지 ajax](https://github.com/Baemint2/SpringBoot-learning/assets/54212480/e1dc90cb-42e3-44d5-9b71-2a4a048fc760)
-
+* 검색 기능
+* 아이디 찾기, 로그인 시 비밀번호 변경
 ---
 ### 기능 추가 예정
-  * 검색 기능 
-  * 아이디 찾기, 비밀번호 찾기(비밀번호 변경)
-  * 소셜 로그인 추가
-  * springdoc-openapi를 이용해 api 문서화
-  * 시간적 여유가 되면 프론트 꾸미기
+  * 비밀번호 찾기(필터를 이용해서 비로그인 상태일 때 로직 처리)
