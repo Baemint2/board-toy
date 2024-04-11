@@ -34,6 +34,7 @@ src/main/resources/application.properties
 /.nb-gradle/
 
 application.properties
-
+*.properties
+.DS_Store
 ### VS Code ###
 .vscode/
