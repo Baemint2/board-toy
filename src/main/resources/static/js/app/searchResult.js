@@ -24,8 +24,8 @@ export const searchResult = {
         const type = document.getElementById('search-type').value;
         const keyword = document.getElementById('search-keyword').value;
 
-        localStorage.setItem('type', type);
-        localStorage.setItem('keyword', keyword);
+        // localStorage.setItem('type', type);
+        // localStorage.setItem('keyword', keyword);
 
         const queryString = new URLSearchParams({
             type: type,

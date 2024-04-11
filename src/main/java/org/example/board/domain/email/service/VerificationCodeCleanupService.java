@@ -17,6 +17,7 @@ public class VerificationCodeCleanupService {
     private final VerificationRepository verificationRepository;
     private final EmailVerificationRepository emailVerificationRepository;
 
+    // 매일 자정 테이블 삭제
     @Scheduled(cron = "0 0 0 * * *")
     public void cleanupExpiredVerificationCodes() {
         LocalDateTime now = LocalDateTime.now();

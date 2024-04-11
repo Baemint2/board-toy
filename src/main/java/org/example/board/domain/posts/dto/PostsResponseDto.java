@@ -1,6 +1,8 @@
 package org.example.board.domain.posts.dto;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.board.domain.answer.dto.AnswerResponseDto;
 import org.example.board.domain.image.entity.Image;
 import org.example.board.domain.posts.entity.Category;
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PostsResponseDto {
     private Long id;
     private String title;
@@ -23,6 +26,7 @@ public class PostsResponseDto {
     private Category category;
     private List<Image> images;
 
+    @Builder
     public PostsResponseDto(Posts entity, List<AnswerResponseDto> answerList) {
         this.id = entity.getId();
         this.title = entity.getTitle();

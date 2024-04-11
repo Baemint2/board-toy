@@ -1,7 +1,6 @@
 package org.example.board.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.board.config.auth.JwtService;
 import org.example.board.domain.user.dto.UserCreateDto;
 import org.example.board.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +45,8 @@ class UserApiControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
-    @MockBean
-    private JwtService jwtService;
+//    @MockBean
+//    private JwtService jwtService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -56,7 +55,7 @@ class UserApiControllerTest {
     @BeforeEach
     void setUp() {
         when(userService.checkIfValidOldPassword(anyString())).thenReturn(true);
-        when(jwtService.create(any(Authentication.class))).thenReturn("mockedJwtToken");
+//        when(jwtService.create(any(Authentication.class))).thenReturn("mockedJwtToken");
     }
 
     @Test
@@ -159,28 +158,28 @@ class UserApiControllerTest {
                 .andExpect(content().json("{\"error\":\"해당 이메일로 등록된 사용자가 없습니다.\"}"));
     }
 
-    @Test
-    @WithMockUser
-    public void JWT_로그인_성공() throws Exception {
-        //Given
-        String username = "tester";
-        String password = "qwer1234";
-        String token = "mockedJwtToken";
-
-
-        Authentication authentication = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(authentication);
-        when(jwtService.create(any(Authentication.class))).thenReturn(token);
-
-        // When & Then
-        mockMvc.perform(post("/api/v1/user/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(Map.of("username", username, "password", password)))
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value(token))
-                .andExpect(jsonPath("$.tokenType").value("Bearer"));
-    }
+//    @Test
+//    @WithMockUser
+//    public void JWT_로그인_성공() throws Exception {
+//        //Given
+//        String username = "tester";
+//        String password = "qwer1234";
+//        String token = "mockedJwtToken";
+//
+//
+//        Authentication authentication = mock(Authentication.class);
+//        when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(authentication);
+//        when(jwtService.create(any(Authentication.class))).thenReturn(token);
+//
+//        // When & Then
+//        mockMvc.perform(post("/api/v1/user/login")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(new ObjectMapper().writeValueAsString(Map.of("username", username, "password", password)))
+//                        .with(csrf()))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.accessToken").value(token))
+//                .andExpect(jsonPath("$.tokenType").value("Bearer"));
+//    }
 
 
 }

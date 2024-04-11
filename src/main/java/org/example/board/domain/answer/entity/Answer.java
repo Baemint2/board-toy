@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.example.board.common.BaseTimeEntity;
 import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.user.entity.SiteUser;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 @Getter
 @Entity

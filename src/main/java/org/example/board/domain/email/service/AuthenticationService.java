@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.example.board.config.VerificationCodeUtils.generateVerificationCode;
+import static org.example.board.common.utils.VerificationCodeUtils.generateVerificationCode;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +17,7 @@ public class AuthenticationService {
     private final EmailVerificationRepository emailVerificationRepository;
     private final EmailService emailService;
 
+    //인증번호 전송 및 인증테이블에 저장
     public void sendAndSaveVerificationCode(String email) {
         Optional<EmailVerification> existingUser = emailVerificationRepository.findByEmail(email);
 

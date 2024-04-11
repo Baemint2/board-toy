@@ -11,7 +11,8 @@
 <body>
         <div class="container my-3 login-container">
             <div class="my-3">
-                <form class="login-form" method="post" th:action="@{/user/login}">
+                <form class="login-form" th:action="@{/user/login}" method="post">
+                    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                     <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
                     <div th:if="${param.error}">
                         <div class="alert alert-danger">
@@ -27,7 +28,7 @@
                         <input class="form-control" name="password" placeholder="비밀번호를 입력하세요" type="password">
                     </div>
                     <input name="redirect" th:value="${redirectUrl}" type="hidden" />
-                    <button class="btn btn-primary login-button" type="submit" >로그인</button>
+                    <button class="btn btn-primary" type="submit" >로그인</button>
                     <ul class="find-wrap" id="find-wrap">
                         <li><a class="find-text" href="/user/find/password">비밀번호 찾기</a></li>
                         <li><a class="find-text" href="/user/find/username">아이디 찾기</a></li>

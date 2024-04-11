@@ -3,7 +3,6 @@
     import com.fasterxml.jackson.databind.ObjectMapper;
     import org.example.board.domain.email.service.AuthenticationService;
     import org.example.board.domain.email.service.VerificationService;
-    import org.example.board.domain.user.repository.TemporaryRepository;
     import org.example.board.domain.user.service.UserService;
     import org.junit.jupiter.api.BeforeEach;
     import org.junit.jupiter.api.Test;
@@ -39,8 +38,6 @@
 
         @MockBean
         private AuthenticationService authenticationService;
-        @MockBean
-        private TemporaryRepository temporaryRepository;
         @MockBean
         private VerificationService verificationService;
 

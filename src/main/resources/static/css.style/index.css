@@ -286,3 +286,8 @@
     text-decoration: none;
     color: #888;
 }
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+}

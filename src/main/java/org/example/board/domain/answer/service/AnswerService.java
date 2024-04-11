@@ -60,13 +60,6 @@ public class AnswerService {
         answerRepository.delete(answer);
     }
 
-    public AnswerResponseDto findById(Long id) {
-        Answer answer = answerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다. " + id));
-
-        return new AnswerResponseDto(answer);
-    }
-
     public List<Posts> findPostsContentByUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return answerRepository.findPostsContentByUser(username);

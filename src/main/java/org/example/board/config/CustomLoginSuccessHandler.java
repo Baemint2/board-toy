@@ -13,11 +13,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
         String redirect = request.getParameter("redirect");
 
-        // 로깅 추가
-        log.info("Redirect parameter value: {}", redirect);
 
         if(redirect != null && !redirect.isEmpty()) {
-            log.info("Redirecting to: {}", redirect);
             return redirect;
         } else {
             String defaultTargetUrl = super.determineTargetUrl(request, response);

@@ -18,7 +18,7 @@ public class EmailService {
     public static int number;
     private final JavaMailSender javaMailSender;
 
-    //인증 번호 생성
+    //인증 번호 메시지
     @Transactional
     public void sendVerificationEmail(String to, String verificationCode) {
         try {

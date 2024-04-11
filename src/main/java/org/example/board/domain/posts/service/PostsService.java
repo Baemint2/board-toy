@@ -15,15 +15,20 @@ import org.example.board.domain.posts.dto.PostsSaveRequestDto;
 import org.example.board.domain.posts.dto.PostsUpdateRequestDto;
 import org.example.board.domain.posts.entity.Posts;
 import org.example.board.domain.posts.repository.PostsRepository;
+import org.example.board.exception.CustomException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -63,6 +68,14 @@ public class PostsService {
         if(!posts.getAuthor().equals(username)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
+//        IllegalStateException;
+//        IllegalArgumentException;
+//        UsernameNotFoundException;
+//        MethodArgumentNotValidException;
+//        SQLIntegrityConstraintViolationException;
+//        DataIntegrityViolationException;
+//        CustomException;
+
         // 파일 처리
         if (!files.isEmpty()) {
             List<Image> images = imageService.uploadPosts(files, posts.getId());
